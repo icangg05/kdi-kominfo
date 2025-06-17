@@ -17,6 +17,7 @@
     },
     "dependencies": {
         "@floating-ui/dom": "^1.7.1",
+        "@preline/carousel": "^3.1.0",
         "@preline/dropdown": "^3.1.0",
         "preline": "^3.1.0"
     }

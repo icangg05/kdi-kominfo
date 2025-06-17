@@ -17,10 +17,12 @@
 @theme {
   --font-sen: "Sen";
   --font-public-sans: "Public Sans";
+  --color-primary : #3052D0;
+  --color-secondary : #2E273F;
 }
 
 @utility container {
-  padding-inline: 12px;
+  padding-inline: 14px;
   margin-inline: auto;
 
   @variant lg {
