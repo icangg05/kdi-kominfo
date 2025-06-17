@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<title>{{ $title ?? 'Page Title' }}</title>
+
+	@vite(['resources/css/app.css', 'resources/js/app.js'])
+</head>
+
+<body class="font-public-sans antialiassed">
+	{{-- Navbar --}}
+	<section class="z-[997] fixed w-full">
+		{{-- Top Nav --}}
+		<div
+			class="hidden lg:block border border-b border-gray-200 backdrop-blur bg-white transition-all ease-out false">
+			<div class="py-1.5 pb-2 container flex items-center justify-between text-gray-800 font-semibold">
+				{{-- Left Section --}}
+				<div class="flex items-center gap-7">
+					<p class="text-xs flex items-center space-x-1">
+						<i class="fa-solid fa-location-dot text-gray-500"></i>
+						<span class="mt-[3px]">Kendari, Sulawesi Tenggara</span>
+					</p>
+					<p class="text-xs flex items-center space-x-1">
+						<i class="fa-solid fa-clock text-gray-500"></i>
+						<span class="text-xs font-mono mt-1">15:50:33 WITA</span>
+					</p>
+				</div>
+				{{-- Left Section --}}
+
+				{{-- Right Section --}}
+				<div class="flex items-center gap-7">
+					<p class="text-xs flex items-center space-x-1">
+						<i class="fa-solid fa-phone text-gray-500"></i>
+						<span class="mt-[3px]">0822-4618-8268</span>
+					</p>
+					<p class="text-xs flex items-center space-x-1">
+						<i class="fa-solid fa-envelope text-gray-500"></i>
+						<span class="mt-[3px]">diskominfokendari@gmail.com</span>
+					</p>
+				</div>
+				{{-- Right Section --}}
+			</div>
+		</div>
+		{{-- Top Nav --}}
+
+		{{-- List Menu --}}
+		<header class="bg-white text-sm pt-2 pb-3 shadow-2xs">
+			<nav class="container flex flex-wrap basis-full items-center justify-between">
+				{{-- Logo --}}
+				<img class="w-40" src="{{ asset('img/kominfo-logo.webp') }}" alt="logo">
+				{{-- Logo --}}
+
+				{{-- Button Toggle & Search --}}
+				<div class="sm:order-3 flex items-center gap-x-2">
+					{{-- Toggle collap Nav --}}
+					<button type="button"
+						class="sm:hidden hs-collapse-toggle relative size-9 flex justify-center items-center gap-x-2 rounded-lg border border-gray-200 bg-white text-gray-800 shadow-2xs hover:bg-gray-50 focus:outline-hidden focus:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none"
+						id="hs-navbar-alignment-collapse" aria-expanded="false" aria-controls="hs-navbar-alignment"
+						aria-label="Toggle navigation" data-hs-collapse="#hs-navbar-alignment">
+						<svg class="hs-collapse-open:hidden shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24"
+							height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+							stroke-linejoin="round">
+							<line x1="3" x2="21" y1="6" y2="6" />
+							<line x1="3" x2="21" y1="12" y2="12" />
+							<line x1="3" x2="21" y1="18" y2="18" />
+						</svg>
+						<svg class="hs-collapse-open:block hidden shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24"
+							height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+							stroke-linejoin="round">
+							<path d="M18 6 6 18" />
+							<path d="m6 6 12 12" />
+						</svg>
+						<span class="sr-only">Toggle</span>
+					</button>
+					{{-- Toggle collap Nav --}}
+
+					{{-- Search Input --}}
+					<div class="hidden lg:relative">
+						<input type="text"
+							placeholder="Pencarian"
+							class="py-2.5 sm:py-3 px-4 ps-11 block w-full border-gray-300 rounded-lg sm:text-sm focus:z-10 focus:border-sky-600 focus:ring-0 disabled:opacity-50 disabled:pointer-events-none">
+						<div class="absolute inset-y-0 start-0 flex items-center pointer-events-none z-20 ps-4">
+							<i class="fa-solid fa-magnifying-glass text-gray-400"></i>
+						</div>
+					</div>
+					{{-- Search Input --}}
+				</div>
+				{{-- Button Toggle & Search --}}
+
+				{{-- List Navigation --}}
+				<div id="hs-navbar-alignment"
+					class="hs-collapse hidden overflow-hidden transition-all duration-300 basis-full grow sm:grow-0 sm:basis-auto sm:block sm:order-2"
+					aria-labelledby="hs-navbar-alignment-collapse">
+					<div class="flex flex-col gap-5 mt-5 sm:flex-row sm:items-center sm:mt-0 sm:ps-5">
+						<a class="font-medium text-sky-600 focus:outline-hidden" href="#" aria-current="page">Beranda</a>
+						<div
+							class="hs-dropdown [--strategy:static] sm:[--strategy:fixed] [--adaptive:none] sm:[--adaptive:adaptive]">
+							<button id="hs-navbar-example-dropdown"
+								type="button"
+								class="hs-dropdown-toggle flex items-center w-full text-gray-600 hover:text-gray-400 focus:outline-hidden focus:text-gray-400 font-medium"
+								aria-haspopup="menu" aria-expanded="false" aria-label="Mega Menu">
+								Profil
+								<svg class="hs-dropdown-open:-rotate-180 sm:hs-dropdown-open:rotate-0 duration-300 ms-1 shrink-0 size-4"
+									xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+									stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+									<path d="m6 9 6 6 6-6" />
+								</svg>
+							</button>
+
+							<div
+								class="hs-dropdown-menu transition-[opacity,margin] ease-in-out duration-[150ms] hs-dropdown-open:opacity-100 opacity-0 sm:w-48 z-10 bg-white sm:shadow-md rounded-lg p-1 space-y-1 before:absolute top-full sm:border border-gray-200 before:-top-5 before:start-0 before:w-full before:h-5 hidden"
+								role="menu" aria-orientation="vertical" aria-labelledby="hs-navbar-example-dropdown">
+								<a
+									class="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:outline-hidden focus:bg-gray-100"
+									href="#">
+									About
+								</a>
+								<div class="hs-dropdown [--strategy:static] sm:[--strategy:absolute] [--adaptive:none] relative">
+									<button id="hs-navbar-example-dropdown-sub" type="button"
+										class="hs-dropdown-toggle w-full flex justify-between items-center text-sm text-gray-800 rounded-lg py-2 px-3 hover:bg-gray-100 focus:outline-hidden focus:bg-gray-100">
+										Sub Menu
+										<svg
+											class="hs-dropdown-open:-rotate-180 sm:hs-dropdown-open:-rotate-90 sm:-rotate-90 duration-300 ms-2 shrink-0 size-4"
+											xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+											stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+											<path d="m6 9 6 6 6-6" />
+										</svg>
+									</button>
+
+									<div
+										class="hs-dropdown-menu transition-[opacity,margin] ease-in-out duration-[150ms] hs-dropdown-open:opacity-100 opacity-0 sm:w-48 hidden z-10 sm:mt-2 bg-white sm:shadow-md rounded-lg before:absolute sm:border border-gray-200 before:-end-5 before:top-0 before:h-full before:w-5 sm:mx-2.5! top-0 end-full"
+										role="menu" aria-orientation="vertical" aria-labelledby="hs-navbar-example-dropdown-sub">
+										<div class="p-1 space-y-1">
+											<a
+												class="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:outline-hidden focus:bg-gray-100"
+												href="#">
+												About
+											</a>
+											<a
+												class="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:outline-hidden focus:bg-gray-100"
+												href="#">
+												Downloads
+											</a>
+											<a
+												class="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:outline-hidden focus:bg-gray-100"
+												href="#">
+												Team Account
+											</a>
+										</div>
+									</div>
+								</div>
+								<a
+									class="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:outline-hidden focus:bg-gray-100"
+									href="#">
+									Downloads
+								</a>
+								<a
+									class="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:outline-hidden focus:bg-gray-100"
+									href="#">
+									Team Account
+								</a>
+							</div>
+						</div>
+						<a class="font-medium text-gray-600 hover:text-gray-400 focus:outline-hidden focus:text-gray-400"
+							href="#">Berita</a>
+						<a class="font-medium text-gray-600 hover:text-gray-400 focus:outline-hidden focus:text-gray-400"
+							href="#">Dokumen</a>
+						<div
+							class="hs-dropdown [--strategy:static] sm:[--strategy:fixed] [--adaptive:none] sm:[--adaptive:adaptive]">
+							<button id="hs-navbar-example-dropdown"
+								type="button"
+								class="hs-dropdown-toggle flex items-center w-full text-gray-600 hover:text-gray-400 focus:outline-hidden focus:text-gray-400 font-medium"
+								aria-haspopup="menu" aria-expanded="false" aria-label="Mega Menu">
+								Layanan
+								<svg class="hs-dropdown-open:-rotate-180 sm:hs-dropdown-open:rotate-0 duration-300 ms-1 shrink-0 size-4"
+									xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+									stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+									<path d="m6 9 6 6 6-6" />
+								</svg>
+							</button>
+
+							<div
+								class="hs-dropdown-menu transition-[opacity,margin] ease-in-out duration-[150ms] hs-dropdown-open:opacity-100 opacity-0 sm:w-48 z-10 bg-white sm:shadow-md rounded-lg p-1 space-y-1 before:absolute top-full sm:border border-gray-200 before:-top-5 before:start-0 before:w-full before:h-5 hidden"
+								role="menu" aria-orientation="vertical" aria-labelledby="hs-navbar-example-dropdown">
+								<a
+									class="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:outline-hidden focus:bg-gray-100"
+									href="#">
+									About
+								</a>
+								<div class="hs-dropdown [--strategy:static] sm:[--strategy:absolute] [--adaptive:none] relative">
+									<button id="hs-navbar-example-dropdown-sub" type="button"
+										class="hs-dropdown-toggle w-full flex justify-between items-center text-sm text-gray-800 rounded-lg py-2 px-3 hover:bg-gray-100 focus:outline-hidden focus:bg-gray-100">
+										Sub Menu
+										<svg
+											class="hs-dropdown-open:-rotate-180 sm:hs-dropdown-open:-rotate-90 sm:-rotate-90 duration-300 ms-2 shrink-0 size-4"
+											xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+											stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+											<path d="m6 9 6 6 6-6" />
+										</svg>
+									</button>
+
+									<div
+										class="hs-dropdown-menu transition-[opacity,margin] ease-in-out duration-[150ms] hs-dropdown-open:opacity-100 opacity-0 sm:w-48 hidden z-10 sm:mt-2 bg-white sm:shadow-md rounded-lg before:absolute sm:border border-gray-200 before:-end-5 before:top-0 before:h-full before:w-5 sm:mx-2.5! top-0 end-full"
+										role="menu" aria-orientation="vertical" aria-labelledby="hs-navbar-example-dropdown-sub">
+										<div class="p-1 space-y-1">
+											<a
+												class="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:outline-hidden focus:bg-gray-100"
+												href="#">
+												About
+											</a>
+											<a
+												class="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:outline-hidden focus:bg-gray-100"
+												href="#">
+												Downloads
+											</a>
+											<a
+												class="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:outline-hidden focus:bg-gray-100"
+												href="#">
+												Team Account
+											</a>
+										</div>
+									</div>
+								</div>
+								<a
+									class="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:outline-hidden focus:bg-gray-100"
+									href="#">
+									Downloads
+								</a>
+								<a
+									class="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:outline-hidden focus:bg-gray-100"
+									href="#">
+									Team Account
+								</a>
+							</div>
+						</div>
+						<a class="font-medium text-gray-600 hover:text-gray-400 focus:outline-hidden focus:text-gray-400"
+							href="#">Galeri</a>
+					</div>
+					{{-- List Navigation --}}
+				</div>
+			</nav>
+		</header>
+		{{-- List Menu --}}
+	</section>
+	{{-- Navbar --}}
+
+
+	{{ $slot }}
+
+
+	{{-- Font Awesome --}}
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/js/all.min.js"
+		integrity="sha512-b+nQTCdtTBIRIbraqNEwsjB6UvL3UEMkXnhzd8awtCYh0Kcsjl9uEgwVFVbhoj3uu1DO1ZMacNvLoyJJiNfcvg=="
+		crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+	{{-- Preline --}}
+	<script src="{{ asset('preline.js') }}"></script>
+</body>
+
+</html>

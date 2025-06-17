@@ -1,0 +1,42 @@
+@import url("https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,100..900;1,100..900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Sen:wght@400..800&display=swap");
+@import "tailwindcss";
+
+/* Preline UI */
+@source "../../node_modules/preline/dist/*.js";
+@import "../../node_modules/preline/variants.css";
+
+/* Plugins */
+@plugin "@tailwindcss/forms";
+
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+@source '../**/*.blade.php';
+@source '../**/*.js';
+
+@theme {
+  --font-sen: "Sen";
+  --font-public-sans: "Public Sans";
+}
+
+@utility container {
+  padding-inline: 12px;
+  margin-inline: auto;
+
+  @variant lg {
+    padding-inline: 30px;
+    width: 1200px;
+  }
+}
+
+.bline {
+  border: 1px solid red;
+}
+
+.tShadow {
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+}
+
+.btn-disabled {
+  @apply opacity-50 pointer-events-none;
+}
