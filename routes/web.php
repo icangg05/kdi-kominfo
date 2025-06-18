@@ -1,6 +1,7 @@
 <?php
 
-use App\Livewire\Beranda;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', Beranda::class)->name('beranda');
+
+Route::get('/', App\Livewire\Beranda::class)->name('beranda');
+Route::get('/profil-dinas/pimpinan', App\Livewire\ProfilPimpinan::class)->name('profil.profil-pimpinan');

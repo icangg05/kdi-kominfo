@@ -7,7 +7,7 @@
 	{{-- Load Style --}}
 </head>
 
-<body class="font-public-sans antialiassed">
+<body class="font-public-sans antialiased">
 	{{-- Navbar --}}
 	<x-layouts.partials.navbar />
 	{{-- Navbar --}}
@@ -19,6 +19,7 @@
 	{{-- Footer --}}
 	<x-layouts.partials.footer />
 	{{-- Footer --}}
+
 
 	{{-- Load Scripts --}}
 	@include('components.layouts.partials.script')

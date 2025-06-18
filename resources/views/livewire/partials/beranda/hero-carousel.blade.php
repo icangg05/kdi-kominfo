@@ -45,7 +45,7 @@
 			terpercaya guna mendukung transformasi digital menuju Smart City.
 		</p>
 		<div class="flex flex-col lg:flex-row items-center gap-3">
-			<a href="#layanan"
+			<a href="#layanan-kominfo"
 				class="w-full lg:w-fit py-2.5 px-5 text-center text-sm font-medium rounded-lg border border-transparent bg-primary text-white">
 				Layanan
 			</a>

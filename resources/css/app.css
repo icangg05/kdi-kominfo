@@ -1,6 +1,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,100..900;1,100..900&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Sen:wght@400..800&display=swap");
 @import "tailwindcss";
+@plugin "@tailwindcss/typography";
 
 /* Preline UI */
 @source "../../node_modules/preline/dist/*.js";
@@ -17,8 +18,9 @@
 @theme {
   --font-sen: "Sen";
   --font-public-sans: "Public Sans";
-  --color-primary : #3052D0;
-  --color-secondary : #2E273F;
+  --color-primary: #21365b;
+  /* --color-primary: #3052d0; */
+  --color-secondary: #2e273f;
 }
 
 @utility container {

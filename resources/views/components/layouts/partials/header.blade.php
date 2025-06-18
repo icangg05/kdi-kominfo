@@ -50,7 +50,7 @@
 					href="#"
 					aria-current="page"
 					class="relative inline-block font-medium text-primary focus:outline-hidden
-    after:content-[''] after:absolute after:bottom-0 after:left-1/2 after:-translate-x-1/2 after:w-full after:h-[2px] after:bg-primary">
+    after:content-[''] after:absolute after:bottom-0 after:left-1/2 after:-translate-x-1/2 after:w-[90%] after:h-[1px] after:bg-primary">
 					Beranda
 				</a>
 
@@ -61,7 +61,7 @@
 						type="button"
 						class="hs-dropdown-toggle flex items-center w-full text-gray-600 hover:text-gray-400 focus:outline-hidden focus:text-gray-400 font-medium"
 						aria-haspopup="menu" aria-expanded="false" aria-label="Mega Menu">
-						Profil
+						Profil Dinas
 						<svg class="hs-dropdown-open:-rotate-180 sm:hs-dropdown-open:rotate-0 duration-300 ms-1 shrink-0 size-4"
 							xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
 							stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -75,51 +75,27 @@
 						<a
 							class="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:outline-hidden focus:bg-gray-100"
 							href="#">
-							About
+							Tentang Kami
 						</a>
-						<div class="hs-dropdown [--strategy:static] sm:[--strategy:absolute] [--adaptive:none] relative">
-							<button id="hs-navbar-example-dropdown-sub" type="button"
-								class="hs-dropdown-toggle w-full flex justify-between items-center text-sm text-gray-800 rounded-lg py-2 px-3 hover:bg-gray-100 focus:outline-hidden focus:bg-gray-100">
-								Sub Menu
-								<svg
-									class="hs-dropdown-open:-rotate-180 sm:hs-dropdown-open:-rotate-90 sm:-rotate-90 duration-300 ms-2 shrink-0 size-4"
-									xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-									stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-									<path d="m6 9 6 6 6-6" />
-								</svg>
-							</button>
-
-							<div
-								class="hs-dropdown-menu transition-[opacity,margin] ease-in-out duration-[150ms] hs-dropdown-open:opacity-100 opacity-0 sm:w-48 hidden z-10 sm:mt-2 bg-white sm:shadow-md rounded-lg before:absolute sm:border border-gray-200 before:-end-5 before:top-0 before:h-full before:w-5 sm:mx-2.5! top-0 end-full"
-								role="menu" aria-orientation="vertical" aria-labelledby="hs-navbar-example-dropdown-sub">
-								<div class="p-1 space-y-1">
-									<a
-										class="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:outline-hidden focus:bg-gray-100"
-										href="#">
-										About
-									</a>
-									<a
-										class="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:outline-hidden focus:bg-gray-100"
-										href="#">
-										Downloads
-									</a>
-									<a
-										class="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:outline-hidden focus:bg-gray-100"
-										href="#">
-										Team Account
-									</a>
-								</div>
-							</div>
-						</div>
-						<a
+							<a
 							class="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:outline-hidden focus:bg-gray-100"
 							href="#">
-							Downloads
+							Tupoksi
+						</a>
+						<a
+							class="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:outline-hidden focus:bg-gray-100"
+							href="{{ route('profil.profil-pimpinan') }}">
+							Profil Pimpinan
 						</a>
 						<a
 							class="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:outline-hidden focus:bg-gray-100"
 							href="#">
-							Team Account
+							Profil Pegawai
+						</a>
+						<a
+							class="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:outline-hidden focus:bg-gray-100"
+							href="#">
+							Struktur Organisasi
 						</a>
 					</div>
 				</div>

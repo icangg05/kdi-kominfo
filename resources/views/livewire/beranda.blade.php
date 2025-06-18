@@ -5,7 +5,7 @@
 	<!-- End Slider -->
 
 	{{-- Row --}}
-	<div class="grid grid-cols-1 mt-[43rem] lg:mt-28 lg:-translate-y-[0rem] gap-y-16 lg:gap-y-23">
+	<div class="grid grid-cols-1 mt-[44.5rem] lg:mt-28 lg:-translate-y-[0rem] gap-y-16 lg:gap-y-23">
 		{{-- Sambutan Kadis --}}
 		@include('livewire.partials.beranda.sambutan-kadis')
 		{{-- Sambutan Kadis --}}
