@@ -1,4 +1,4 @@
-<header class="bg-white text-sm pt-3 pb-2.5 lg:pb-2 shadow-2xs">
+<header class="bg-white text-sm pt-3 pb-2.5 lg:pb-2 shadow">
 	<nav class="container flex flex-wrap basis-full items-center justify-between">
 		{{-- Logo --}}
 		<img class="w-40" src="{{ asset('img/kominfo-logo.png') }}" alt="logo">
