@@ -3,13 +3,13 @@
 
 <head>
 	{{-- Load Style --}}
-	@include('components.partials.head')
+	@include('components.layouts.partials.head')
 	{{-- Load Style --}}
 </head>
 
 <body class="font-public-sans antialiassed">
 	{{-- Navbar --}}
-	<x-partials.navbar />
+	<x-layouts.partials.navbar />
 	{{-- Navbar --}}
 
 	{{-- Dynamis Content --}}
@@ -17,11 +17,11 @@
 	{{-- Dynamis Content --}}
 
 	{{-- Footer --}}
-	<x-partials.footer />
+	<x-layouts.partials.footer />
 	{{-- Footer --}}
 
 	{{-- Load Scripts --}}
-	@include('components.partials.script')
+	@include('components.layouts.partials.script')
 	{{-- Load Scripts --}}
 </body>
 
