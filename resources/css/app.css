@@ -18,7 +18,7 @@
 @theme {
   --font-sen: "Sen";
   --font-public-sans: "Public Sans";
-  --color-primary: #21365b;
+  --color-primary: #163f6c;
   /* --color-primary: #3052d0; */
   --color-secondary: #2e273f;
 }
@@ -43,4 +43,28 @@
 
 .btn-disabled {
   @apply opacity-50 pointer-events-none;
+}
+
+.cShadow {
+  @apply hover:shadow-[0_8px_30px_rgb(0,0,0,0.12)];
+}
+
+.c2Shadow {
+  @apply shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),0px_1px_0px_0px_rgba(25,28,33,0.02),0px_0px_0px_1px_rgba(25,28,33,0.08)];
+}
+
+/* Custom Scrollbar */
+.scrollbar-modern::-webkit-scrollbar {
+  height: 8px;
+  width: 8px;
+}
+
+.scrollbar-modern::-webkit-scrollbar-thumb {
+  background-color: #91a0b4; /* slate-400 */
+  border-radius: 9999px;
+  border: 2px solid white;
+}
+
+.scrollbar-modern::-webkit-scrollbar-track {
+  background-color: #f1f5f9; /* slate-100 */
 }

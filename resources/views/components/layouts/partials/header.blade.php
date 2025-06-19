@@ -1,7 +1,9 @@
 <header class="bg-white text-sm pt-3 pb-2.5 lg:pb-2 shadow">
 	<nav class="container flex flex-wrap basis-full items-center justify-between">
 		{{-- Logo --}}
-		<img class="w-40" src="{{ asset('img/kominfo-logo.png') }}" alt="logo">
+		<a href="{{ route('beranda') }}" wire:navigate>
+			<img class="w-40" src="{{ asset('img/kominfo-logo.png') }}" alt="logo">
+		</a>
 		{{-- Logo --}}
 
 		{{-- Button Toggle & Search --}}
@@ -47,19 +49,20 @@
 			aria-labelledby="hs-navbar-alignment-collapse">
 			<div class="flex flex-col gap-5 mt-5 sm:flex-row sm:items-center sm:mt-0 sm:ps-5">
 				<a
-					href="#"
+					wire:navigate
+					href="{{ route('beranda') }}"
 					aria-current="page"
-					class="relative inline-block font-medium text-primary focus:outline-hidden
-    after:content-[''] after:absolute after:bottom-0 after:left-1/2 after:-translate-x-1/2 after:w-[90%] after:h-[1px] after:bg-primary">
+					class="relative inline-block font-medium focus:outline-hidden
+						{{ request()->routeIs('beranda') ? "text-primary lg:after:content-[''] lg:after:absolute lg:after:bottom-0 lg:after:left-1/2 lg:after:-translate-x-1/2 lg:after:w-[80%] lg:after:h-[2px] lg:after:bg-primary/50" : '' }}">
 					Beranda
 				</a>
-
 
 				<div
 					class="hs-dropdown [--strategy:static] sm:[--strategy:fixed] [--adaptive:none] sm:[--adaptive:adaptive]">
 					<button id="hs-navbar-example-dropdown"
 						type="button"
-						class="hs-dropdown-toggle flex items-center w-full text-gray-600 hover:text-gray-400 focus:outline-hidden focus:text-gray-400 font-medium"
+						class="relative hs-dropdown-toggle flex items-center w-full hover:text-gray-400 focus:outline-hidden focus:text-gray-400 font-medium
+						{{ request()->is('profil-dinas*') ? "text-primary lg:after:content-[''] lg:after:absolute lg:after:bottom-0 lg:after:left-1/2 lg:after:-translate-x-[65%] lg:after:w-[70%] lg:after:h-[2px] lg:after:bg-primary/50" : '' }}"
 						aria-haspopup="menu" aria-expanded="false" aria-label="Mega Menu">
 						Profil Dinas
 						<svg class="hs-dropdown-open:-rotate-180 sm:hs-dropdown-open:rotate-0 duration-300 ms-1 shrink-0 size-4"
@@ -72,36 +75,39 @@
 					<div
 						class="hs-dropdown-menu transition-[opacity,margin] ease-in-out duration-[150ms] hs-dropdown-open:opacity-100 opacity-0 sm:w-48 z-10 bg-white sm:shadow-md rounded-lg p-1 space-y-1 before:absolute top-full sm:border border-gray-200 before:-top-5 before:start-0 before:w-full before:h-5 hidden"
 						role="menu" aria-orientation="vertical" aria-labelledby="hs-navbar-example-dropdown">
-						<a
+						<a wire:navigate
 							class="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:outline-hidden focus:bg-gray-100"
-							href="#">
+							href="{{ route('profil-dinas.tentang-kami') }}">
 							Tentang Kami
 						</a>
-							<a
+						<a wire:navigate
 							class="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:outline-hidden focus:bg-gray-100"
 							href="#">
 							Tupoksi
 						</a>
-						<a
+						<a wire:navigate
 							class="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:outline-hidden focus:bg-gray-100"
-							href="{{ route('profil.profil-pimpinan') }}">
+							href="{{ route('profil-dinas.profil-pimpinan') }}">
 							Profil Pimpinan
 						</a>
-						<a
+						<a wire:navigate
 							class="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:outline-hidden focus:bg-gray-100"
-							href="#">
+							href="{{ route('profil-dinas.profil-pegawai') }}">
 							Profil Pegawai
 						</a>
-						<a
+						<a wire:navigate
 							class="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:outline-hidden focus:bg-gray-100"
-							href="#">
+							href="{{ route('profil-dinas.struktur-organisasi') }}">
 							Struktur Organisasi
 						</a>
 					</div>
 				</div>
-				<a class="font-medium text-gray-800 hover:text-gray-400 focus:outline-hidden focus:text-gray-400"
-					href="#">Berita</a>
-				<a class="font-medium text-gray-800 hover:text-gray-400 focus:outline-hidden focus:text-gray-400"
+
+				<a wire:navigate class="relative font-medium text-gray-800 hover:text-gray-400 focus:outline-hidden focus:text-gray-400
+				{{ request()->is('berita*') ? "text-primary lg:after:content-[''] lg:after:absolute lg:after:bottom-0 lg:after:left-1/2 lg:after:-translate-x-1/2 lg:after:w-[80%] lg:after:h-[2px] lg:after:bg-primary/50" : '' }}"
+					href="{{ route('berita.index') }}">Berita</a>
+
+				<a wire:navigate class="font-medium text-gray-800 hover:text-gray-400 focus:outline-hidden focus:text-gray-400"
 					href="#">Dokumen</a>
 				<div
 					class="hs-dropdown [--strategy:static] sm:[--strategy:fixed] [--adaptive:none] sm:[--adaptive:adaptive]">
@@ -120,7 +126,7 @@
 					<div
 						class="hs-dropdown-menu transition-[opacity,margin] ease-in-out duration-[150ms] hs-dropdown-open:opacity-100 opacity-0 sm:w-48 z-10 bg-white sm:shadow-md rounded-lg p-1 space-y-1 before:absolute top-full sm:border border-gray-200 before:-top-5 before:start-0 before:w-full before:h-5 hidden"
 						role="menu" aria-orientation="vertical" aria-labelledby="hs-navbar-example-dropdown">
-						<a
+						<a wire:navigate
 							class="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:outline-hidden focus:bg-gray-100"
 							href="#">
 							About
@@ -141,17 +147,17 @@
 								class="hs-dropdown-menu transition-[opacity,margin] ease-in-out duration-[150ms] hs-dropdown-open:opacity-100 opacity-0 sm:w-48 hidden z-10 sm:mt-2 bg-white sm:shadow-md rounded-lg before:absolute sm:border border-gray-200 before:-end-5 before:top-0 before:h-full before:w-5 sm:mx-2.5! top-0 end-full"
 								role="menu" aria-orientation="vertical" aria-labelledby="hs-navbar-example-dropdown-sub">
 								<div class="p-1 space-y-1">
-									<a
+									<a wire:navigate
 										class="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:outline-hidden focus:bg-gray-100"
 										href="#">
 										About
 									</a>
-									<a
+									<a wire:navigate
 										class="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:outline-hidden focus:bg-gray-100"
 										href="#">
 										Downloads
 									</a>
-									<a
+									<a wire:navigate
 										class="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:outline-hidden focus:bg-gray-100"
 										href="#">
 										Team Account
@@ -159,19 +165,19 @@
 								</div>
 							</div>
 						</div>
-						<a
+						<a wire:navigate
 							class="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:outline-hidden focus:bg-gray-100"
 							href="#">
 							Downloads
 						</a>
-						<a
+						<a wire:navigate
 							class="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:outline-hidden focus:bg-gray-100"
 							href="#">
 							Team Account
 						</a>
 					</div>
 				</div>
-				<a class="font-medium text-gray-800 hover:text-gray-400 focus:outline-hidden focus:text-gray-400"
+				<a wire:navigate class="font-medium text-gray-800 hover:text-gray-400 focus:outline-hidden focus:text-gray-400"
 					href="#">Galeri</a>
 			</div>
 			{{-- List Navigation --}}

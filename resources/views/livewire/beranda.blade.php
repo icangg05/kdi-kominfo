@@ -27,7 +27,7 @@
 		{{-- Layanan Kominfo --}}
 
 		{{-- Berita --}}
-		@include('livewire.partials.beranda.berita')
+		@include('livewire.partials.beranda.section-berita')
 		{{-- Berita --}}
 	</div>
 	{{-- Row --}}

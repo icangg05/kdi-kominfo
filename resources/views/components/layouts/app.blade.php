@@ -21,6 +21,9 @@
 	{{-- Footer --}}
 
 
+	@stack('modal')
+
+	
 	{{-- Load Scripts --}}
 	@include('components.layouts.partials.script')
 	{{-- Load Scripts --}}

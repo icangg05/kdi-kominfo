@@ -42,13 +42,13 @@
 			<a href="#" class="col-span-3 lg:col-span-1">
 				<div class="flex flex-col bg-white border border-gray-200 shadow-2xs rounded-xl">
 					<img class="w-full aspect-16/10 object-cover rounded-t-xl"
-						src="https://images.unsplash.com/photo-1680868543815-b8666dba60f7?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=320&q=80"
+						src="https://d1csarkz8obe9u.cloudfront.net/posterpreviews/news-chanel-template-design-09dd867fae3163ba798dd4bc574a67c6_screen.jpg?ts=1635157235"
 						alt="Card Image">
 					<div class="p-4 md:p-5">
 						<h3 class="text-lg font-bold text-gray-800">
 							Card title
 						</h3>
-						<p class="mt-1 text-gray-500">
+						<p class="mt-1 text-sm lg:text-base text-gray-500">
 							Some quick example text to build on the card title and make up the bulk of the card's content.
 						</p>
 						<p class="mt-5 text-xs text-gray-500">
