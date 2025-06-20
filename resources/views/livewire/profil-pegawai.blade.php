@@ -1,6 +1,6 @@
 <div>
 	<x-layouts.page
-		:breadcrumb="[['fa-solid fa-building-columns', 'Profil Dinas', '#'], ['Profil Pimpinan', '#']]"
+		:breadcrumb="[['fa-solid fa-building-columns', 'Profil Dinas', '#'], ['Profil Pegawai', '#']]"
 		:title="'Profil Pegawai'"
 		:desc="'Daftar profil pegawai Dinas Komunikasi dan Informatika Kota Kendari, Sulawesi Tenggara'">
 

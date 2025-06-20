@@ -2,7 +2,7 @@
 	<x-layouts.page
 		:breadcrumb="[['fa-solid fa-building-columns', 'Profil Dinas', '#'], ['Profil Pimpinan', '#']]"
 		:title="'Profil Pimpinan'"
-		:desc="'Kepala Dinas Komunikasi dan Informatika Kota Kendari Sulawesi Tenggara Periode 2025-Sekarang'">
+		:desc="'Kepala Dinas Komunikasi dan Informatika Kota Kendari Sulawesi Tenggara Periode 2025 - Sekarang'">
 
     {{-- Card Title --}}
 		<h2 class="text-center font-bold text-xl lg:text-3xl text-gray-800"> Sahuriyanto Meronda, S.P </h2>

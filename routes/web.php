@@ -12,4 +12,5 @@ Route::get('/profil-dinas/profil-pegawai', App\Livewire\ProfilPegawai::class)->n
 Route::get('/profil-dinas/struktur-organisasi', App\Livewire\StrukturOrganisasi::class)->name('profil-dinas.struktur-organisasi');
 
 Route::get('/berita', App\Livewire\Berita::class)->name('berita.index');
+Route::get('/berita/{slug}', App\Livewire\BeritaShow::class)->name('berita.show');
 

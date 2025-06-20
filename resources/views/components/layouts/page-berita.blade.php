@@ -46,7 +46,7 @@
 		</div>
 		{{-- Title --}}
 
-		<div class="mt-[9rem] lg:mt-[11rem]">
+		<div class="mt-[8rem] lg:mt-[10rem]">
 			{{ $slot }}
 		</div>
 	</div>

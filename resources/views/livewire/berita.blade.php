@@ -1,5 +1,5 @@
 <div>
-	<x-layouts.page2
+	<x-layouts.page-berita
 		:breadcrumb="[['Berita', '#']]"
 		:title="'Berita Terkini'"
 		:desc="'Satu portal untuk semua berita penting. Temukan informasi terkini dari Dinas Komunikasi dan Informatika Kota Kendari.'">
@@ -15,9 +15,12 @@
 			<!-- Bagian Kiri: List Berita -->
 			<div class="lg:col-span-2 space-y-6">
 				@for ($i = 0; $i < 5; $i++)
-					<a href="#" class="block bg-white rounded-xl cShadow c2Shadow transition-shadow overflow-hidden">
+					<a wire:navigate href="{{ route('berita.show', $i) }}"
+						class="block bg-white rounded-xl cShadow c2Shadow transition-shadow overflow-hidden">
 						<div class="grid md:grid-cols-3 gap-4">
-							<img src="https://d1csarkz8obe9u.cloudfront.net/posterpreviews/news-chanel-template-design-09dd867fae3163ba798dd4bc574a67c6_screen.jpg?ts=1635157235" alt="Berita"
+							<img
+								src="https://d1csarkz8obe9u.cloudfront.net/posterpreviews/news-chanel-template-design-09dd867fae3163ba798dd4bc574a67c6_screen.jpg?ts=1635157235"
+								alt="Berita"
 								class="w-full h-52 col-span-2 lg:col-span-1 lg:h-full object-cover lg:rounded-l-xl">
 							<div class="p-4 col-span-2">
 								<h3 class="text-xl font-bold text-primary mb-1">
@@ -69,7 +72,8 @@
 					<h4 class="font-semibold text-primary mb-3">Berita Lainnya</h4>
 					<div class="space-y-1">
 						@for ($j = 6; $j < 9; $j++)
-							<a href="#" class="flex items-start gap-3 hover:bg-gray-100 p-2 rounded-lg transition">
+							<a wire:navigate href="{{ route('berita.show', $i) }}"
+								class="flex items-start gap-3 hover:bg-gray-100 p-2 rounded-lg transition">
 								<img src="https://picsum.photos/800/600?random={{ $i }}"
 									class="w-16 h-16 rounded-lg object-cover" />
 								<div>
@@ -87,5 +91,5 @@
 			</aside>
 		</div>
 
-	</x-layouts.page2>
+		</x-layouts.page2>
 </div>
