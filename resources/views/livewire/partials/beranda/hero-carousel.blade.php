@@ -14,21 +14,21 @@
 			<div class="hs-carousel-slide relative w-full">
 				<div class="absolute inset-0 bg-cover bg-center"
 					style="background-image: url({{ asset('img/beranda-carousel-1.jpg') }});"></div>
-				<div class="absolute inset-0 bg-gray-700/60 lg:bg-black/60"></div> <!-- Overlay hitam -->
+				<div class="absolute inset-0 bg-gray-700/80 lg:bg-black/60"></div> <!-- Overlay hitam -->
 			</div>
 
 			<!-- Slide 2 -->
 			<div class="hs-carousel-slide relative w-full">
 				<div class="absolute inset-0 bg-cover bg-center"
 					style="background-image: url({{ asset('img/beranda-carousel-2.jpg') }});"></div>
-				<div class="absolute inset-0 bg-gray-700/60 lg:bg-black/60"></div>
+				<div class="absolute inset-0 bg-gray-700/80 lg:bg-black/60"></div>
 			</div>
 
 			<!-- Slide 3 -->
 			<div class="hs-carousel-slide relative w-full">
 				<div class="absolute inset-0 bg-cover bg-center"
 					style="background-image: url({{ asset('img/beranda-carousel-3.jpg') }});"></div>
-				<div class="absolute inset-0 bg-gray-700/60 lg:bg-black/60"></div>
+				<div class="absolute inset-0 bg-gray-700/80 lg:bg-black/60"></div>
 			</div>
 
 		</div>
@@ -37,8 +37,8 @@
 	<!-- Center Content -->
 	<div class="z-10 absolute container top-[7rem] lg:top-[14.5rem] left-1/2 -translate-x-1/2">
 		<p class="font-extrabold text-2xl lg:text-4xl leading-tight text-white/95">
-			Dinas Komunikasi <span class="text-primary">Informatika</span><br>Kota
-			<span class="text-primary">Kendari</span>
+			Dinas Komunikasi <span class="text-acsent">Informatika</span><br>Kota
+			<span class="text-acsent">Kendari</span>
 		</p>
 		<p class="mt-5 lg:mt-6 mb-8 lg:mb-8 text-sm lg:text-base max-w-4xl text-white/90">
 			Dinas Kominfo Kota Kendari berkomitmen untuk menyediakan layanan teknologi informasi yang inovatif, aman, dan
@@ -51,7 +51,7 @@
 			</a>
 			<a href="#layanan"
 				class="w-full lg:w-fit py-2.5 px-5 text-center text-sm font-medium rounded-lg border border-transparent bg-secondary text-white">
-				Tentang Kami
+				Tentang Kami	
 			</a>
 		</div>
 

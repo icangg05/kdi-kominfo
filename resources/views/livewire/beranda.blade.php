@@ -19,7 +19,7 @@
 		{{-- Section Count Pengunjung --}}
 
 		{{-- Section Galeri --}}
-		@include('livewire.partials.beranda.galeri')
+		@include('livewire.partials.beranda.section-galeri')
 		{{-- Section Galeri --}}
 
 		{{-- Layanan Kominfo --}}

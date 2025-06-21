@@ -19,8 +19,8 @@
   --font-sen: "Sen";
   --font-public-sans: "Public Sans";
   --color-primary: #163f6c;
-  /* --color-primary: #3052d0; */
-  --color-secondary: #2e273f;
+  --color-secondary: #372f4c;
+  --color-acsent: #E68425;
 }
 
 @utility container {

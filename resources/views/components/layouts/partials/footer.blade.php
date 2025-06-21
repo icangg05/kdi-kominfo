@@ -1,6 +1,6 @@
-<footer class="mt-18 lg:mt-24 relative bg-cover bg-center bg-no-repeat rounded-t-3xl lg:rounded-t-xl"
+<footer class="mt-18 lg:mt-24 relative bg-cover bg-center bg-no-repeat rounded-t-lg"
 	style="background-image: url('{{ asset('img/bg-earth.jpg') }}');">
-	<div class="absolute inset-0 bg-primary/70 backdrop-brightness-90 rounded-t-3xl lg:rounded-t-xl"></div>
+	<div class="absolute inset-0 bg-primary/70 backdrop-brightness-90 rounded-t-lg"></div>
 
 	<div>
 		<div class="container text-white/90 relative z-10 mx-auto px-4 pt-12 pb-10 grid grid-cols-1 md:grid-cols-3 gap-10">

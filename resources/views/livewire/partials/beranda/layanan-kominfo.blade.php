@@ -1,6 +1,6 @@
 <div class="container scroll-mt-24" id="layanan-kominfo">
 	<x-section-title
-		title="Layanan Layanan"
+		title="Layanan Diskominfo"
 		desc="Diskominfo Kota Kendari menyediakan layanan untuk mendukung kebutuhan teknologi informasi dan komunikasi." />
 
 	{{-- List Bidang Kominfo --}}

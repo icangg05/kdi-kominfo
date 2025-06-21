@@ -22,7 +22,7 @@
 
 
 	@stack('modal')
-
+	@stack('scripts')
 	
 	{{-- Load Scripts --}}
 	@include('components.layouts.partials.script')

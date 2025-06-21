@@ -2,7 +2,7 @@
 	<x-layouts.page-berita
 		:breadcrumb="[['Berita', '#']]"
 		:title="'Berita Terkini'"
-		:desc="'Satu portal untuk semua berita penting. Temukan informasi terkini dari Dinas Komunikasi dan Informatika Kota Kendari.'">
+		:desc="'Satu portal untuk semua berita penting. Temukan informasi terkini dari Dinas Komunikasi dan Informatika Kota Kendari'">
 
 		<div class="mb-10 bg-white/70 backdrop-blur-md rounded-xl p-4 c2Shadow">
 			<p class="text-sm text-gray-500 mb-1 font-medium uppercase tracking-wide">Kata Kunci Pencarian</p>
@@ -91,5 +91,5 @@
 			</aside>
 		</div>
 
-		</x-layouts.page2>
+	</x-layouts.page-berita>
 </div>

@@ -48,7 +48,7 @@
 			];
 		@endphp
 
-		<div class="mt-12 px-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl">
+		<div class="mt-12 px-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl">
 			@foreach ($bidangLayanan as $item)
 				<div
 					class="bg-white rounded-2xl shadow-md cShadow transition-shadow duration-300 p-6 relative overflow-hidden group">

@@ -1,8 +1,8 @@
 <div>
 	{{-- OVerlay Background --}}
-	<div class="h-[43rem] absolute w-full bg-cover bg-center bg-no-repeat"
+	<div class="h-[43rem] absolute w-full bg-cover bg-center bg-no-repeat rounded-b-lg"
 		style="background-image: url('{{ asset('img/bg-earth.jpg') }}');">
-		<div class="absolute inset-0 bg-black/40 backdrop-brightness-90"></div>
+		<div class="absolute inset-0 bg-black/40 backdrop-brightness-90 rounded-b-lg"></div>
 	</div>
 	{{-- Overlay Background --}}
 
@@ -46,10 +46,8 @@
 		</div>
 		{{-- Title --}}
 
-		{{-- Card Content --}}
 		<div class="bg-white border border-gray-200 shadow-2xs rounded-xl px-4 py-6 lg:px-7 lg:py-9">
 			{{ $slot }}
 		</div>
-		{{-- Card Content --}}
 	</div>
 </div>

@@ -17,7 +17,7 @@
 
 				<!-- Judul & Meta -->
 				<div>
-					<h1 class="text-3xl font-bold text-gray-800 mb-2 leading-snug">Judul Berita Informatif dan Kekinian</h1>
+					<h1 class="text-2xl lg:text-3xl font-bold text-gray-800 mb-2 leading-tight">Judul Berita Informatif dan Kekinian</h1>
 					<div class="text-sm flex flex-wrap gap-4 text-gray-500">
 						<span><i class="fas fa-calendar-alt text-primary mr-1"></i> 19 Juni 2025</span>
 						<span><i class="fas fa-user text-primary mr-1"></i> Admin Kominfo</span>
@@ -26,35 +26,34 @@
 				</div>
 
 				<!-- Konten -->
-				<div class="prose max-w-none prose-p:text-gray-800 prose-headings:text-gray-900 prose-li:marker:text-primary">
-					<p>Lorem ipsum dolor sit amet consectetur adipisicing elit...</p>
-					<h2>Subjudul</h2>
-					<p>Isi lanjutan artikel di sini...</p>
+				<div class="prose prose-sm lg:prose max-w-none prose-p:text-gray-800 prose-headings:text-gray-900 prose-li:marker:text-primary">
+					<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Tenetur, molestiae in eveniet reiciendis tempore sed
+						dolores dolore facere rem hic, non maiores nihil laborum minus officiis, odit reprehenderit ea impedit. Excepturi
+						pariatur molestiae consequatur, quam non odio quae voluptatem ratione!</p>
 				</div>
 
 				<!-- Share -->
 				<div class="mt-8">
-	<p class="text-sm font-semibold text-gray-600 mb-3">Bagikan berita ini:</p>
-	<div class="flex flex-wrap gap-3">
-		@php
-			$shares = [
-				['url' => '#', 'icon' => 'fab fa-facebook-f', 'label' => 'Facebook'],
-				['url' => '#', 'icon' => 'fab fa-twitter', 'label' => 'Twitter'],
-				['url' => '#', 'icon' => 'fab fa-whatsapp', 'label' => 'WhatsApp'],
-				['url' => '#', 'icon' => 'fas fa-envelope', 'label' => 'Email'],
-			];
-		@endphp
+					<p class="text-sm font-semibold text-gray-600 mb-3">Bagikan berita ini:</p>
+					<div class="flex flex-wrap gap-3">
+						@php
+							$shares = [
+							    ['url' => '#', 'icon' => 'fab fa-facebook-f', 'label' => 'Facebook'],
+							    ['url' => '#', 'icon' => 'fab fa-twitter', 'label' => 'Twitter'],
+							    ['url' => '#', 'icon' => 'fab fa-whatsapp', 'label' => 'WhatsApp'],
+							    ['url' => '#', 'icon' => 'fas fa-envelope', 'label' => 'Email'],
+							];
+						@endphp
 
-		@foreach ($shares as $share)
-			<a href="{{ $share['url'] }}"
-				class="size-8 lg:size-10 flex items-center justify-center rounded-full bg-primary text-white hover:bg-primary/90 transition shadow-md"
-				title="Bagikan ke {{ $share['label'] }}">
-				<i class="{{ $share['icon'] }} text-sm lg:text-base"></i>
-			</a>
-		@endforeach
-	</div>
-</div>
-
+						@foreach ($shares as $share)
+							<a href="{{ $share['url'] }}"
+								class="size-8 lg:size-10 flex items-center justify-center rounded-full bg-primary text-white hover:bg-primary/90 transition shadow-md"
+								title="Bagikan ke {{ $share['label'] }}">
+								<i class="{{ $share['icon'] }} text-sm lg:text-base"></i>
+							</a>
+						@endforeach
+					</div>
+				</div>
 
 				<!-- Berita Terkait -->
 				<div class="mt-12">
@@ -80,7 +79,7 @@
 			</div>
 
 			<!-- Sidebar Sticky -->
-			<aside class="space-y-6 relative lg:sticky lg:top-30 h-fit">
+			<aside class="space-y-6 relative lg:sticky lg:top-28 h-fit">
 				<!-- Kategori -->
 				<div class="bg-white p-4 rounded-xl c2Shadow">
 					<h4 class="font-semibold text-primary mb-3">Kategori</h4>
