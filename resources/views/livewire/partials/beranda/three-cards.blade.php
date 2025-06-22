@@ -2,28 +2,30 @@
 	@php
 		$threeCards = [
 		    [
-		        'Layanan Cepat',
-		        'Layanan Darurat TI',
-		        'Layanan darurat untuk masalah teknologi informasi, keamanan siber, dan infrastruktur TI.',
-		        '#',
-		        'fa-solid fa-triangle-exclamation', // icon darurat
+		        'Layanan Infrastruktur',
+		        'Subdomain & Hosting',
+		        'Layanan subdomain, hosting OPD, dan pendampingan teknis server.',
+		        route('layanan', 'subdomain-hosting'),
+		        'fa-solid fa-globe',
 		    ],
 		    [
-		        'Edukasi Masyarakat',
-		        'Pelatihan Digital',
-		        'Daftar pelatihan dan workshop literasi digital untuk masyarakat, pelajar, dan pelaku usaha.',
-		        '#',
-		        'fa-solid fa-chalkboard-user', // icon pelatihan
+		        'Layanan Administrasi Digital',
+		        'Pengajuan TTE (Tanda Tangan Elektronik)',
+		        'Pengajuan TTE untuk dokumen resmi digital pemerintah yang sah.',
+		        route('layanan', 'pengajuan-tte'),
+		        'fa-solid fa-file-signature',
 		    ],
 		    [
-		        'Layanan Publik',
-		        'Pengaduan Masyarakat',
-		        'Layanan pengaduan untuk masalah teknologi informasi dan komunikasi yang dialami oleh masyarakat.',
-		        '#',
-		        'fa-solid fa-comments', // icon pengaduan
+		        'Layanan Publik Darurat',
+		        'Layanan Telpon Darurat 112',
+		        'Panggilan darurat 24 jam untuk keadaan gawat di Kendari.',
+		        route('layanan', 'telpon-darurat-112'),
+		        'fa-solid fa-phone-volume',
 		    ],
 		];
 	@endphp
+
+
 
 	@foreach ($threeCards as $item)
 		<div class="col-span-12 lg:col-span-4">
@@ -32,7 +34,7 @@
 					<h6 class="text-[13px] font-extralight">{{ $item[0] }}</h6>
 					<h5 class="text-lg font-bold">{{ $item[1] }}</h5>
 					<p class="leading-snug font-light mt-3 mb-4 text-sm">{{ $item[2] }}</p>
-					<a href="{{ $item[3] }}" class="group inline-flex items-center space-x-2.5 text-sm">
+					<a wire:navigate href="{{ $item[3] }}" class="group inline-flex items-center space-x-2.5 text-sm">
 						<span class="font-medium font-sen">LEARN MORE</span>
 						<i class="group-hover:translate-x-0.5 transition fa-solid fa-arrow-right"></i>
 					</a>

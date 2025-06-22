@@ -2,7 +2,7 @@
 	<nav class="container flex flex-wrap basis-full items-center justify-between">
 		{{-- Logo --}}
 		<a href="{{ route('beranda') }}" wire:navigate>
-			<img class="w-40" src="{{ asset('img/kominfo-logo.png') }}" alt="logo">
+			<img class="w-40" src="{{ asset('img/kominfo-logo.webp') }}" alt="logo">
 		</a>
 		{{-- Logo --}}
 
@@ -50,7 +50,7 @@
 			<div class="flex flex-col gap-5 mt-5 sm:flex-row sm:items-center sm:mt-0 sm:ps-5">
 				<a wire:navigate
 					class="relative font-medium text-white hover:text-gray-400 focus:outline-hidden focus:text-gray-400
-						{{ request()->routeIs('beranda') ? "lg:after:content-[''] lg:after:absolute lg:after:bottom-0 lg:after:left-1/2 lg:after:-translate-x-1/2 lg:after:w-[80%] lg:after:h-[2px] lg:after:bg-white/50" : '' }}"
+						{{ request()->routeIs('beranda') ? "lg:after:content-[''] lg:after:absolute lg:after:bottom-0 lg:after:left-1/2 lg:after:-translate-x-1/2 lg:after:w-[80%] lg:after:h-[2px] lg:after:bg-white/50 lg:hover:after:bg-white/30" : '' }}"
 					href="{{ route('beranda') }}">Beranda</a>
 
 				<div
@@ -58,7 +58,7 @@
 					<button id="hs-navbar-example-dropdown"
 						type="button"
 						class="text-white relative hs-dropdown-toggle flex items-center w-full hover:text-gray-400 focus:outline-hidden focus:text-gray-400 font-medium
-						{{ request()->is('profil-dinas*') ? "lg:after:content-[''] lg:after:absolute lg:after:bottom-0 lg:after:left-1/2 lg:after:-translate-x-[64.5%] lg:after:w-[70%] lg:after:h-[2px] lg:after:bg-white/50" : '' }}"
+						{{ request()->is('profil-dinas*') ? "lg:after:content-[''] lg:after:absolute lg:after:bottom-0 lg:after:left-1/2 lg:after:-translate-x-[64.5%] lg:after:w-[70%] lg:after:h-[2px] lg:after:bg-white/50 lg:hover:after:bg-white/30" : '' }}"
 						aria-haspopup="menu" aria-expanded="false" aria-label="Mega Menu">
 						Profil Dinas
 						<svg class="hs-dropdown-open:-rotate-180 sm:hs-dropdown-open:rotate-0 duration-300 ms-1 shrink-0 size-4"
@@ -78,7 +78,7 @@
 						</a>
 						<a wire:navigate
 							class="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:outline-hidden focus:bg-gray-100"
-							href="#">
+							href="{{ route('profil-dinas.tupoksi') }}">
 							Tupoksi
 						</a>
 						<a wire:navigate
@@ -101,19 +101,19 @@
 
 				<a wire:navigate
 					class="text-white relative font-mediumtext-white hover:text-gray-400 focus:outline-hidden focus:text-gray-400
-					{{ request()->is('berita*') ? "text-primary lg:after:content-[''] lg:after:absolute lg:after:bottom-0 lg:after:left-1/2 lg:after:-translate-x-1/2 lg:after:w-[80%] lg:after:h-[2px] lg:after:bg-white/50" : '' }}"
+					{{ request()->is('berita*') ? "text-primary lg:after:content-[''] lg:after:absolute lg:after:bottom-0 lg:after:left-1/2 lg:after:-translate-x-1/2 lg:after:w-[80%] lg:after:h-[2px] lg:after:bg-white/50 lg:hover:after:bg-white/30" : '' }}"
 					href="{{ route('berita.index') }}">Berita</a>
 
 				<a wire:navigate
 					class="relative font-medium text-white hover:text-gray-400 focus:outline-hidden focus:text-gray-400
-					{{ request()->is('dokumen*') ? "text-primary lg:after:content-[''] lg:after:absolute lg:after:bottom-0 lg:after:left-1/2 lg:after:-translate-x-1/2 lg:after:w-[80%] lg:after:h-[2px] lg:after:bg-white/50" : '' }}"
+					{{ request()->is('dokumen*') ? "text-primary lg:after:content-[''] lg:after:absolute lg:after:bottom-0 lg:after:left-1/2 lg:after:-translate-x-1/2 lg:after:w-[80%] lg:after:h-[2px] lg:after:bg-white/50 lg:hover:after:bg-white/30" : '' }}"
 					href="{{ route('dokumen.index') }}">Dokumen</a>
 				<div
 					class="hs-dropdown [--strategy:static] sm:[--strategy:fixed] [--adaptive:none] sm:[--adaptive:adaptive]">
 					<button id="hs-navbar-example-dropdown"
 						type="button"
 						class="relative hs-dropdown-toggle flex items-center w-full text-white hover:text-gray-400 focus:outline-hidden focus:text-gray-400 font-medium
-						{{ request()->is('layanan*') ? "lg:after:content-[''] lg:after:absolute lg:after:bottom-0 lg:after:left-1/2 lg:after:-translate-x-[68%] lg:after:w-[70%] lg:after:h-[2px] lg:after:bg-white/50" : '' }}"
+						{{ request()->is('layanan*') ? "lg:after:content-[''] lg:after:absolute lg:after:bottom-0 lg:after:left-1/2 lg:after:-translate-x-[68%] lg:after:w-[70%] lg:after:h-[2px] lg:after:bg-white/50 lg:hover:after:bg-white/30" : '' }}"
 						aria-haspopup="menu" aria-expanded="false" aria-label="Mega Menu">
 						Layanan
 						<svg class="hs-dropdown-open:-rotate-180 sm:hs-dropdown-open:rotate-0 duration-300 ms-1 shrink-0 size-4"
@@ -184,7 +184,7 @@
 				</div>
 				<a wire:navigate
 					class="relative font-medium text-white hover:text-gray-400 focus:outline-hidden focus:text-gray-400
-						{{ request()->routeIs('galeri*') ? "lg:after:content-[''] lg:after:absolute lg:after:bottom-0 lg:after:left-1/2 lg:after:-translate-x-1/2 lg:after:w-[80%] lg:after:h-[2px] lg:after:bg-white/50" : '' }}"
+						{{ request()->routeIs('galeri*') ? "lg:after:content-[''] lg:after:absolute lg:after:bottom-0 lg:after:left-1/2 lg:after:-translate-x-1/2 lg:after:w-[80%] lg:after:h-[2px] lg:after:bg-white/50 lg:hover:after:bg-white/30" : '' }}"
 					href="{{ route('galeri.index') }}">Galeri</a>
 			</div>
 			{{-- List Navigation --}}

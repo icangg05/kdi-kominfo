@@ -1,4 +1,4 @@
-<div class="container scroll-mt-24" id="layanan-kominfo">
+<div class="container scroll-mt-24 lg:scroll-mt-30" id="layanan-kominfo">
 	<x-section-title
 		title="Layanan Diskominfo"
 		desc="Diskominfo Kota Kendari menyediakan layanan untuk mendukung kebutuhan teknologi informasi dan komunikasi." />

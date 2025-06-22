@@ -19,7 +19,7 @@
 						class="block bg-white rounded-xl cShadow c2Shadow transition-shadow overflow-hidden">
 						<div class="grid md:grid-cols-3 gap-4">
 							<img
-								src="https://d1csarkz8obe9u.cloudfront.net/posterpreviews/news-chanel-template-design-09dd867fae3163ba798dd4bc574a67c6_screen.jpg?ts=1635157235"
+								src="{{ asset('img/berita.webp') }}"
 								alt="Berita"
 								class="w-full h-52 col-span-2 lg:col-span-1 lg:h-full object-cover lg:rounded-l-xl">
 							<div class="p-4 col-span-2">

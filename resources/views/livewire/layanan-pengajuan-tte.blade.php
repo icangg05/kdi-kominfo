@@ -96,7 +96,10 @@
 						terkait pengajuan TTE.</p>
 				</div>
 				<div class="left lg:text-right space-y-2">
-					<p class="text-sm text-gray-800"><i class="fas fa-envelope text-primary mr-1"></i> kominfo@kendarikota.go.id</p>
+					<p class="text-sm text-gray-800">
+						<i class="fas fa-envelope text-primary mr-1"></i>
+						<a class="text-blue-600 hover:underline" href="mailto:kominfo@kendarikota.go.id">kominfo@kendarikota.go.id</a>
+					</p>
 					<p class="text-sm text-gray-800"><i class="fas fa-phone-alt text-primary mr-1"></i> (0401) 1234567</p>
 					<p class="text-sm text-gray-800"><i class="fas fa-map-marker-alt text-primary mr-1"></i> Jl. Balaikota Blok A,
 						Kendari</p>

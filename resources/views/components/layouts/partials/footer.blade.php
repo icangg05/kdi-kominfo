@@ -1,5 +1,17 @@
+@php
+	$links = [
+	    ['Beranda', route('beranda')],
+	    ['Tentang Kami', route('profil-dinas.tentang-kami')],
+	    ['Profil Pimpinan', route('profil-dinas.profil-pimpinan')],
+	    ['Profil Pegawai', route('profil-dinas.profil-pegawai')],
+	    ['Struktur Organisasi', route('profil-dinas.struktur-organisasi')],
+	    ['Berita', route('berita.index')],
+	    ['Galeri', route('galeri.index')],
+	];
+@endphp
+
 <footer class="mt-18 lg:mt-24 relative bg-cover bg-center bg-no-repeat rounded-t-lg"
-	style="background-image: url('{{ asset('img/bg-earth.jpg') }}');">
+	style="background-image: url('{{ asset('img/bg-earth.webp') }}');">
 	<div class="absolute inset-0 bg-primary/70 backdrop-brightness-90 rounded-t-lg"></div>
 
 	<div>
@@ -9,7 +21,7 @@
 			<div>
 				<div class="mb-3 flex items-center gap-2 text-xl">
 					<i class="fa-solid fa-network-wired"></i>
-          <h1 class="font-bold">Diskominfo Kendari</h1>
+					<h1 class="font-bold">Diskominfo Kendari</h1>
 				</div>
 				<p class="text-sm leading-relaxed">
 					Mendukung transformasi digital dan pelayanan publik berbasis teknologi informasi di Kota Kendari.
@@ -22,11 +34,14 @@
 					<i class="fa-solid fa-link"></i>
 					Navigasi
 				</h3>
-				<ul class="space-y-2 text-sm">
-					<li><a href="#" class="hover:text-white transition">Beranda</a></li>
-					<li><a href="#" class="hover:text-white transition">Layanan</a></li>
-					<li><a href="#" class="hover:text-white transition">Galeri</a></li>
-					<li><a href="#" class="hover:text-white transition">Kontak</a></li>
+				<ul class="grid grid-cols-2 gap-x-6 gap-y-2 text-sm">
+					@foreach ($links as $item)
+						<li>
+							<a wire:navigate href="{{ $item[1] }}" class="hover:text-white transition">
+								{{ $item[0] }}
+							</a>
+						</li>
+					@endforeach
 				</ul>
 			</div>
 

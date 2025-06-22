@@ -1,7 +1,7 @@
 <div class="container">
 	<x-section-title
 		title="Berita Terbaru Diskominfo<br>Kota Kendari"
-		desc="Informasi terbaru seputar program dan kegiatan Diskominfo Kota Kendari. <a href='#' class='text-primary'>Lihat lainnya</a>" />
+		desc="Informasi terbaru seputar program dan kegiatan Diskominfo Kota Kendari. <a wire:navigate href='{{ route('berita.index') }}' class='text-primary'>Lihat lainnya</a>" />
 
 	@php
 		$bidangLayanan = [
@@ -42,7 +42,7 @@
 			<a href="#" class="col-span-3 lg:col-span-1">
 				<div class="flex flex-col bg-white border border-gray-200 shadow-2xs rounded-xl">
 					<img class="w-full aspect-16/10 object-cover rounded-t-xl"
-						src="https://d1csarkz8obe9u.cloudfront.net/posterpreviews/news-chanel-template-design-09dd867fae3163ba798dd4bc574a67c6_screen.jpg?ts=1635157235"
+						src="{{ asset('img/berita.webp') }}"
 						alt="Card Image">
 					<div class="p-4 md:p-5">
 						<h3 class="text-lg font-bold text-gray-800">

@@ -9,7 +9,7 @@
 			<!-- Ilustrasi Utama -->
 			<div class="flex flex-col lg:flex-row gap-8 lg:gap-0 items-center">
 				<div class="basis-1/2">
-					<img src="{{ asset('img/emergency.png') }}" alt="Ilustrasi Layanan 112"
+					<img src="{{ asset('img/emergency.webp') }}" alt="Ilustrasi Layanan 112"
 						class="w-full max-w-md mx-auto lg:mx-0">
 				</div>
 				<div class="basis-1/2">

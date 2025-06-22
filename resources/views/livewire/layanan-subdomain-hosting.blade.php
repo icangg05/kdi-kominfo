@@ -7,7 +7,7 @@
 
 		<!-- Banner Ilustrasi -->
 		<div class="w-full bg-[#073354] rounded-lg">
-			<img src="{{ asset('img/subdomain.png') }}" alt="Ilustrasi Subdomain Hosting"
+			<img src="{{ asset('img/subdomain.webp') }}" alt="Ilustrasi Subdomain Hosting"
 				class="w-full max-h-72 object-contain rounded-lg">
 		</div>
 

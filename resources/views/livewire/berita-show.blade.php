@@ -10,7 +10,7 @@
 				<!-- Gambar -->
 				<div class="rounded-xl overflow-hidden shadow-md">
 					<img
-						src="https://d1csarkz8obe9u.cloudfront.net/posterpreviews/news-chanel-template-design-09dd867fae3163ba798dd4bc574a67c6_screen.jpg?ts=1635157235"
+						src="{{ asset('img/berita.webp') }}"
 						alt="Gambar Berita"
 						class="w-full h-auto object-cover" />
 				</div>

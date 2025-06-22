@@ -1,8 +1,8 @@
 <div>
 	{{-- OVerlay Background --}}
 	<div class="h-[43rem] absolute w-full bg-cover bg-center bg-no-repeat rounded-b-lg"
-		style="background-image: url('{{ asset('img/bg-earth.jpg') }}');">
-		<div class="absolute inset-0 bg-black/40 backdrop-brightness-90 rounded-b-lg"></div>
+		style="background-image: url('{{ asset('img/bg-earth.webp') }}');">
+		<div class="absolute inset-0 bg-gray-900/60 backdrop-brightness-90 rounded-b-lg"></div>
 	</div>
 	{{-- Overlay Background --}}
 
