@@ -49,7 +49,7 @@
 
 <div>
 	<x-layouts.page-berita
-		:breadcrumb="[['fas fa-folder', 'Dokumen', '#']]"
+		:breadcrumb="[['Dokumen', '#']]"
 		:title="'Dokumen Publikasi'"
 		:desc="'Kumpulan dokumen resmi dari Dinas Komunikasi dan Informatika Kota Kendari yang diklasifikasikan berdasarkan kategori, tahun, dan jenis dokumen'">
 

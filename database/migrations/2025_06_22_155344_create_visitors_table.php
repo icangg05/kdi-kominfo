@@ -11,12 +11,10 @@ return new class extends Migration
    */
   public function up(): void
   {
-    Schema::create('profil_dinas', function (Blueprint $table) {
+    Schema::create('visitor', function (Blueprint $table) {
       $table->id();
-      $table->string('jenis');
-      $table->json('konten');
-      $table->text('icon')->nullable();
-      $table->timestamps();
+      $table->ipAddress('ip');
+      $table->date('date')->index();
     });
   }
 
@@ -25,6 +23,6 @@ return new class extends Migration
    */
   public function down(): void
   {
-    Schema::dropIfExists('profil_dinas');
+    Schema::dropIfExists('visitor');
   }
 };
