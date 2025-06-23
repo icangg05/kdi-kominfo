@@ -13,22 +13,102 @@ class ProfilDinasSeeder extends Seeder
    */
   public function run(): void
   {
-    ProfilDinas::insert([
+    $data = [
       [
         'jenis'  => 'sambutan-kadis',
         'konten' => '<p>Sebagai institusi yang bertanggung jawab dalam bidang teknologi informasi dan komunikasi, kami berkomitmen untuk memberikan layanan terbaik guna mendukung transformasi digital dan mewujudkan Kota Kendari sebagai Smart City yang maju, inovatif, dan berdaya saing.</p><p>Website ini hadir sebagai sarana informasi dan komunikasi antara pemerintah dan masyarakat. Kami mengajak seluruh masyarakat Kota Kendari untuk bersama-sama memanfaatkan teknologi informasi guna menciptakan kota yang lebih cerdas, terhubung, dan sejahtera.</p><p>Dengan semangat kolaborasi dan inovasi, mari kita wujudkan visi Kota Kendari sebagai pusat pertumbuhan ekonomi digital dan teknologi di wilayah Indonesia Timur.</p>'
       ],
+
       [
         'jenis'  => 'tagline-sambutan',
-        'konten' =>  '[
+        'konten' =>  json_encode([
           "Smart City Terdepan",
           "Transformasi Digital",
           "Inovasi Teknologi",
           "Layanan Publik Prima",
           "Keamanan Siber",
           "Literasi Digital"
-        ]'
+        ]),
       ],
-    ]);
+
+      [
+        'jenis'  => 'sejarah',
+        'konten' => '<p>Dinas Komunikasi dan Informatika (Diskominfo) Kota Kendari merupakan perangkat daerah yang memiliki peran strategis dalam mendukung transformasi digital pemerintahan serta penyelenggaraan layanan publik berbasis teknologi informasi. Sejak awal pembentukannya, Diskominfo Kota Kendari telah menunjukkan komitmen untuk menjadi penggerak utama dalam memodernisasi sistem informasi pemerintahan dan membangun keterhubungan antara pemerintah dan masyarakat.</p>
+          <p>Salah satu tonggak penting dalam sejarah Diskominfo adalah peluncuran <strong>Layanan Call Center 112 “Kendari Siaga”</strong>, yang merupakan sistem layanan darurat terpadu berbasis nasional. Layanan ini diluncurkan sebagai bagian dari upaya percepatan transformasi layanan publik, dan ditetapkan secara resmi melalui Surat Keputusan Wali Kota Kendari pada April 2022. Call Center 112 memungkinkan masyarakat mengakses bantuan darurat secara gratis dan cepat, hanya dengan satu nomor, tanpa harus mengingat banyak kontak instansi terkait.</p>
+          <p>Pada masa pandemi COVID-19, Diskominfo Kendari menunjukkan peran yang sangat aktif dalam penyebaran informasi, edukasi publik, serta penyelenggaraan berbagai aplikasi penunjang layanan pemerintahan. Aplikasi seperti <strong>Cov-Heroes</strong>, <strong>e-SPPD</strong>, <strong>LAIKA</strong>, dan <strong>JARI</strong> hadir sebagai solusi untuk mempercepat koordinasi dan pengambilan keputusan di tengah keterbatasan pertemuan fisik. Diskominfo juga secara intensif menyelenggarakan webinar literasi digital dan pelatihan keamanan siber, guna meningkatkan kesiapan masyarakat menghadapi era digital dan melawan hoaks.</p>
+          <p>Seiring dengan perkembangan teknologi, Diskominfo terus melahirkan berbagai inovasi baru. Beberapa di antaranya adalah <strong>Aplikasi Srikandi</strong> sebagai sistem kearsipan digital, <strong>E-Laika</strong> untuk manajemen surat menyurat tingkat RT/RW, dan <strong>E-Office</strong> sebagai platform tata kelola administrasi pemerintahan yang efisien dan terintegrasi. Aplikasi-aplikasi ini dirancang tidak hanya untuk meningkatkan kinerja aparatur, tetapi juga memberikan kemudahan layanan bagi masyarakat.</p>
+          <p>Melalui semangat kolaborasi dan inovasi, Diskominfo Kota Kendari terus meneguhkan eksistensinya sebagai motor penggerak digitalisasi pemerintahan. Dengan mengintegrasikan berbagai sistem informasi, memperkuat literasi digital, dan membangun Command Center sebagai pusat kendali kota, Diskominfo menjadi salah satu pilar utama dalam mewujudkan visi Kota Kendari sebagai Smart City yang terhubung, cerdas, dan berdaya saing di wilayah Indonesia Timur.</p>'
+      ],
+
+      [
+        'jenis'  => 'visi',
+        'konten' => '"Terwujudnya Kota Kendari Tahun 2029 sebagai Kota Layak Huni yang Semakin Maju, Berdaya Saing, Adil, Sejahtera, dan Berkelanjutan."',
+      ],
+
+      [
+        'jenis'  => 'misi',
+        'konten' => json_encode([
+          "Menyediakan, memelihara dan mengembangkan berbagai fasilitas yang layak dan mencukupi untuk kebutuhan warga dan pengguna kota lainnya (yakni fasilitas umum, sosial, ruang publik, dan lainnya).",
+          "Mewujudkan Tata Penyelenggaraan Kota yang baik (good city governance), meliputi tatakelola pemerintahan Kota yang baik, partisipasi warga kota yang baik dalam pengelolaan kota, dan juga kenyamanan bagi pengguna kota yang baik.",
+          "Pembangunan Infrastruktur Kota yang terintegrasi, efisien, dan ramah lingkungan, dalam rangka memenuhi pelayanan dasar yang berkualitas.",
+          "Peningkatan Pelayanan Sosial dan Kesejahteraan Warga Kota (Pendidikan, Kesehatan, dan lainnya).",
+          "Membangun Perekonomian yang Kokoh dan Berkeadilan.",
+          "Mengokohkan Kehidupan Sosial Kemasyarakatan.",
+          "Meningkatkan Kualitas Hidup Warga Kota melalui Pemberdayaan Masyarakat dan Pengentasan Kemiskinan."
+        ]),
+      ],
+
+      [
+        'jenis'  => 'foto-diskominfo',
+        'konten' => json_encode([
+          "foto-diskominfo/diskominfo-1.webp",
+          "foto-diskominfo/diskominfo-2.webp",
+          "foto-diskominfo/diskominfo-3.webp",
+          "foto-diskominfo/diskominfo-4.webp",
+          "foto-diskominfo/diskominfo-5.webp",
+          "foto-diskominfo/diskominfo-6.webp"
+        ]),
+      ],
+
+      [
+        'jenis'  => 'tugas',
+        'konten' => '<p>Berdasarkan <strong>Peraturan Wali Kota Kendari Nomor 20 Tahun 2022</strong>, Dinas Komunikasi dan Informatika mempunyai tugas:</p>
+        <p><em>“<strong>Melaksanakan urusan pemerintahan</strong> bidang <strong>komunikasi dan informatika</strong>, bidang <strong>persandian</strong>, dan bidang <strong>statistik</strong> sesuai dengan ketentuan peraturan perundang-undangan.”</em></p>',
+      ],
+
+      [
+        'jenis'  => 'fungsi',
+        'konten' => json_encode([
+          [
+            'isi'  => 'Perumusan kebijakan teknis di bidang komunikasi dan informatika, persandian, dan statistik.',
+            'icon' => 'fa-solid fa-lightbulb',
+          ],
+          [
+            'isi'  => 'Pelaksanaan kebijakan di bidang komunikasi dan informatika, persandian, dan statistik.',
+            'icon' => 'fa-solid fa-gears',
+          ],
+          [
+            'isi'  => 'Pelaksanaan evaluasi dan pelaporan di bidang komunikasi dan informatika, persandian, dan statistik.',
+            'icon' => 'fa-solid fa-chart-line',
+          ],
+          [
+            'isi'  => 'Pelaksanaan administrasi dinas sesuai dengan lingkup tugasnya.',
+            'icon' => 'fa-solid fa-file-lines',
+          ],
+          [
+            'isi'  => 'Pelaksanaan fungsi lain yang diberikan oleh Wali Kota sesuai dengan tugas dan fungsinya.',
+            'icon' => 'fa-solid fa-briefcase',
+          ]
+        ]),
+      ],
+
+      [
+        'jenis'  => 'struktur-organisasi',
+        'konten' => 'gambar/struktur-organisasi.webp'
+      ],
+    ];
+
+    foreach ($data as $item)
+      ProfilDinas::create($item);
   }
 }

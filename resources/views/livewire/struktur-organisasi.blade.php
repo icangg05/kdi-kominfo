@@ -11,7 +11,7 @@
 		{{-- Gambar Struktur --}}
 		<div class="mt-6 min-w-full lg:mt-12 prose prose-sm lg:prose prose-li:leading-normal lg:prose-li:leading-tight">
 			<img class="w-full rounded c2Shadow"
-				src="https://mgmall.s3.amazonaws.com/img/012025/838b75648fbdfa78a60899f859de7247d1e6044b.jpg" alt="image">
+				src="{{ asset("storage/$data") }}" alt="image">
 		</div>
 		{{-- Gambar Struktur --}}
 
@@ -56,7 +56,7 @@
 						<i class="{{ $item['icon'] }}"></i>
 					</div>
 					<h3 class="text-lg font-semibold leading-[24px] text-gray-900 mb-2"> {{ $item['title'] }} </h3>
-					<p class="text-gray-600 text-sm leading-relaxed">
+					<p class="text-cText text-sm leading-relaxed">
 						{{ $item['desc'] }}
 					</p>
 					<div

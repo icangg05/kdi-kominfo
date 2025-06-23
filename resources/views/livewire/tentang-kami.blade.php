@@ -9,18 +9,8 @@
 		{{-- Card Title --}}
 
 		{{-- Isi Sejarah --}}
-		<div class="mt-6 min-w-full lg:mt-12 prose prose-sm lg:prose prose-li:leading-normal lg:prose-li:leading-tight">
-			<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Amet pariatur a sapiente neque quidem sunt et distinctio
-				velit, debitis autem voluptatum error facere id nisi commodi aspernatur, optio quibusdam. Odit molestias beatae at
-				quas quos harum voluptate laudantium necessitatibus maxime eum minus totam, aut, nam dignissimos quasi labore? Odit,
-				autem.</p>
-			<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Laudantium, fugiat, nihil eos itaque ex ea perferendis
-				quod quasi deserunt sapiente voluptate soluta nemo id modi atque? Nemo unde saepe, iusto dolore labore, inventore
-				vel ab veritatis harum, adipisci repellendus ut eum? Natus ab exercitationem perspiciatis illo suscipit ducimus unde
-				ipsam aliquid dolore nisi culpa corporis harum magni explicabo provident ut consectetur, facilis laborum cupiditate
-				impedit eum blanditiis fugit voluptatem veritatis. Non beatae nam, similique expedita dolorum ducimus consectetur
-				voluptatum sequi suscipit ea libero ipsam distinctio labore omnis dolore laborum et delectus commodi enim fuga nihil
-				ipsum consequuntur. Perferendis, exercitationem quis.</p>
+		<div class="[&_*]:text-cText mt-6 min-w-full lg:mt-12 prose prose-sm lg:prose prose-li:leading-normal lg:prose-li:leading-tight">
+			{!!  $sejarah !!}
 		</div>
 		{{-- Isi Sejarah --}}
 
@@ -28,34 +18,22 @@
 		<div class="max-w-4xl mx-auto px-6 my-12">
 			<!-- Header -->
 			<div class="font-sen border-4 border-dashed border-primary rounded-2xl p-6 text-center mb-8">
-				<h2 class="text-xl leading-[24px] lg:leading-[28px] lg:text-3xl font-bold text-primary	">Visi Misi Pemerintahan Kota
+				<h2 class="text-xl leading-[24px] lg:leading-[28px] lg:text-3xl font-bold text-primary	">Visi Misi Diskominfo Kota
 					Kendari</h2>
-				<p class="text-sm md:text-base text-gray-500 mt-2">Periode 2025 - Sekarang</p>
+				<p class="text-sm md:text-base text-gray-500 mt-2">Periode {{ $awalPeriode }} - Sekarang</p>
 			</div>
 
 			<!-- Visi -->
 			<div class="bg-primary text-white rounded-2xl px-6 py-6 shadow-md mb-10">
 				<h3 class="text-lg lg:text-xl font-semibold mb-2">Visi</h3>
 				<p class="text-sm lg:text-base leading-[28px] lg:leading-[24px]">
-					"Terwujudnya Kota Kendari Tahun 2029 sebagai Kota Layak Huni yang Semakin Maju, Berdaya Saing, Adil, Sejahtera, dan
-					Berkelanjutan.""
+					{{ $visi }}
 				</p>
 			</div>
 
 			<!-- Misi -->
 			<div>
 				<h3 class="text-lg lg:text-2xl font-bold text-primary mb-6">Misi</h3>
-				@php
-					$misi = [
-					    'Menyediakan, memelihara dan mengembangkan berbagai fasilitas yang layak dan mencukupi untuk kebutuhan warga dan pengguna kota lainnya (yakni fasilitas umum, sosial, ruang publik, dan lainnya).',
-					    'Mewujudkan Tata Penyelenggaraan Kota yang baik (good city governance), meliputi tatakelola pemerintahan Kota yang baik, partisipasi warga kota yang baik dalam pengelolaan kota, dan juga kenyamanan bagi pengguna kota yang baik.',
-					    'Pembangunan Infrastruktur Kota yang terintegrasi, efisien, dan ramah lingkungan, dalam rangka memenuhi pelayanan dasar yang berkualitas.',
-					    'Peningkatan Pelayanan Sosial dan Kesejahteraan Warga Kota (Pendidikan, Kesehatan, dan lainnya).',
-					    'Membangun Perekonomian yang Kokoh dan Berkeadilan.',
-					    'Mengokohkan Kehidupan Sosial Kemasyarakatan.',
-					    'Meningkatkan Kualitas Hidup Warga Kota melalui Pemberdayaan Masyarakat dan Pengentasan Kemiskinan.',
-					];
-				@endphp
 				<div class="space-y-3.5 lg:space-y-4">
 					@foreach ($misi as $i => $item)
 						<div class="flex items-start gap-x-4">
@@ -63,7 +41,7 @@
 								class="flex-shrink-0 bg-primary text-white rounded-full w-8 h-8 flex items-center justify-center font-bold">
 								{{ $i + 1 }}
 							</div>
-							<p class="text-gray-700 text-sm lg:text-base leading-[24px] lg:leading-relaxed">
+							<p class="text-cText text-sm lg:text-base leading-[24px] lg:leading-relaxed">
 								{{ $item }}
 							</p>
 						</div>
@@ -78,16 +56,16 @@
     "loadingClasses": "opacity-0"
   }' class="relative">
 			<div class="hs-carousel flex flex-col md:flex-row gap-2">
-				<div class="md:order-2 relative grow overflow-hidden min-h-96 bg-white rounded-lg">
+				<div class="md:order-2 relative grow overflow-hidden min-h-55 lg:min-h-120 bg-white rounded-lg">
 					<div
 						class="hs-carousel-body absolute top-0 bottom-0 start-0 flex flex-nowrap transition-transform duration-700 opacity-0">
-						@for ($i = 0; $i < 7; $i++)
+						@foreach ($fotoDiskominfo as $i => $item)
 							<div class="hs-carousel-slide">
-								<img src="https://picsum.photos/800/600?random={{ $i }}" alt="Galeri {{ $i }}"
+								<img src="{{ asset("storage/$item") }}" alt="foto-{{ $i }}"
 									alt="Foto Ruangan"
 									class="object-cover w-full h-full" />
 							</div>
-						@endfor
+						@endforeach
 					</div>
 
 					<button type="button"
@@ -114,15 +92,15 @@
 
 				<div class="md:order-1 flex-none">
 					<div
-						class="scrollbar-modern hs-carousel-pagination max-h-96 flex flex-row md:flex-col gap-2 overflow-x-auto md:overflow-x-hidden md:overflow-y-auto">
-						@for ($i = 0; $i < 7; $i++)
+						class="scrollbar-modern hs-carousel-pagination max-h-120 flex flex-row md:flex-col gap-2 overflow-x-auto md:overflow-x-hidden md:overflow-y-auto">
+						@foreach ($fotoDiskominfo as $i => $item)
 							<div
 								class="hs-carousel-pagination-item shrink-0 border border-gray-200 rounded-md overflow-hidden cursor-pointer size-20 md:size-32 hs-carousel-active:border-blue-400">
-								<img src="https://picsum.photos/800/600?random={{ $i }}" alt="Galeri {{ $i }}"
+								<img src="{{ asset("storage/$item") }}" alt="foto-{{ $i }}"
 									alt="Foto Ruangan"
 									class="object-cover w-full h-full" />
 							</div>
-						@endfor
+						@endforeach
 					</div>
 				</div>
 			</div>

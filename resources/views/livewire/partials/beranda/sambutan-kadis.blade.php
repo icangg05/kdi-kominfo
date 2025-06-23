@@ -24,7 +24,7 @@
 		{{-- Right Content --}}
 		<div class="col-span-5 lg:col-span-2 order-1 lg:order-2">
 			<img class="aspect-3/4 object-cover object-center w-[90%] lg:w-full mx-auto"
-				src="https://asset-2.tstatic.net/sultra/foto/bank/images/Kepala-Dinas-Pertanian-Kota-Kendari-Sahuriyanto-Meronda.jpg"
+				src="{{ asset("storage/$fotoKadis") }}"
 				alt="kadis">
 		</div>
 		{{-- Right Content --}}

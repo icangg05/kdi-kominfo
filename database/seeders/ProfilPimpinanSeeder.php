@@ -17,7 +17,7 @@ class ProfilPimpinanSeeder extends Seeder
       'nama'          => 'Sahuriyanto Meronda, SP., MM',
       'awal_periode'  => 2025,
       'akhir_periode' => 2029,
-      'foto'          => '[]',
+      'foto'          => '["foto-kadis/kadis-1.webp", "foto-kadis/kadis-3.webp", "foto-kadis/kadis-2.webp"]',
       'konten'        => '
         <h3>Profil Singkat</h3>
         <ul>

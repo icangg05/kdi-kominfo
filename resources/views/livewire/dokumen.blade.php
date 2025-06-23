@@ -1,5 +1,5 @@
 @php
-	$kategoriDokumen = ['Dokumen Evaluasi', 'Dokumen Perencanaan', 'Produk Hukum'];
+	$kategoriDokumen = App\Models\KategoriDokumen::all();
 
 	$dokumenList = collect([
 	    (object) [
@@ -81,9 +81,9 @@
 						</li>
 						@foreach ($kategoriDokumen as $kategori)
 							<li>
-								<a href="{{ route('dokumen.index', ['kategori' => $kategori]) }}"
-									class="flex items-center gap-2 {{ request('kategori') === $kategori ? 'text-primary font-medium' : 'hover:text-primary' }}">
-									<i class="fas fa-folder text-primary"></i> {{ $kategori }}
+								<a href="{{ route('dokumen.index', ['kategori' => $kategori->nama]) }}"
+									class="flex items-center gap-2 {{ request('kategori') === $kategori->nama ? 'text-primary font-medium' : 'hover:text-primary' }}">
+									<i class="fas fa-folder text-primary"></i> {{ $kategori->nama }}
 								</a>
 							</li>
 						@endforeach

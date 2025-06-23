@@ -51,7 +51,7 @@
 				class="w-full lg:w-fit py-2.5 px-5 text-center text-sm font-medium rounded-lg border border-transparent bg-primary text-white">
 				Layanan
 			</a>
-			<a href="#layanan"
+			<a wire:navigate href="{{ route('profil-dinas.tentang-kami') }}"
 				class="w-full lg:w-fit py-2.5 px-5 text-center text-sm font-medium rounded-lg border border-transparent bg-secondary text-white">
 				Tentang Kami
 			</a>
