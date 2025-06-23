@@ -14,7 +14,7 @@ return new class extends Migration
     Schema::create('profil_dinas', function (Blueprint $table) {
       $table->id();
       $table->string('jenis');
-      $table->json('konten');
+      $table->text('konten');
       $table->text('icon')->nullable();
       $table->timestamps();
     });

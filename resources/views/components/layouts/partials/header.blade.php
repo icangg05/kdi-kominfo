@@ -1,7 +1,7 @@
 <header class="bg-primary/90 backdrop-blur-md backdrop-saturate-150 text-sm pt-3 pb-2.5 lg:pb-2 shadow">
 	<nav class="container flex flex-wrap basis-full items-center justify-between">
 		{{-- Logo --}}
-		<a href="{{ route('beranda') }}" wire:navigate>
+		<a href="{{ route('beranda') }}" wire:navigate.hover>
 			<img class="w-40" src="{{ asset('img/kominfo-logo.webp') }}" alt="logo">
 		</a>
 		{{-- Logo --}}
@@ -48,7 +48,7 @@
 			class="hs-collapse hidden overflow-hidden transition-all duration-300 basis-full grow sm:grow-0 sm:basis-auto sm:block sm:order-2"
 			aria-labelledby="hs-navbar-alignment-collapse">
 			<div class="flex flex-col gap-5 mt-5 sm:flex-row sm:items-center sm:mt-0 sm:ps-5">
-				<a wire:navigate
+				<a wire:navigate.hover
 					class="relative font-medium text-white hover:text-gray-400 focus:outline-hidden focus:text-gray-400
 						{{ request()->routeIs('beranda') ? "lg:after:content-[''] lg:after:absolute lg:after:bottom-0 lg:after:left-1/2 lg:after:-translate-x-1/2 lg:after:w-[80%] lg:after:h-[2px] lg:after:bg-white/50 lg:hover:after:bg-white/30" : '' }}"
 					href="{{ route('beranda') }}">Beranda</a>
@@ -71,27 +71,27 @@
 					<div
 						class="mt-2 hs-dropdown-menu transition-[opacity,margin] ease-in-out duration-[150ms] hs-dropdown-open:opacity-100 opacity-0 sm:w-48 z-10 bg-white sm:shadow-md rounded-lg p-1 space-y-1 before:absolute top-full sm:border border-gray-200 before:-top-5 before:start-0 before:w-full before:h-5 hidden"
 						role="menu" aria-orientation="vertical" aria-labelledby="hs-navbar-example-dropdown">
-						<a wire:navigate
+						<a wire:navigate.hover
 							class="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:outline-hidden focus:bg-gray-100"
 							href="{{ route('profil-dinas.tentang-kami') }}">
 							Tentang Kami
 						</a>
-						<a wire:navigate
+						<a wire:navigate.hover
 							class="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:outline-hidden focus:bg-gray-100"
 							href="{{ route('profil-dinas.tupoksi') }}">
 							Tupoksi
 						</a>
-						<a wire:navigate
+						<a wire:navigate.hover
 							class="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:outline-hidden focus:bg-gray-100"
 							href="{{ route('profil-dinas.profil-pimpinan') }}">
 							Profil Pimpinan
 						</a>
-						<a wire:navigate
+						<a wire:navigate.hover
 							class="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:outline-hidden focus:bg-gray-100"
 							href="{{ route('profil-dinas.profil-pegawai') }}">
 							Profil Pegawai
 						</a>
-						<a wire:navigate
+						<a wire:navigate.hover
 							class="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:outline-hidden focus:bg-gray-100"
 							href="{{ route('profil-dinas.struktur-organisasi') }}">
 							Struktur Organisasi
@@ -99,12 +99,12 @@
 					</div>
 				</div>
 
-				<a wire:navigate
+				<a wire:navigate.hover
 					class="text-white relative font-mediumtext-white hover:text-gray-400 focus:outline-hidden focus:text-gray-400
 					{{ request()->is('berita*') ? "text-primary lg:after:content-[''] lg:after:absolute lg:after:bottom-0 lg:after:left-1/2 lg:after:-translate-x-1/2 lg:after:w-[80%] lg:after:h-[2px] lg:after:bg-white/50 lg:hover:after:bg-white/30" : '' }}"
 					href="{{ route('berita.index') }}">Berita</a>
 
-				<a wire:navigate
+				<a wire:navigate.hover
 					class="relative font-medium text-white hover:text-gray-400 focus:outline-hidden focus:text-gray-400
 					{{ request()->is('dokumen*') ? "text-primary lg:after:content-[''] lg:after:absolute lg:after:bottom-0 lg:after:left-1/2 lg:after:-translate-x-1/2 lg:after:w-[80%] lg:after:h-[2px] lg:after:bg-white/50 lg:hover:after:bg-white/30" : '' }}"
 					href="{{ route('dokumen.index') }}">Dokumen</a>
@@ -126,7 +126,7 @@
 					<div
 						class="mt-2 hs-dropdown-menu transition-[opacity,margin] ease-in-out duration-[150ms] hs-dropdown-open:opacity-100 opacity-0 sm:w-48 z-10 bg-white sm:shadow-md rounded-lg p-1 space-y-1 before:absolute top-full sm:border border-gray-200 before:-top-5 before:start-0 before:w-full before:h-5 hidden"
 						role="menu" aria-orientation="vertical" aria-labelledby="hs-navbar-example-dropdown">
-						<a wire:navigate
+						<a wire:navigate.hover
 							class="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:outline-hidden focus:bg-gray-100"
 							href="{{ route('layanan', 'subdomain-hosting') }}">
 							Subdomain & Hosting
@@ -147,17 +147,17 @@
 								class="hs-dropdown-menu transition-[opacity,margin] ease-in-out duration-[150ms] hs-dropdown-open:opacity-100 opacity-0 sm:w-48 hidden z-10 sm:mt-2 bg-white sm:shadow-md rounded-lg before:absolute sm:border border-gray-200 before:-end-5 before:top-0 before:h-full before:w-5 sm:mx-2.5! top-0 end-full"
 								role="menu" aria-orientation="vertical" aria-labelledby="hs-navbar-example-dropdown-sub">
 								<div class="p-1 space-y-1">
-									<a wire:navigate
+									<a wire:navigate.hover
 										class="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:outline-hidden focus:bg-gray-100"
 										href="#">
 										About
 									</a>
-									<a wire:navigate
+									<a wire:navigate.hover
 										class="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:outline-hidden focus:bg-gray-100"
 										href="#">
 										Downloads
 									</a>
-									<a wire:navigate
+									<a wire:navigate.hover
 										class="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:outline-hidden focus:bg-gray-100"
 										href="#">
 										Team Account
@@ -165,24 +165,24 @@
 								</div>
 							</div>
 						</div> --}}
-						<a wire:navigate
+						<a wire:navigate.hover
 							class="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:outline-hidden focus:bg-gray-100"
 							href="{{ route('layanan', 'email-dinas') }}">
 							Pembuatan Email Dinas
 						</a>
-						<a wire:navigate
+						<a wire:navigate.hover
 							class="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:outline-hidden focus:bg-gray-100"
 							href="{{ route('layanan', 'pengajuan-tte') }}">
 							Pengajuan TTE (Tanda Tangan Elektronik)
 						</a>
-						<a wire:navigate
+						<a wire:navigate.hover
 							class="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:outline-hidden focus:bg-gray-100"
 							href="{{ route('layanan', 'telpon-darurat-112') }}">
 							Layanan Telpon Darurat 112
 						</a>
 					</div>
 				</div>
-				<a wire:navigate
+				<a wire:navigate.hover
 					class="relative font-medium text-white hover:text-gray-400 focus:outline-hidden focus:text-gray-400
 						{{ request()->routeIs('galeri*') ? "lg:after:content-[''] lg:after:absolute lg:after:bottom-0 lg:after:left-1/2 lg:after:-translate-x-1/2 lg:after:w-[80%] lg:after:h-[2px] lg:after:bg-white/50 lg:hover:after:bg-white/30" : '' }}"
 					href="{{ route('galeri.index') }}">Galeri</a>

@@ -21,6 +21,8 @@
   --color-primary: #163f6c;
   --color-secondary: #372f4c;
   --color-acsent: #E68425;
+
+  --color-cText: #4A5565;
 }
 
 @utility container {

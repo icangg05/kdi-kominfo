@@ -2,12 +2,17 @@
 
 namespace App\Livewire;
 
+use App\Models\ProfilPimpinan as ModelsProfilPimpinan;
 use Livewire\Component;
 
 class ProfilPimpinan extends Component
 {
   public function render()
   {
-    return view('livewire.profil-pimpinan');
+    $data = ModelsProfilPimpinan::first();
+
+    return view('livewire.profil-pimpinan', compact(
+      'data',
+    ));
   }
 }
