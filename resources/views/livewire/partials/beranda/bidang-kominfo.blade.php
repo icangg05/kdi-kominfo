@@ -42,7 +42,8 @@
 				<h6
 					class="mx-auto max-w-xs lg:w-full mt-5 mb-2.5 lg:mb-4 font-bold text-lg lg:text-xl text-gray-800 leading-tight">
 					{{ $item[1] }}</h6>
-				<p class="mx-auto max-w-[340px] lg:w-full text-sm lg:text-base text-gray-500">{{ $item[2] }}
+				<p class="mx-auto max-w-[340px] lg:w-full text-sm lg:text-base text-cText">
+					{{ $item[2] }}
 				</p>
 			</div>
 		@endforeach

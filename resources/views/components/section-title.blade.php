@@ -9,7 +9,7 @@
 		<div class="h-px w-10 bg-primary/50"></div>
 	</div>
 
-	<p class="text-gray-500 text-sm lg:text-base max-w-2xl text-center mx-auto">
+	<p class="text-cText text-sm lg:text-base max-w-2xl text-center mx-auto">
 		{!! $desc !!}
 	</p>
 </div>

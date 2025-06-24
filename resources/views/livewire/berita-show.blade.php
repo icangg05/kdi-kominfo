@@ -10,26 +10,38 @@
 				<!-- Gambar -->
 				<div class="rounded-xl overflow-hidden shadow-md">
 					<img
-						src="{{ asset('img/berita.webp') }}"
+						src="{{ asset($data->thumbnail ? "storage/$data->thumbnail" : 'img/berita.webp') }}"
 						alt="Gambar Berita"
 						class="w-full h-auto object-cover" />
 				</div>
 
 				<!-- Judul & Meta -->
 				<div>
-					<h1 class="text-2xl lg:text-3xl font-bold text-gray-800 mb-2 leading-tight">Judul Berita Informatif dan Kekinian</h1>
-					<div class="text-sm flex flex-wrap gap-4 text-gray-500">
-						<span><i class="fas fa-calendar-alt text-primary mr-1"></i> 19 Juni 2025</span>
-						<span><i class="fas fa-user text-primary mr-1"></i> Admin Kominfo</span>
-						<span><i class="fas fa-eye text-primary mr-1"></i> 1.245 views</span>
+					<h1 class="text-2xl lg:text-3xl font-bold text-gray-800 mb-2 leading-tight">{{ $data->judul }}</h1>
+					<div class="text-sm flex flex-col lg:flex-row gap-1 justify-between text-gray-500">
+						<div class="flex flex-wrap gap-4">
+							<span>
+								<i class="fas fa-calendar-alt text-primary mr-1"></i>
+								{{ \Carbon\Carbon::parse($data->created_at)->translatedFormat('d F Y') }}
+							</span>
+							<span>
+								<i class="fas fa-user text-primary mr-1"></i> Admin Kominfo
+							</span>
+							<span>
+								<i class="fas fa-eye text-primary mr-1"></i> {{ number_format($data->total_lihat, 0, ',', '.') }} views
+							</span>
+						</div>
+						<span>
+							<i class="fas fa-tag text-primary mr-1"></i>
+							{{ $data->kategori->nama ?? 'Tanpa Kategori' }}
+						</span>
 					</div>
 				</div>
 
 				<!-- Konten -->
-				<div class="prose prose-sm lg:prose max-w-none prose-p:text-gray-800 prose-headings:text-gray-900 prose-li:marker:text-primary">
-					<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Tenetur, molestiae in eveniet reiciendis tempore sed
-						dolores dolore facere rem hic, non maiores nihil laborum minus officiis, odit reprehenderit ea impedit. Excepturi
-						pariatur molestiae consequatur, quam non odio quae voluptatem ratione!</p>
+				<div
+					class="prose prose-sm lg:prose max-w-none prose-p:text-gray-800 prose-headings:text-gray-900 prose-li:marker:text-primary">
+					{!! $data->konten !!}
 				</div>
 
 				<!-- Share -->
@@ -57,23 +69,35 @@
 
 				<!-- Berita Terkait -->
 				<div class="mt-12">
+					@php
+						$beritaTerkait = App\Models\Berita::where('kategori_berita_id', $data->kategori_berita_id)
+						    ->whereNot('id', $data->id)
+						    ->latest()
+						    ->limit(3)
+						    ->get();
+					@endphp
+
 					<h3 class="text-xl font-semibold text-gray-800 mb-4">Berita Terkait</h3>
 					<div class="grid md:grid-cols-3 gap-6">
-						@for ($i = 1; $i <= 3; $i++)
-							<a href="#" class="block bg-white rounded-xl overflow-hidden shadow c2Shadow cShadow	 transition">
-								<img src="https://picsum.photos/400/250?random={{ $i }}" class="w-full h-48 object-cover"
+						@forelse ($beritaTerkait as $item)
+							<a wire:navigate href="{{ route('berita.show', $item->slug) }}"
+								class="block bg-white rounded-xl overflow-hidden shadow c2Shadow cShadow	 transition">
+								<img src="{{ asset($item->thumbnail ? "storage/$item->thumbnail" : 'img/berita.webp') }}"
+									class="w-full h-48 object-cover"
 									alt="Berita Terkait">
 								<div class="p-4 space-y-2">
 									<h4 class="text-gray-800 font-semibold text-sm leading-snug line-clamp-2">
-										Judul Berita Terkait {{ $i }}
+										{{ $item->judul }}
 									</h4>
 									<div class="text-xs text-gray-500 flex items-center gap-1">
 										<i class="fas fa-calendar-alt text-primary"></i>
-										{{ now()->subDays($i)->format('d M Y') }}
+										{{ Carbon\Carbon::parse($data->created_at)->translatedFormat('d F Y') }}
 									</div>
 								</div>
 							</a>
-						@endfor
+						@empty
+							<x-empty-card message="Tidak ada berita terkait." />
+						@endforelse
 					</div>
 				</div>
 			</div>
@@ -81,40 +105,10 @@
 			<!-- Sidebar Sticky -->
 			<aside class="space-y-6 relative lg:sticky lg:top-28 h-fit">
 				<!-- Kategori -->
-				<div class="bg-white p-4 rounded-xl c2Shadow">
-					<h4 class="font-semibold text-primary mb-3">Kategori</h4>
-					<ul class="space-y-2 text-sm text-gray-700">
-						@foreach (['Teknologi', 'Pemerintahan', 'Kominfo', 'Digitalisasi', 'Umum'] as $kategori)
-							<li>
-								<a href="#" class="hover:text-primary transition">
-									<i class="fas fa-tag mr-1 text-xs text-primary"></i> {{ $kategori }}
-								</a>
-							</li>
-						@endforeach
-					</ul>
-				</div>
+				<x-card-kategori-berita />
 
 				<!-- Berita Lainnya -->
-				<div class="bg-white p-4 rounded-xl c2Shadow">
-					<h4 class="font-semibold text-primary mb-3">Berita Lainnya</h4>
-					<div class="space-y-1">
-						@for ($j = 6; $j < 9; $j++)
-							<a wire:navigate href="{{ route('berita.show', $j) }}"
-								class="flex items-start gap-3 hover:bg-gray-100 p-2 rounded-lg transition">
-								<img src="https://picsum.photos/800/600?random={{ $j }}"
-									class="w-16 h-16 rounded-lg object-cover" />
-								<div>
-									<h5 class="text-sm font-medium text-gray-800 leading-tight">
-										Berita Tambahan ke-{{ $j }}
-									</h5>
-									<span class="text-xs text-gray-400">
-										<i class="fas fa-calendar-alt mr-1"></i> {{ now()->subDays($j)->format('d M Y') }}
-									</span>
-								</div>
-							</a>
-						@endfor
-					</div>
-				</div>
+				<x-card-berita-lainnya />
 			</aside>
 		</div>
 

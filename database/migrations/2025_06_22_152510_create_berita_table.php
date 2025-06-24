@@ -15,6 +15,7 @@ return new class extends Migration
       $table->id();
       $table->foreignId('kategori_berita_id')->constrained('kategori_berita')->onDelete('cascade');
       $table->string('judul');
+      $table->string('slug');
       $table->text('konten');
       $table->string('thumbnail')->nullable();
       $table->unsignedInteger('total_lihat')->default(0);

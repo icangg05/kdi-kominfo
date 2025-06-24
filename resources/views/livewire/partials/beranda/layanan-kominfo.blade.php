@@ -41,7 +41,7 @@
 					<h6
 						class="max-w-xs lg:w-full mb-2.5 lg:mb-3 font-bold text-lg lg:text-xl text-gray-800 leading-tight">
 						{{ $item[1] }}</h6>
-					<p class="max-w-[340px] lg:w-full text-sm lg:text-base text-gray-500">
+					<p class="max-w-[340px] lg:w-full text-sm lg:text-base text-cText">
 						{{ $item[2] }}
 					</p>
 				</div>
