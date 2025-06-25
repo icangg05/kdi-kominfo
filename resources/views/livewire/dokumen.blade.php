@@ -1,51 +1,6 @@
 @php
 	$kategoriDokumen = App\Models\KategoriDokumen::all();
-
-	$dokumenList = collect([
-	    (object) [
-	        'id' => 1,
-	        'judul' => 'LKIP 2024',
-	        'deskripsi' => 'Laporan Kinerja Instansi Pemerintah (LKIP) Tahun Anggaran 2024',
-	        'kategori' => 'Dokumen Evaluasi',
-	        'jumlah_unduh' => 20,
-	        'tanggal' => '2025-05-19',
-	        'url' => '#',
-	    ],
-	    (object) [
-	        'id' => 2,
-	        'judul' => 'Rencana Kerja 2025',
-	        'deskripsi' => 'Rencana kerja tahunan Diskominfo Kendari untuk tahun 2025.',
-	        'kategori' => 'Dokumen Perencanaan',
-	        'jumlah_unduh' => 12,
-	        'tanggal' => '2025-03-01',
-	        'url' => '#',
-	    ],
-	    (object) [
-	        'id' => 3,
-	        'judul' => 'Peraturan Wali Kota No. 5',
-	        'deskripsi' => 'Peraturan Wali Kota Kendari tentang pengelolaan data dan informasi.',
-	        'kategori' => 'Produk Hukum',
-	        'jumlah_unduh' => 33,
-	        'tanggal' => '2024-11-15',
-	        'url' => '#',
-	    ],
-	    (object) [
-	        'id' => 4,
-	        'judul' => 'Evaluasi Program Digitalisasi',
-	        'deskripsi' => 'Laporan evaluasi terhadap program digitalisasi pelayanan publik.',
-	        'kategori' => 'Dokumen Evaluasi',
-	        'jumlah_unduh' => 15,
-	        'tanggal' => '2024-08-09',
-	        'url' => '#',
-	    ],
-	]);
-
-	$kategoriAktif = request('kategori');
-	if ($kategoriAktif) {
-	    $dokumenList = $dokumenList->where('kategori', $kategoriAktif);
-	}
 @endphp
-
 
 <div>
 	<x-layouts.page-berita
@@ -60,7 +15,7 @@
 				<div class="bg-white rounded-xl c2Shadow p-4">
 					<h4 class="text-sm font-semibold text-primary mb-2">Pencarian</h4>
 					<div class="relative">
-						<input type="text" placeholder="Cari dokumen..."
+						<input wire:model.live.debounce.300ms="search" type="text" placeholder="Cari dokumen..."
 							class="w-full px-4 py-2 pl-10 text-sm border rounded-lg border-gray-300 focus:border-primary focus:ring-0"
 							autocomplete="off">
 						<div class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
@@ -69,31 +24,22 @@
 					</div>
 				</div>
 
+				@if ($search)
+					<div class="block lg:hidden bg-white/70 backdrop-blur-md rounded-xl p-4 c2Shadow">
+						<p class="text-sm text-gray-500 mb-1 font-medium uppercase tracking-wide">Kata Kunci Pencarian</p>
+						<div class="text-primary text-sm lg:text-base font-semibold italic">
+							<i class="fas fa-magnifying-glass mr-1 text-primary/70"></i> {{ $search }}
+						</div>
+					</div>
+				@endif
+
 				<!-- Kategori Dokumen -->
-				<div class="bg-white rounded-xl c2Shadow p-4">
-					<h4 class="text-sm font-semibold text-gray-700 mb-3">Kategori Dokumen</h4>
-					<ul class="space-y-2 text-sm text-gray-700">
-						<li>
-							<a href="{{ route('dokumen.index') }}"
-								class="flex items-center gap-2 {{ request('kategori') === null ? 'text-primary font-medium' : 'hover:text-primary' }}">
-								<i class="fas fa-folder text-primary"></i> Semua Dokumen
-							</a>
-						</li>
-						@foreach ($kategoriDokumen as $kategori)
-							<li>
-								<a href="{{ route('dokumen.index', ['kategori' => $kategori->nama]) }}"
-									class="flex items-center gap-2 {{ request('kategori') === $kategori->nama ? 'text-primary font-medium' : 'hover:text-primary' }}">
-									<i class="fas fa-folder text-primary"></i> {{ $kategori->nama }}
-								</a>
-							</li>
-						@endforeach
-					</ul>
-				</div>
+				<x-card-kategori-dokumen />
 			</div>
 
 			<!-- Daftar Dokumen -->
 			<div class="md:col-span-3 space-y-5">
-				@forelse ($dokumenList as $dokumen)
+				@forelse ($data as $dokumen)
 					<div
 						class="bg-white rounded-xl cShadow c2Shadow p-5 flex flex-col md:flex-row md:items-center gap-4 md:gap-6 transition-shadow">
 						<!-- Icon Dokumen -->
@@ -106,19 +52,19 @@
 						<!-- Informasi Utama -->
 						<div class="flex-1 space-y-1">
 							<span class="inline-block text-xs px-2 py-1 bg-gray-100 text-gray-600 rounded-full font-medium">
-								<i class="fas fa-folder-open mr-1"></i> {{ $dokumen->kategori }}
+								<i class="fas fa-folder-open mr-1"></i> {{ $dokumen->kategori_nama }}
 							</span>
-							<h3 class="text-lg font-semibold text-gray-800">{{ $dokumen->judul }}</h3>
-							<p class="text-sm text-gray-600">{{ $dokumen->deskripsi }}</p>
+							<h3 class="text-lg font-semibold text-gray-800 line-clamp-1">{{ $dokumen->judul }}</h3>
+							<p class="text-sm text-cText line-clamp-2">{{ $dokumen->deskripsi }}</p>
 
 							<!-- Meta Info -->
 							<div class="flex flex-wrap gap-4 text-sm text-gray-500 mt-2">
 								<div class="flex items-center gap-1">
-									<i class="fas fa-download text-gray-400"></i> {{ $dokumen->jumlah_unduh }} Unduhan
+									<i class="fas fa-download text-gray-400"></i> {{ $dokumen->total_unduhan }} Unduhan
 								</div>
 								<div class="flex items-center gap-1">
 									<i class="fas fa-calendar-alt text-gray-400"></i>
-									{{ \Carbon\Carbon::parse($dokumen->tanggal)->translatedFormat('l, d M Y') }}
+									{{ \Carbon\Carbon::parse($dokumen->created_at)->translatedFormat('l, d M Y') }}
 								</div>
 							</div>
 						</div>
@@ -130,7 +76,7 @@
 								data-hs-overlay="#modal-dokumen-{{ $dokumen->id }}">
 								<i class="fas fa-info-circle"></i> Detail
 							</a>
-							<a href="{{ $dokumen->url }}"
+							<a href="#"
 								class="inline-flex items-center justify-center gap-2 px-4 py-2 bg-primary text-white rounded-lg text-sm hover:bg-primary/90 transition">
 								<i class="fas fa-cloud-download-alt"></i> Unduh
 							</a>
@@ -159,26 +105,26 @@
 									</div>
 
 									<!-- Body -->
-									<div class="p-6 space-y-3 text-sm text-gray-700">
-										<p class="text-[15px] lg:text-base text-gray-800">{{ $dokumen->deskripsi }}</p>
+									<div class="p-6 space-y-3 text-sm text-cText">
+										<p class="text-[15px] lg:text-base leading-snug">{{ $dokumen->deskripsi }}</p>
 
-										<ul class="space-y-2 text-sm text-gray-700">
+										<ul class="space-y-2 text-sm">
 											@php
 												$detailItems = [
 												    [
 												        'icon' => 'fas fa-layer-group',
 												        'label' => 'Kategori',
-												        'value' => $dokumen->kategori,
+												        'value' => $dokumen->kategori_nama,
 												    ],
 												    [
 												        'icon' => 'fas fa-calendar-alt',
 												        'label' => 'Tanggal',
-												        'value' => \Carbon\Carbon::parse($dokumen->tanggal)->translatedFormat('d F Y'),
+												        'value' => \Carbon\Carbon::parse($dokumen->created_at)->translatedFormat('d F Y'),
 												    ],
 												    [
 												        'icon' => 'fas fa-download',
 												        'label' => 'Unduhan',
-												        'value' => $dokumen->jumlah_unduh,
+												        'value' => $dokumen->total_unduhan,
 												    ],
 												];
 											@endphp
@@ -196,7 +142,7 @@
 
 									<!-- Footer -->
 									<div class="flex justify-between items-center px-4 py-3 border-t border-gray-200">
-										<a href="{{ $dokumen->url }}"
+										<a href="#"
 											class="inline-flex items-center gap-2 text-sm font-medium bg-primary text-white py-2 px-4 rounded-lg hover:bg-primary/90">
 											<i class="fas fa-cloud-download-alt"></i> Unduh Dokumen
 										</a>
@@ -211,10 +157,13 @@
 					@endpush
 
 				@empty
-					<div class="bg-white rounded-xl cShadow c2Shadow p-5 transition-shadow">
-						<p class="text-center text-gray-500">Tidak ada dokumen yang tersedia.</p>
-					</div>
+					<x-empty-card message="Tidak ada dokumen yang tersedia." />
 				@endforelse
+
+				{{-- Pagination --}}
+				<div class="mt-2">
+					{{ $data->links() }}
+				</div>
 			</div>
 		</div>
 	</x-layouts.page-berita>

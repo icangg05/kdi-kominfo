@@ -12,11 +12,3 @@ document.addEventListener("livewire:navigated", () => {
     Hash: false,
   });
 });
-
-// document.addEventListener("livewire:load", () => {
-//   Livewire.hook("message.processed", () => {
-//     setTimeout(() => {
-//       HSOverlay?.autoInit?.();
-//     }, 100);
-//   });
-// });

@@ -8,4 +8,6 @@ class Galeri extends Model
 {
   protected $table = 'galeri';
   protected $guarded = [];
+
+  public $timestamps = false;
 }

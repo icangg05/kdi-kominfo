@@ -34,6 +34,8 @@ class DatabaseSeeder extends Seeder
       ProfilPimpinanSeeder::class,
       PegawaiSeeder::class,
       BeritaSeeder::class,
+      DokumenSeeder::class,
+      GaleriSeeder::class,
     ]);
   }
 }
