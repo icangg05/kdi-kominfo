@@ -1,6 +1,13 @@
 <?php
 
+use App\Http\Controllers\Admin\AuthController;
+use App\Http\Controllers\Admin\DashboardController;
 use Illuminate\Support\Facades\Route;
+
+
+// Page Login
+Route::get('/login', [AuthController::class, 'login'])->name('login');
+Route::post('/login', [AuthController::class, 'authenticate'])->name('authenticate');
 
 
 // Page Beranda
@@ -25,3 +32,13 @@ Route::get('/dokumen', App\Livewire\Dokumen::class)->name('dokumen.index');
 
 // Page Layanan
 Route::get('/layanan/{nama_layanan}', App\Livewire\Layanan::class)->name('layanan');
+
+
+
+// Page Dashboard
+Route::middleware('auth')->group(function() {
+  // Logout
+  Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
+
+  Route::get('/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
+});
