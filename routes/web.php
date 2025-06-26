@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\ProfilDinasController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -41,4 +42,8 @@ Route::middleware('auth')->group(function() {
   Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
 
   Route::get('/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
+  Route::get('/dashboard/profil-dinas/{jenis}', [ProfilDinasController::class, 'index'])->name('admin.profil-dinas');
+  Route::post('/dashboard/profil-dinas/{jenis}', [ProfilDinasController::class, 'save'])->name('admin.profil-dinas.save');
+  Route::delete('/dashboard/profil-dinas/{jenis}', [ProfilDinasController::class, 'delete'])->name('admin.profil-dinas.delete');
+  
 });

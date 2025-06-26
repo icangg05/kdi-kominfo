@@ -10,14 +10,20 @@
 	@include('components.partials-admin.header')
 	<!-- Sidebar menu-->
 	@include('components.partials-admin.sidebar')
-	
+
 	<main class="app-content">
+		<x-partials-admin.breadcrumb
+			:icon="$icon"
+			:title="$title"
+			:desc="$desc"
+			:nav-menu="$navMenu" />
+
 		{{ $slot }}
 	</main>
 
 	<!-- Essential javascripts for application to work-->
 	@include('components.partials-admin.script')
-	
+
 </body>
 
 </html>

@@ -9,8 +9,9 @@
 		{{-- Card Title --}}
 
 		{{-- Isi Sejarah --}}
-		<div class="[&_*]:text-cText mt-6 min-w-full lg:mt-12 prose prose-sm lg:prose prose-li:leading-normal lg:prose-li:leading-tight">
-			{!!  $sejarah !!}
+		<div
+			class="[&_*]:text-cText mt-6 min-w-full lg:mt-12 prose prose-sm lg:prose prose-li:leading-normal lg:prose-li:leading-tight">
+			{!! $sejarah !!}
 		</div>
 		{{-- Isi Sejarah --}}
 
@@ -42,7 +43,7 @@
 								{{ $i + 1 }}
 							</div>
 							<p class="text-cText text-sm lg:text-base leading-[24px] lg:leading-relaxed">
-								{{ $item }}
+								{{ $item['misi'] }}
 							</p>
 						</div>
 					@endforeach

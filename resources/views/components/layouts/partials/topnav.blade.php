@@ -9,6 +9,14 @@
 					{{ \Carbon\Carbon::now()->translatedFormat('l, d F Y') }}
 				</span>
 			</p>
+			@auth
+				<a href="{{ route('admin.dashboard') }}" class="text-xs flex items-center space-x-1">
+					<i class="fa-solid fa-tachometer-alt text-gray-600"></i>
+					<span class="mt-[4px]">
+						Dashboard Page
+					</span>
+				</a>
+			@endauth
 		</div>
 		{{-- Left Section --}}
 

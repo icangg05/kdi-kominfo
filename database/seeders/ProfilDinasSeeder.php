@@ -48,13 +48,22 @@ class ProfilDinasSeeder extends Seeder
       [
         'jenis'  => 'misi',
         'konten' => json_encode([
-          "Menyediakan, memelihara dan mengembangkan berbagai fasilitas yang layak dan mencukupi untuk kebutuhan warga dan pengguna kota lainnya (yakni fasilitas umum, sosial, ruang publik, dan lainnya).",
-          "Mewujudkan Tata Penyelenggaraan Kota yang baik (good city governance), meliputi tatakelola pemerintahan Kota yang baik, partisipasi warga kota yang baik dalam pengelolaan kota, dan juga kenyamanan bagi pengguna kota yang baik.",
-          "Pembangunan Infrastruktur Kota yang terintegrasi, efisien, dan ramah lingkungan, dalam rangka memenuhi pelayanan dasar yang berkualitas.",
-          "Peningkatan Pelayanan Sosial dan Kesejahteraan Warga Kota (Pendidikan, Kesehatan, dan lainnya).",
-          "Membangun Perekonomian yang Kokoh dan Berkeadilan.",
-          "Mengokohkan Kehidupan Sosial Kemasyarakatan.",
-          "Meningkatkan Kualitas Hidup Warga Kota melalui Pemberdayaan Masyarakat dan Pengentasan Kemiskinan."
+          [
+            'id'   => 1,
+            'misi' => "Menyediakan, memelihara dan mengembangkan berbagai fasilitas yang layak dan mencukupi untuk kebutuhan warga dan pengguna kota lainnya (yakni fasilitas umum, sosial, ruang publik, dan lainnya).",
+          ],
+          [
+            'id'   => 2,
+            'misi' => "Mewujudkan Tata Penyelenggaraan Kota yang baik (good city governance), meliputi tatakelola pemerintahan Kota yang baik, partisipasi warga kota yang baik dalam pengelolaan kota, dan juga kenyamanan bagi pengguna kota yang baik."
+          ],
+          [
+            'id'   => 3,
+            'misi' => "Pembangunan Infrastruktur Kota yang terintegrasi, efisien, dan ramah lingkungan, dalam rangka memenuhi pelayanan dasar yang berkualitas."
+          ],
+          [
+            'id'   => 4,
+            'misi' => "Peningkatan Pelayanan Sosial dan Kesejahteraan Warga Kota (Pendidikan, Kesehatan, dan lainnya).",
+          ],
         ]),
       ],
 
