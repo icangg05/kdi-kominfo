@@ -1,21 +1,30 @@
 <x-layouts.admin
-	icon="fa fa-bullseye"
-	title="Misi"
-	desc="Misi Diskominfo Kota Kendari"
-	:nav-menu="[['Dashboard'], ['Misi', '#']]">
+	icon="fa fa-cogs"
+	title="Fungsi"
+	desc="Fungsi Diskominfo Kota Kendari"
+	:nav-menu="[['Dashboard'], ['Fungsi', '#']]">
 
 	<div class="row">
 		<div class="col-md-7 order-2 order-md-1">
-			<form action="{{ route('admin.profil-dinas.save', 'misi') }}" method="post" id="formMisi">
+			<form action="{{ route('admin.profil-dinas.save', 'fungsi') }}" method="post">
 				@csrf
 				<div class="tile">
-					<h3 class="tile-title">Form Misi</h3>
+					<h3 class="tile-title">Form Fungsi</h3>
 					<div class="tile-body">
-						<x-admin-textinput.textarea
-							placeholder="Tulis misi diskominfo..."
-							key="konten"
-							id="konten"
-							required />
+						<div class="mb-3">
+							<x-admin-textinput.textarea
+								label="Fungsi Diskominfo"
+								placeholder="Tulis fungsi diskominfo..."
+								key="konten"
+								required />
+						</div>
+						<div>
+							<x-admin-textinput.input
+								label="Label Icon"
+								placeholder="Tulis nama icon font awesome..."
+								key="icon"
+								required />
+						</div>
 
 						{{-- Tambahkan hidden input untuk misiId --}}
 						<input type="hidden" name="misiId" id="misiId">
@@ -41,7 +50,8 @@
 						<thead>
 							<tr>
 								<th>#</th>
-								<th>Misi Diskominfo</th>
+								<th>Fungsi Diskominfo</th>
+								<th>Icon</th>
 								<th>Aksi</th>
 							</tr>
 						</thead>
@@ -50,8 +60,12 @@
 								<tr style="cursor: default" data-id="{{ $item['id'] }}">
 									<td>{{ $loop->iteration }}.</td>
 									<td>{{ $item['value'] }}</td>
+									<td>
+										<i class="{{ $item['icon'] }}"></i>
+										<span style="display: none">{{ $item['icon'] }}</span>
+									</td>
 									<td class="btn-group">
-										<form action="{{ route('admin.profil-dinas.delete', 'misi') }}" method="post">
+										<form action="{{ route('admin.profil-dinas.delete', 'fungsi') }}" method="post">
 											@csrf
 											@method('delete')
 											<input type="hidden" name="misiId" value="{{ $item['id'] }}">
@@ -80,10 +94,13 @@
 
 					let misiText = $(this).find('td:nth-child(2)').text().trim();
 					let misiId = $(this).data('id');
+					
+					let iconText = $(this).find('td:nth-child(3) span').text().trim();
 
 					// Isi ke form
 					$('#konten').val(misiText);
 					$('#misiId').val(misiId);
+					$('#icon').val(iconText);
 					$('#btnSubmit').text('Ubah');
 				});
 

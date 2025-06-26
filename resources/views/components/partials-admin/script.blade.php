@@ -2,11 +2,14 @@
 <script src="{{ asset('admin') }}/js/popper.min.js"></script>
 <script src="{{ asset('admin') }}/js/bootstrap.min.js"></script>
 <script src="{{ asset('admin') }}/js/main.js"></script>
+
 <!-- The javascript plugin to display page loading on top-->
 <script src="{{ asset('admin') }}/js/plugins/pace.min.js"></script>
+
 <!-- Page specific javascripts-->
-<script type="text/javascript" src="{{ asset('admin') }}/js/plugins/chart.js"></script>
-<script type="text/javascript">
+{{-- <script type="text/javascript" src="{{ asset('admin') }}/js/plugins/chart.js"></script> --}}
+
+{{-- <script type="text/javascript">
 	var data = {
 		labels: ["January", "February", "March", "April", "May"],
 		datasets: [{
@@ -50,9 +53,10 @@
 
 	var ctxp = $("#pieChartDemo").get(0).getContext("2d");
 	var pieChart = new Chart(ctxp).Pie(pdata);
-</script>
+</script> --}}
+
 <!-- Google analytics script-->
-<script type="text/javascript">
+{{-- <script type="text/javascript">
 	if (document.location.hostname == 'pratikborsadiya.in') {
 		(function(i, s, o, g, r, a, m) {
 			i['GoogleAnalyticsObject'] = r;
@@ -68,9 +72,16 @@
 		ga('create', 'UA-72504830-1', 'auto');
 		ga('send', 'pageview');
 	}
-</script>
+</script> --}}
 
+<!-- Ckeditro -->
 <script src="https://cdn.ckeditor.com/ckeditor5/41.0.0/classic/ckeditor.js"></script>
+
+<!-- Font awesome -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/js/all.min.js"
+	integrity="sha512-b+nQTCdtTBIRIbraqNEwsjB6UvL3UEMkXnhzd8awtCYh0Kcsjl9uEgwVFVbhoj3uu1DO1ZMacNvLoyJJiNfcvg=="
+	crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+	
 <!-- Data table plugin-->
 <script type="text/javascript" src="{{ asset('admin') }}/js/plugins/jquery.dataTables.min.js"></script>
 <script type="text/javascript" src="{{ asset('admin') }}/js/plugins/dataTables.bootstrap.min.js"></script>

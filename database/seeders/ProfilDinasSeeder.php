@@ -50,19 +50,19 @@ class ProfilDinasSeeder extends Seeder
         'konten' => json_encode([
           [
             'id'   => 1,
-            'misi' => "Menyediakan, memelihara dan mengembangkan berbagai fasilitas yang layak dan mencukupi untuk kebutuhan warga dan pengguna kota lainnya (yakni fasilitas umum, sosial, ruang publik, dan lainnya).",
+            'value' => "Menyediakan, memelihara dan mengembangkan berbagai fasilitas yang layak dan mencukupi untuk kebutuhan warga dan pengguna kota lainnya (yakni fasilitas umum, sosial, ruang publik, dan lainnya).",
           ],
           [
             'id'   => 2,
-            'misi' => "Mewujudkan Tata Penyelenggaraan Kota yang baik (good city governance), meliputi tatakelola pemerintahan Kota yang baik, partisipasi warga kota yang baik dalam pengelolaan kota, dan juga kenyamanan bagi pengguna kota yang baik."
+            'value' => "Mewujudkan Tata Penyelenggaraan Kota yang baik (good city governance), meliputi tatakelola pemerintahan Kota yang baik, partisipasi warga kota yang baik dalam pengelolaan kota, dan juga kenyamanan bagi pengguna kota yang baik."
           ],
           [
             'id'   => 3,
-            'misi' => "Pembangunan Infrastruktur Kota yang terintegrasi, efisien, dan ramah lingkungan, dalam rangka memenuhi pelayanan dasar yang berkualitas."
+            'value' => "Pembangunan Infrastruktur Kota yang terintegrasi, efisien, dan ramah lingkungan, dalam rangka memenuhi pelayanan dasar yang berkualitas."
           ],
           [
             'id'   => 4,
-            'misi' => "Peningkatan Pelayanan Sosial dan Kesejahteraan Warga Kota (Pendidikan, Kesehatan, dan lainnya).",
+            'value' => "Peningkatan Pelayanan Sosial dan Kesejahteraan Warga Kota (Pendidikan, Kesehatan, dan lainnya).",
           ],
         ]),
       ],
@@ -89,24 +89,29 @@ class ProfilDinasSeeder extends Seeder
         'jenis'  => 'fungsi',
         'konten' => json_encode([
           [
-            'isi'  => 'Perumusan kebijakan teknis di bidang komunikasi dan informatika, persandian, dan statistik.',
-            'icon' => 'fa-solid fa-lightbulb',
+            'id'    => 1,
+            'value' => 'Perumusan kebijakan teknis di bidang komunikasi dan informatika, persandian, dan statistik.',
+            'icon'  => 'fa-solid fa-lightbulb',
           ],
           [
-            'isi'  => 'Pelaksanaan kebijakan di bidang komunikasi dan informatika, persandian, dan statistik.',
-            'icon' => 'fa-solid fa-gears',
+            'id'    => 2,
+            'value' => 'Pelaksanaan kebijakan di bidang komunikasi dan informatika, persandian, dan statistik.',
+            'icon'  => 'fa-solid fa-gears',
           ],
           [
-            'isi'  => 'Pelaksanaan evaluasi dan pelaporan di bidang komunikasi dan informatika, persandian, dan statistik.',
-            'icon' => 'fa-solid fa-chart-line',
+            'id'    => 3,
+            'value' => 'Pelaksanaan evaluasi dan pelaporan di bidang komunikasi dan informatika, persandian, dan statistik.',
+            'icon'  => 'fa-solid fa-chart-line',
           ],
           [
-            'isi'  => 'Pelaksanaan administrasi dinas sesuai dengan lingkup tugasnya.',
-            'icon' => 'fa-solid fa-file-lines',
+            'id'    => 4,
+            'value' => 'Pelaksanaan administrasi dinas sesuai dengan lingkup tugasnya.',
+            'icon'  => 'fa-solid fa-file-lines',
           ],
           [
-            'isi'  => 'Pelaksanaan fungsi lain yang diberikan oleh Wali Kota sesuai dengan tugas dan fungsinya.',
-            'icon' => 'fa-solid fa-briefcase',
+            'id'    => 5,
+            'value' => 'Pelaksanaan fungsi lain yang diberikan oleh Wali Kota sesuai dengan tugas dan fungsinya.',
+            'icon'  => 'fa-solid fa-briefcase',
           ]
         ]),
       ],

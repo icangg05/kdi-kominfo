@@ -12,73 +12,83 @@ class ProfilDinasController extends Controller
     'sejarah' => 'admin.form-sejarah',
     'visi'    => 'admin.form-visi',
     'misi'    => 'admin.form-misi',
+    'tugas'   => 'admin.form-tugas',
+    'fungsi'  => 'admin.form-fungsi',
   ];
 
   public function index($jenis)
   {
-    if (!array_key_exists($jenis, $this->viewMap)) abort(404);
-
-    $data = ProfilDinas::where('jenis', $jenis)->first();
+    if (!array_key_exists($jenis, $this->viewMap)) {
+      abort(404);
+    }
+    $data = ProfilDinas::where('jenis', $jenis)->firstOrFail();
 
     return view($this->viewMap[$jenis], compact('data'));
   }
 
   public function save(Request $request, $jenis)
   {
-    if (!array_key_exists($jenis, $this->viewMap)) abort(404);
+    if (!array_key_exists($jenis, $this->viewMap)) {
+      abort(404);
+    }
 
-    $request->validate([
-      'konten' => 'required|string',
-    ]);
+    $data = ProfilDinas::where('jenis', $jenis)->firstOrFail();
 
-    $data   = ProfilDinas::where('jenis', $jenis)->first();
-    $konten = $data->konten ?? [];
+    if (in_array($jenis, ['misi', 'fungsi'])) {
+      $request->validate(['konten' => 'required|string']);
 
-    if ($jenis === 'misi') {
+      $konten = $data->konten ?? [];
+
       if ($request->filled('misiId')) {
-        // Update item berdasarkan ID
         foreach ($konten as &$item) {
           if ($item['id'] == $request->misiId) {
-            $item['misi'] = ucfirst($request->konten);
+            $item['value'] = ucfirst($request->konten);
+            if ($jenis === 'fungsi') {
+              $item['icon'] = $request->icon;
+            }
             break;
           }
         }
       } else {
-        // Tambah baru
-        $konten[] = [
-          'id' => end($konten) ?end($konten)['id'] + 1 : 1,
-          'misi' => ucfirst($request->konten),
+        $nextId = count($konten) > 0 ? max(array_column($konten, 'id')) + 1 : 1;
+        $newItem = [
+          'id' => $nextId,
+          'value' => ucfirst($request->konten),
         ];
-        $konten = json_encode($konten);
+        if ($jenis === 'fungsi') {
+          $newItem['icon'] = $request->icon;
+        }
+        $konten[] = $newItem;
       }
-    } else {
-      $konten = $request->konten;
-    }
 
-    $data->update(['konten' => $konten]);
+      $data->update(['konten' => json_encode($konten)]);
+    } else {
+      // Sejarah & Visi & Tugas
+      $request->validate(['konten' => 'required|string']);
+      $data->update(['konten' => $request->konten]);
+    }
 
     return back()->with('success', 'Data berhasil disimpan.');
   }
 
-
   public function delete(Request $request, $jenis)
   {
-    if (!array_key_exists($jenis, $this->viewMap)) abort(404);
+    if (!array_key_exists($jenis, $this->viewMap)) {
+      abort(404);
+    }
 
-    $data   = ProfilDinas::where('jenis', $jenis)->firstOrFail();
-    $konten = $data->konten ?? [];
+    $data = ProfilDinas::where('jenis', $jenis)->firstOrFail();
+    $konten = is_array($data->konten) ? $data->konten : json_decode($data->konten, true);
 
-    // Pastikan ada misiId
     if ($request->filled('misiId')) {
-      // Filter array, hapus item yang cocok dengan misiId
-      $konten = array_filter($konten, function ($item) use ($request) {
+      $konten = array_values(array_filter($konten, function ($item) use ($request) {
         return $item['id'] != $request->misiId;
-      });
+      }));
 
-      // Simpan ke database
       $data->update(['konten' => json_encode($konten)]);
-
       return back()->with('success', 'Data berhasil dihapus.');
     }
+
+    return back()->with('error', 'Data tidak ditemukan.');
   }
 }

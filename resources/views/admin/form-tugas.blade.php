@@ -1,19 +1,20 @@
 <x-layouts.admin
-	icon="fa fa-book"
-	title="Visi"
-	desc="Visi Diskominfo Kota Kendari"
-	:nav-menu="[['Dashboard'], ['Visi', '#']]">
+	icon="fa fa-check-square-o"
+	{{-- fa fa-cogs --}}
+	title="Tugas"
+	desc="Tugas Diskominfo Kota Kendari"
+	:nav-menu="[['Dashboard'], ['Tugas', '#']]">
 
 	<div class="row">
 		<div class="col-md-7 order-2 order-md-1">
 			<form action="" method="post">
 				<div class="tile">
-					<h3 class="tile-title">Form Visi</h3>
+					<h3 class="tile-title">Form Tugas</h3>
 					<div class="tile-body">
 						@csrf
 						<div>
 							<x-admin-textinput.ckeditor
-								label="Tulis Visi Diskominfo"
+								label="Tulis Tugas Diskominfo"
 								key="konten"
 								:value="$data->konten" />
 						</div>

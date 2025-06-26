@@ -43,7 +43,7 @@
 								{{ $i + 1 }}
 							</div>
 							<p class="text-cText text-sm lg:text-base leading-[24px] lg:leading-relaxed">
-								{{ $item['misi'] }}
+								{{ $item['value'] }}
 							</p>
 						</div>
 					@endforeach

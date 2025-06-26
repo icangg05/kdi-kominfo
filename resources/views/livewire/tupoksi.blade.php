@@ -33,7 +33,7 @@
 						<div class="text-primary text-3xl">
 							<i class="{{ $item['icon'] }}"></i>
 						</div>
-						<p class="text-cText text-sm lg:text-base leading-relaxed">{{ $item['isi'] }}</p>
+						<p class="text-cText text-sm lg:text-base leading-relaxed">{{ $item['value'] }}</p>
 					</div>
 				@endforeach
 			</div>

@@ -1,5 +1,5 @@
 <x-layouts.admin
-	icon="fa-clock-rotate-left"
+	icon="fa fa-university"
 	title="Sejarah"
 	desc="Sejarah Diskominfo Kota Kendari"
 	:nav-menu="[['Dashboard'], ['Sejarah', '#'], ]">

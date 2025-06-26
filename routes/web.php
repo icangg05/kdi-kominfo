@@ -7,8 +7,8 @@ use Illuminate\Support\Facades\Route;
 
 
 // Page Login
-Route::get('/login', [AuthController::class, 'login'])->name('login');
-Route::post('/login', [AuthController::class, 'authenticate'])->name('authenticate');
+Route::get('/login', [AuthController::class, 'login'])->middleware('guest')->name('login');
+Route::post('/login', [AuthController::class, 'authenticate'])->middleware('guest')->name('authenticate');
 
 
 // Page Beranda
