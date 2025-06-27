@@ -1,20 +1,19 @@
 <x-layouts.admin
-	icon="fa fa-bullseye"
-	title="Misi"
-	desc="Misi Diskominfo Kota Kendari"
-	:nav-menu="[['Dashboard'], ['Misi', '#']]">
+	icon="fas fa-quote-left"
+	title="Tagline"
+	desc="Tagline Diskominfo Kota Kendari"
+	:nav-menu="[['Dashboard'], ['Tagline', '#']]">
 
 	<div class="row">
 		<div class="col-md-7 order-2 order-md-1">
-			<form action="{{ route('admin.profil-dinas.save', 'misi') }}" method="post" id="formMisi">
+			<form action="{{ route('admin.profil-dinas.save', 'tagline-sambutan') }}" method="post" >
 				@csrf
 				<div class="tile">
-					<h3 class="tile-title">Form Misi</h3>
+					<h3 class="tile-title">Form Tagline</h3>
 					<div class="tile-body">
-						<x-admin-textinput.textarea
-							placeholder="Tulis misi diskominfo..."
+						<x-admin-textinput.input
+							placeholder="Tulis tagline..."
 							key="konten"
-							id="konten"
 							required />
 
 						{{-- Tambahkan hidden input untuk dataId --}}
@@ -38,7 +37,7 @@
 						<thead>
 							<tr>
 								<th>#</th>
-								<th>Misi Diskominfo</th>
+								<th>Tagline Diskominfo</th>
 								<th>Aksi</th>
 							</tr>
 						</thead>
@@ -48,7 +47,7 @@
 									<td>{{ $loop->iteration }}.</td>
 									<td>{{ $item['value'] }}</td>
 									<td class="btn-group">
-										<form action="{{ route('admin.profil-dinas.delete', 'misi') }}" method="post">
+										<form action="{{ route('admin.profil-dinas.delete', 'tagline-sambutan') }}" method="post">
 											@csrf
 											@method('delete')
 											<input type="hidden" name="dataId" value="{{ $item['id'] }}">
@@ -64,5 +63,4 @@
 			</div>
 		</div>
 	</div>
-
 </x-layouts.admin>

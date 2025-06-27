@@ -5,15 +5,22 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\ProfilDinas;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class ProfilDinasController extends Controller
 {
   protected $viewMap = [
-    'sejarah' => 'admin.form-sejarah',
-    'visi'    => 'admin.form-visi',
-    'misi'    => 'admin.form-misi',
-    'tugas'   => 'admin.form-tugas',
-    'fungsi'  => 'admin.form-fungsi',
+    'sejarah'             => 'admin.form-sejarah',
+    'visi'                => 'admin.form-visi',
+    'misi'                => 'admin.form-misi',
+    'tugas'               => 'admin.form-tugas',
+    'fungsi'              => 'admin.form-fungsi',
+    'foto-diskominfo'     => 'admin.form-foto-diskominfo',
+    'struktur-organisasi' => 'admin.form-struktur-organisasi',
+
+    // Sambutan & tagline
+    'sambutan-kadis'   => ' admin.form-sambutan-kadis',
+    'tagline-sambutan' => ' admin.form-tagline',
   ];
 
   public function index($jenis)
@@ -34,14 +41,14 @@ class ProfilDinasController extends Controller
 
     $data = ProfilDinas::where('jenis', $jenis)->firstOrFail();
 
-    if (in_array($jenis, ['misi', 'fungsi'])) {
+    if (in_array($jenis, ['misi', 'tagline-sambutan', 'fungsi'])) {
       $request->validate(['konten' => 'required|string']);
 
       $konten = $data->konten ?? [];
 
-      if ($request->filled('misiId')) {
+      if ($request->filled('dataId')) {
         foreach ($konten as &$item) {
-          if ($item['id'] == $request->misiId) {
+          if ($item['id'] == $request->dataId) {
             $item['value'] = ucfirst($request->konten);
             if ($jenis === 'fungsi') {
               $item['icon'] = $request->icon;
@@ -62,14 +69,38 @@ class ProfilDinasController extends Controller
       }
 
       $data->update(['konten' => json_encode($konten)]);
+    } elseif ($jenis == 'foto-diskominfo') {
+      // Foto diskominfo
+      $request->validate(['konten' => 'required|image|max:2048']);
+      $path = $request->file('konten')->store('foto-diskominfo', 'public');
+
+      $konten = $data->konten ?? [];
+      $nextId = count($konten) > 0 ? max(array_column($konten, 'id')) + 1 : 1;
+
+      $konten[] = [
+        'id'    => $nextId,
+        'value' => $path,
+      ];
+
+      $data->update(['konten' => json_encode($konten)]);
     } else {
-      // Sejarah & Visi & Tugas
-      $request->validate(['konten' => 'required|string']);
-      $data->update(['konten' => $request->konten]);
+      if ($jenis == 'struktur-organisasi') {
+        $request->validate(['konten' => 'required|image|max:2048']);
+        $path = $request->file('konten')->store('gambar', 'public');
+
+        Storage::disk('public')->delete($data->konten);
+
+        $data->update(['konten' => $path]);
+      } else {
+        // Sejarah & Visi & Tugas
+        $request->validate(['konten' => 'required|string']);
+        $data->update(['konten' => $request->konten]);
+      }
     }
 
     return back()->with('success', 'Data berhasil disimpan.');
   }
+
 
   public function delete(Request $request, $jenis)
   {
@@ -77,18 +108,26 @@ class ProfilDinasController extends Controller
       abort(404);
     }
 
-    $data = ProfilDinas::where('jenis', $jenis)->firstOrFail();
+    $data   = ProfilDinas::where('jenis', $jenis)->firstOrFail();
     $konten = is_array($data->konten) ? $data->konten : json_decode($data->konten, true);
 
-    if ($request->filled('misiId')) {
-      $konten = array_values(array_filter($konten, function ($item) use ($request) {
-        return $item['id'] != $request->misiId;
-      }));
-
-      $data->update(['konten' => json_encode($konten)]);
-      return back()->with('success', 'Data berhasil dihapus.');
+    // Khusus jenis foto, hapus juga file gambarnya
+    if ($jenis == 'foto-diskominfo') {
+      foreach ($konten as $item) {
+        if ($item['id'] == $request->dataId) {
+          Storage::disk('public')->delete($item['value']);
+          break;
+        }
+      }
     }
 
-    return back()->with('error', 'Data tidak ditemukan.');
+    // Hapus item dari array berdasarkan id
+    $konten = array_values(array_filter($konten, function ($item) use ($request) {
+      return $item['id'] != $request->dataId;
+    }));
+
+    $data->update(['konten' => json_encode($konten)]);
+
+    return back()->with('success', 'Data berhasil dihapus.');
   }
 }

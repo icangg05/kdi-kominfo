@@ -25,9 +25,5 @@
 				</div>
 			</form>
 		</div>
-		@if (session('success'))
-			<x-alert type="success" :message="session('success')" />
-		@endif
-
 	</div>
 </x-layouts.admin>

@@ -22,12 +22,30 @@ class ProfilDinasSeeder extends Seeder
       [
         'jenis'  => 'tagline-sambutan',
         'konten' =>  json_encode([
-          "Smart City Terdepan",
-          "Transformasi Digital",
-          "Inovasi Teknologi",
-          "Layanan Publik Prima",
-          "Keamanan Siber",
-          "Literasi Digital"
+          [
+            'id'    => 1,
+            'value' => "Smart City Terdepan",
+          ],
+          [
+            'id'    => 2,
+            'value' => "Transformasi Digital",
+          ],
+          [
+            'id'    => 3,
+            'value' => "Inovasi Teknologi",
+          ],
+          [
+            'id'    => 4,
+            'value' =>  "Layanan Publik Prima",
+          ],
+          [
+            'id'    => 5,
+            'value' => "Keamanan Siber",
+          ],
+          [
+            'id'    => 6,
+            'value' => "Literasi Digital",
+          ],
         ]),
       ],
 
@@ -70,12 +88,22 @@ class ProfilDinasSeeder extends Seeder
       [
         'jenis'  => 'foto-diskominfo',
         'konten' => json_encode([
-          "foto-diskominfo/diskominfo-1.webp",
-          "foto-diskominfo/diskominfo-2.webp",
-          "foto-diskominfo/diskominfo-3.webp",
-          "foto-diskominfo/diskominfo-4.webp",
-          "foto-diskominfo/diskominfo-5.webp",
-          "foto-diskominfo/diskominfo-6.webp"
+          [
+            'id'    => 1,
+            'value' => "foto-diskominfo/diskominfo-1.webp",
+          ],
+          [
+            'id'    => 2,
+            'value' => "foto-diskominfo/diskominfo-2.webp",
+          ],
+          [
+            'id'    => 3,
+            'value' => "foto-diskominfo/diskominfo-3.webp",
+          ],
+          [
+            'id'    => 4,
+            'value' => "foto-diskominfo/diskominfo-4.webp",
+          ],
         ]),
       ],
 

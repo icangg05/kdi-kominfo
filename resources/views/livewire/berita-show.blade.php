@@ -18,7 +18,7 @@
 				<!-- Judul & Meta -->
 				<div>
 					<h1 class="text-2xl lg:text-3xl font-bold text-gray-800 mb-2 leading-tight">{{ $data->judul }}</h1>
-					<div class="text-sm flex flex-col lg:flex-row gap-1 justify-between text-gray-500">
+					<div class="text-xs lg:text-sm flex flex-col lg:flex-row gap-1 justify-between text-gray-500">
 						<div class="flex flex-wrap gap-4">
 							<span>
 								<i class="fas fa-calendar-alt text-primary mr-1"></i>

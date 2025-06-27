@@ -1,41 +1,87 @@
 @php
-$sidebar = [
-    ['fas fa-house', 'Dashboard', route('admin.dashboard'), request()->routeIs('admin.dashboard')],
+	$sidebar = [
+	    ['fas fa-house', 'Dashboard', route('admin.dashboard'), request()->routeIs('admin.dashboard')],
 
-    [
-        'fas fa-building-columns', // solid style karena tidak ada versi `far`
-        'Profil Dinas',
-        '#',
-        request()->is('dashboard/profil-dinas*'),
-        [
-            ['far fa-circle', 'Sejarah', route('admin.profil-dinas', 'sejarah'), request()->route('jenis') === 'sejarah'],
-            ['far fa-circle', 'Visi', route('admin.profil-dinas', 'visi'), request()->route('jenis') === 'visi'],
-            ['far fa-circle', 'Misi', route('admin.profil-dinas', 'misi'), request()->route('jenis') === 'misi'],
-            ['far fa-circle', 'Foto Diskominfo', route('admin.profil-dinas', 'foto-diskominfo'), request()->route('jenis') === 'foto-diskominfo'],
-            ['far fa-circle', 'Tugas', route('admin.profil-dinas', 'tugas'), request()->route('jenis') === 'tugas'],
-            ['far fa-circle', 'Fungsi', route('admin.profil-dinas', 'fungsi'), request()->route('jenis') === 'fungsi'],
-            ['far fa-circle', 'Profil Pimpinan', route('admin.profil-dinas', 'profil-pimpinan'), request()->route('jenis') === 'profil-pimpinan'],
-            ['far fa-circle', 'Pegawai', route('admin.profil-dinas', 'pegawai'), request()->route('jenis') === 'pegawai'],
-            ['far fa-circle', 'Struktur Organisasi', route('admin.profil-dinas', 'struktur-organisasi'), request()->route('jenis') === 'struktur-organisasi'],
-        ],
-    ],
+	    [
+	        'fas fa-building-columns',
+	        'Profil Dinas',
+	        '#',
+	        request()->is('dashboard/profil-dinas*') ||
+	        request()->is('dashboard/profil-pimpinan*') ||
+	        request()->routeIs('admin.pegawai'),
+	        [
+	            [
+	                'far fa-circle',
+	                'Sambutan Kadis',
+	                route('admin.profil-dinas', 'sambutan-kadis'),
+	                request()->route('jenis') === 'sambutan-kadis',
+	            ],
+	            [
+	                'far fa-circle',
+	                'Tagline Diskominfo',
+	                route('admin.profil-dinas', 'tagline-sambutan'),
+	                request()->route('jenis') === 'tagline-sambutan',
+	            ],
+	            [
+	                'far fa-circle',
+	                'Sejarah',
+	                route('admin.profil-dinas', 'sejarah'),
+	                request()->route('jenis') === 'sejarah',
+	            ],
+	            ['far fa-circle', 'Visi', route('admin.profil-dinas', 'visi'), request()->route('jenis') === 'visi'],
+	            ['far fa-circle', 'Misi', route('admin.profil-dinas', 'misi'), request()->route('jenis') === 'misi'],
+	            [
+	                'far fa-circle',
+	                'Foto Diskominfo',
+	                route('admin.profil-dinas', 'foto-diskominfo'),
+	                request()->route('jenis') === 'foto-diskominfo',
+	            ],
+	            ['far fa-circle', 'Tugas', route('admin.profil-dinas', 'tugas'), request()->route('jenis') === 'tugas'],
+	            ['far fa-circle', 'Fungsi', route('admin.profil-dinas', 'fungsi'), request()->route('jenis') === 'fungsi'],
+	            [
+	                'far fa-circle',
+	                'Profil Pimpinan',
+	                route('admin.profil-pimpinan'),
+	                request()->routeIs('admin.profil-pimpinan'),
+	            ],
+	            ['far fa-circle', 'Pegawai', route('admin.pegawai'), request()->routeIs('admin.pegawai')],
+	            [
+	                'far fa-circle',
+	                'Struktur Organisasi',
+	                route('admin.profil-dinas', 'struktur-organisasi'),
+	                request()->route('jenis') === 'struktur-organisasi',
+	            ],
+	        ],
+	    ],
 
-    ['fas fa-newspaper', 'Berita', route('admin.dashboard'), request()->is('dashboard/berita*')],
-    ['fas fa-file-lines', 'Dokumen', route('admin.dashboard'), request()->is('dashboard/dokumen*')],
-    ['fas fa-photo-film', 'Galeri Diskominfo', route('admin.dashboard'), request()->is('dashboard/galeri*')],
+	    ['fas fa-newspaper', 'Berita', route('admin.dashboard'), request()->is('dashboard/berita*')],
+	    ['fas fa-file-lines', 'Dokumen', route('admin.dashboard'), request()->is('dashboard/dokumen*')],
+	    ['fas fa-photo-film', 'Galeri Diskominfo', route('admin.dashboard'), request()->is('dashboard/galeri*')],
 
-    [
-        'fas fa-database',
-        'Data Lainnya',
-        '#',
-        request()->is('dashboard/data-lainnya*'),
-        [
-            ['far fa-circle', 'Kategori Berita', route('admin.dashboard'), '#'],
-            ['far fa-circle', 'Kategori Dokumen', route('admin.dashboard'), '#'],
-            ['far fa-circle', 'Pengaturan', route('admin.dashboard'), '#'],
-        ],
-    ],
-];
+	    [
+	        'fas fa-database',
+	        'Data Lainnya',
+	        '#',
+	        request()->is('dashboard/data-lainnya*') ||
+	        request()->routeIs('kategori-berita.index') ||
+	        request()->routeIs('kategori-dokumen.index'),
+	        [
+	            [
+	                'far fa-circle',
+	                'Kategori Berita',
+	                route('kategori-berita.index'),
+	                request()->routeIs('kategori-berita.index'),
+	            ],
+	            [
+	                'far fa-circle',
+	                'Kategori Dokumen',
+	                route('kategori-dokumen.index'),
+	                request()->routeIs('kategori-dokumen.index'),
+	            ],
+	            ['far fa-circle', 'Pengaturan', '#', request()->is('pengaturan')],
+	        ],
+	    ],
+	];
 @endphp
 
 

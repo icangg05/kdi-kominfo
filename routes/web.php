@@ -2,7 +2,11 @@
 
 use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\KategoriBeritaController;
+use App\Http\Controllers\Admin\KategoriDokumenController;
+use App\Http\Controllers\Admin\PegawaiController;
 use App\Http\Controllers\Admin\ProfilDinasController;
+use App\Http\Controllers\ProfilPimpinanController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -37,13 +41,24 @@ Route::get('/layanan/{nama_layanan}', App\Livewire\Layanan::class)->name('layana
 
 
 // Page Dashboard
-Route::middleware('auth')->group(function() {
+Route::middleware('auth')->group(function () {
   // Logout
   Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
 
   Route::get('/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
+
+  Route::get('/dashboard/profil-pimpinan', [ProfilPimpinanController::class, 'index'])->name('admin.profil-pimpinan');
+  Route::post('/dashboard/profil-pimpinan', [ProfilPimpinanController::class, 'save'])->name('admin.profil-pimpinan.save');
+
   Route::get('/dashboard/profil-dinas/{jenis}', [ProfilDinasController::class, 'index'])->name('admin.profil-dinas');
   Route::post('/dashboard/profil-dinas/{jenis}', [ProfilDinasController::class, 'save'])->name('admin.profil-dinas.save');
   Route::delete('/dashboard/profil-dinas/{jenis}', [ProfilDinasController::class, 'delete'])->name('admin.profil-dinas.delete');
-  
+
+  Route::get('/dashboard/pegawai', [PegawaiController::class, 'index'])->name('admin.pegawai');
+  Route::post('/dashboard/pegawai', [PegawaiController::class, 'save'])->name('admin.pegawai.save');
+  Route::delete('/dashboard/pegawai', [PegawaiController::class, 'delete'])->name('admin.pegawai.delete');
+  Route::get('/dashboard/pegawai/refresh', [PegawaiController::class, 'refreshTable'])->name('admin.pegawai.refresh');
+
+  Route::resource('dashboard/kategori-berita', KategoriBeritaController::class)->except(['show', 'edit']);
+  Route::resource('dashboard/kategori-dokumen', KategoriDokumenController::class)->except(['show', 'edit']);
 });

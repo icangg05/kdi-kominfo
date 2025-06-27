@@ -12,16 +12,16 @@
 		<div class="mt-4 lg:mt-8 grid grid-cols-2 gap-2 lg:gap-4 lg:grid-cols-3 lg:grid-rows-1">
 			<img
 				class="aspect-[3/4] lg:aspect-9/10 object-cover rounded w-full h-full"
-				src="{{ asset('storage/' . $data->foto[0]) }}"
+				src="{{ asset('storage/' . $data->foto[0]['value']) }}"
 				alt="img">
 			<div class="grid grid-rows-2 gap-2 lg:gap-4 lg:grid-rows-1 lg:grid-cols-2 lg:contents">
 				<img
 					class="object-cover rounded w-full h-full"
-					src="{{ asset('storage/' . $data->foto[1]) }}"
+					src="{{ asset('storage/' . $data->foto[1]['value']) }}"
 					alt="img">
 				<img
 					class="object-cover rounded w-full h-full"
-					src="{{ asset('storage/' . $data->foto[2]) }}"
+					src="{{ asset('storage/' . $data->foto[2]['value']) }}"
 					alt="img">
 			</div>
 		</div>

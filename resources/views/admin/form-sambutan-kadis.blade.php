@@ -1,19 +1,20 @@
 <x-layouts.admin
-	icon="fa fa-book"
-	title="Visi"
-	desc="Visi Diskominfo Kota Kendari"
-	:nav-menu="[['Dashboard'], ['Visi', '#']]">
+	icon="fa fa-university"
+	title="Sambutan Kepala Dinas"
+	desc="Sambutan Kepala Dinas Diskominfo Kota Kendari"
+	:nav-menu="[['Dashboard'], ['Sambutan Kepala Dinas', '#'], ]">
 
 	<div class="row">
 		<div class="col-md-7 order-2 order-md-1">
-			<form action="" method="post">
+			<form action="{{ route('admin.profil-dinas', 'sambutan-kadis') }}" method="post">
+        @csrf
 				<div class="tile">
-					<h3 class="tile-title">Form Visi</h3>
+					<h3 class="tile-title">Form Sambutan Kepala Dinas</h3>
 					<div class="tile-body">
 						@csrf
 						<div>
 							<x-admin-textinput.ckeditor
-								label="Tulis Visi Diskominfo"
+								label="Tulis Sambutan Kepala Dinas"
 								key="konten"
 								:value="$data->konten" />
 						</div>
@@ -25,6 +26,5 @@
 				</div>
 			</form>
 		</div>
-
 	</div>
 </x-layouts.admin>

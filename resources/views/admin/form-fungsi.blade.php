@@ -26,8 +26,8 @@
 								required />
 						</div>
 
-						{{-- Tambahkan hidden input untuk misiId --}}
-						<input type="hidden" name="misiId" id="misiId">
+						{{-- Tambahkan hidden input untuk dataId --}}
+						<input type="hidden" name="dataId" id="dataId">
 					</div>
 					<div class="tile-footer">
 						<button class="btn btn-primary" type="submit" id="btnSubmit">Tambah</button>&nbsp;&nbsp;&nbsp;
@@ -37,9 +37,6 @@
 			</form>
 
 		</div>
-		@if (session('success'))
-			<x-alert type="success" :message="session('success')" />
-		@endif
 	</div>
 
 	<div class="row">
@@ -68,7 +65,7 @@
 										<form action="{{ route('admin.profil-dinas.delete', 'fungsi') }}" method="post">
 											@csrf
 											@method('delete')
-											<input type="hidden" name="misiId" value="{{ $item['id'] }}">
+											<input type="hidden" name="dataId" value="{{ $item['id'] }}">
 											<button onclick="return confirm('Yakin hapus data ini?')" type="submit" class="btn btn-sm btn-danger"><i
 													class="bi bi-trash fs-5"></i></button>
 										</form>
@@ -82,35 +79,5 @@
 		</div>
 	</div>
 
-
-	@push('scripts')
-		<script>
-			$(document).ready(function() {
-				// Saat baris diklik
-				$('#sampleTable tbody tr').on('click', function(e) {
-					// sekarang 'e' sudah dikenali
-					if ($(e.target).closest('td').is(':last-child'))
-						return;
-
-					let misiText = $(this).find('td:nth-child(2)').text().trim();
-					let misiId = $(this).data('id');
-					
-					let iconText = $(this).find('td:nth-child(3) span').text().trim();
-
-					// Isi ke form
-					$('#konten').val(misiText);
-					$('#misiId').val(misiId);
-					$('#icon').val(iconText);
-					$('#btnSubmit').text('Ubah');
-				});
-
-				// Reset form
-				$('#btnReset').on('click', function() {
-					$('#btnSubmit').text('Tambah');
-					$('#misiId').val('');
-				});
-			});
-		</script>
-	@endpush
 
 </x-layouts.admin>

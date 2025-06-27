@@ -14,7 +14,7 @@
 				@foreach ($taglineSambutan as $item)
 					<p class="font-sen text-cText text-sm lg:text-base inline-flex items-center space-x-3">
 						<i class="fa-solid fa-caret-right text-primary"></i>
-						<span>{{ $item }}</span>
+						<span>{{ $item['value'] }}</span>
 					</p>
 				@endforeach
 			</div>
@@ -24,7 +24,7 @@
 		{{-- Right Content --}}
 		<div class="col-span-5 lg:col-span-2 order-1 lg:order-2">
 			<img class="aspect-3/4 object-cover object-center w-[90%] lg:w-full mx-auto"
-				src="{{ asset("storage/$fotoKadis") }}"
+				src="{{ asset("storage/". $fotoKadis['value']) }}"
 				alt="kadis">
 		</div>
 		{{-- Right Content --}}

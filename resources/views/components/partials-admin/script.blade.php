@@ -81,14 +81,64 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/js/all.min.js"
 	integrity="sha512-b+nQTCdtTBIRIbraqNEwsjB6UvL3UEMkXnhzd8awtCYh0Kcsjl9uEgwVFVbhoj3uu1DO1ZMacNvLoyJJiNfcvg=="
 	crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-	
+
+{{-- Moment js --}}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/locale/id.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/js/tom-select.complete.min.js"></script>
+
+{{-- Toastify --}}
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+
 <!-- Data table plugin-->
 <script type="text/javascript" src="{{ asset('admin') }}/js/plugins/jquery.dataTables.min.js"></script>
 <script type="text/javascript" src="{{ asset('admin') }}/js/plugins/dataTables.bootstrap.min.js"></script>
 <script type="text/javascript">
 	$('#sampleTable').DataTable();
+	$('#myTable').DataTable();
 </script>
 
+<script>
+	$(document).ready(function() {
+		// Saat baris diklik
+		$('#sampleTable').on('click', 'tbody tr', function(e) {
+			// sekarang 'e' sudah dikenali
+			if ($(e.target).closest('td').is(':last-child'))
+				return;
 
+			let valueText = $(this).find('td:nth-child(2)').text().trim();
+			let dataId = $(this).data('id');
+
+			// Isi ke form
+			$('#konten').val(valueText);
+			$('#dataId').val(dataId);
+			$('#btnSubmit').text('Ubah');
+		});
+
+		// Reset form
+		$('#btnReset').on('click', function() {
+			$('#btnSubmit').text('Tambah');
+			$('#dataId').val('');
+		});
+	});
+</script>
+
+{{-- Alert --}}
+{{-- <script>
+	$(document).ready(function() {
+		const $alert = $('.custom-alert');
+
+		// Munculkan alert dengan animasi
+		setTimeout(() => {
+			$alert.addClass('show');
+		}, 100);
+
+		// Hilangkan setelah 3 detik
+		setTimeout(() => {
+			$alert.removeClass('show');
+		}, 3500);
+	});
+</script> --}}
 
 @stack('scripts')

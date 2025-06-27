@@ -55,14 +55,14 @@
 		{{-- Foto Ruangan Kominfo --}}
 		<div data-hs-carousel='{
     "loadingClasses": "opacity-0"
-  }' class="relative">
+  }' class="relative mt-14">
 			<div class="hs-carousel flex flex-col md:flex-row gap-2">
 				<div class="md:order-2 relative grow overflow-hidden min-h-55 lg:min-h-120 bg-white rounded-lg">
 					<div
 						class="hs-carousel-body absolute top-0 bottom-0 start-0 flex flex-nowrap transition-transform duration-700 opacity-0">
 						@foreach ($fotoDiskominfo as $i => $item)
 							<div class="hs-carousel-slide">
-								<img src="{{ asset("storage/$item") }}" alt="foto-{{ $i }}"
+								<img src="{{ asset("storage/". $item['value']) }}" alt="foto-{{ $i }}"
 									alt="Foto Ruangan"
 									class="object-cover w-full h-full" />
 							</div>
@@ -97,7 +97,7 @@
 						@foreach ($fotoDiskominfo as $i => $item)
 							<div
 								class="hs-carousel-pagination-item shrink-0 border border-gray-200 rounded-md overflow-hidden cursor-pointer size-20 md:size-32 hs-carousel-active:border-blue-400">
-								<img src="{{ asset("storage/$item") }}" alt="foto-{{ $i }}"
+								<img src="{{ asset("storage/". $item['value']) }}" alt="foto-{{ $i }}"
 									alt="Foto Ruangan"
 									class="object-cover w-full h-full" />
 							</div>

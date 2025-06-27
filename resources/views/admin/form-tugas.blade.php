@@ -1,6 +1,5 @@
 <x-layouts.admin
-	icon="fa fa-check-square-o"
-	{{-- fa fa-cogs --}}
+	icon="fa fa-check-square"
 	title="Tugas"
 	desc="Tugas Diskominfo Kota Kendari"
 	:nav-menu="[['Dashboard'], ['Tugas', '#']]">
@@ -26,9 +25,5 @@
 				</div>
 			</form>
 		</div>
-		@if (session('success'))
-			<x-alert type="success" :message="session('success')" />
-		@endif
-
 	</div>
 </x-layouts.admin>
