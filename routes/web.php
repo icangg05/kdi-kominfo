@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\GaleriController;
 use App\Http\Controllers\Admin\KategoriBeritaController;
 use App\Http\Controllers\Admin\KategoriDokumenController;
 use App\Http\Controllers\Admin\PegawaiController;
@@ -13,6 +14,7 @@ use Illuminate\Support\Facades\Route;
 // Page Login
 Route::get('/login', [AuthController::class, 'login'])->middleware('guest')->name('login');
 Route::post('/login', [AuthController::class, 'authenticate'])->middleware('guest')->name('authenticate');
+Route::get('/logout', [AuthController::class, 'logout'])->middleware('auth')->name('logout');
 
 
 // Page Beranda
@@ -41,24 +43,24 @@ Route::get('/layanan/{nama_layanan}', App\Livewire\Layanan::class)->name('layana
 
 
 // Page Dashboard
-Route::middleware('auth')->group(function () {
-  // Logout
-  Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
+Route::middleware('auth')->prefix('dashboard')->name('dashboard.')->group(function () {
+  Route::get('/', [DashboardController::class, 'index'])->name('index');
 
-  Route::get('/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
+  Route::get('/profil-pimpinan', [ProfilPimpinanController::class, 'index'])->name('profil-pimpinan');
+  Route::post('/profil-pimpinan', [ProfilPimpinanController::class, 'save'])->name('profil-pimpinan.save');
 
-  Route::get('/dashboard/profil-pimpinan', [ProfilPimpinanController::class, 'index'])->name('admin.profil-pimpinan');
-  Route::post('/dashboard/profil-pimpinan', [ProfilPimpinanController::class, 'save'])->name('admin.profil-pimpinan.save');
+  Route::get('/profil-dinas/{jenis}', [ProfilDinasController::class, 'index'])->name('profil-dinas');
+  Route::post('/profil-dinas/{jenis}', [ProfilDinasController::class, 'save'])->name('profil-dinas.save');
+  Route::delete('/profil-dinas/{jenis}', [ProfilDinasController::class, 'delete'])->name('profil-dinas.delete');
 
-  Route::get('/dashboard/profil-dinas/{jenis}', [ProfilDinasController::class, 'index'])->name('admin.profil-dinas');
-  Route::post('/dashboard/profil-dinas/{jenis}', [ProfilDinasController::class, 'save'])->name('admin.profil-dinas.save');
-  Route::delete('/dashboard/profil-dinas/{jenis}', [ProfilDinasController::class, 'delete'])->name('admin.profil-dinas.delete');
+  Route::get('/pegawai', [PegawaiController::class, 'index'])->name('pegawai');
+  Route::post('/pegawai', [PegawaiController::class, 'save'])->name('pegawai.save');
+  Route::delete('/pegawai', [PegawaiController::class, 'delete'])->name('pegawai.delete');
+  Route::get('/pegawai/refresh', [PegawaiController::class, 'refreshTable'])->name('pegawai.refresh');
 
-  Route::get('/dashboard/pegawai', [PegawaiController::class, 'index'])->name('admin.pegawai');
-  Route::post('/dashboard/pegawai', [PegawaiController::class, 'save'])->name('admin.pegawai.save');
-  Route::delete('/dashboard/pegawai', [PegawaiController::class, 'delete'])->name('admin.pegawai.delete');
-  Route::get('/dashboard/pegawai/refresh', [PegawaiController::class, 'refreshTable'])->name('admin.pegawai.refresh');
+  Route::resource('/kategori-berita', KategoriBeritaController::class)->except(['show', 'edit']);
+  Route::resource('/kategori-dokumen', KategoriDokumenController::class)->except(['show', 'edit']);
 
-  Route::resource('dashboard/kategori-berita', KategoriBeritaController::class)->except(['show', 'edit']);
-  Route::resource('dashboard/kategori-dokumen', KategoriDokumenController::class)->except(['show', 'edit']);
+  // Route Galeri
+  Route::resource('/galeri', GaleriController::class)->except(['show', 'edit']);
 });

@@ -134,7 +134,6 @@
 						$('#previewFoto').attr('src', `/img/user.svg`);
 					}
 
-					// ⬇️ Scroll otomatis ke atas (area form)
 					$('html').animate({
 						scrollTop: $('#form').offset().top - 90
 					}, 150);
@@ -144,7 +143,7 @@
 
 			// Refresh table
 			function refreshTable() {
-				$.get('{{ route('admin.pegawai.refresh') }}', function(data) {
+				$.get('{{ route('dashboard.pegawai.refresh') }}', function(data) {
 					$('#container-table').html(data); // inject table
 					setupTableClick(); // rebind klik baris
 					$('#myTable').DataTable(); // re-init datatable
@@ -181,7 +180,7 @@
 
 
 					$.ajax({
-						url: '{{ route('admin.pegawai.save') }}',
+						url: '{{ route('dashboard.pegawai.save') }}',
 						method: 'POST',
 						data: formData,
 						processData: false,
@@ -217,7 +216,7 @@
 					const $form = $(this);
 
 					$.ajax({
-						url: '{{ route('admin.pegawai.delete') }}',
+						url: '{{ route('dashboard.pegawai.delete') }}',
 						method: 'POST',
 						data: $form.serialize(),
 						success: function(res) {
@@ -236,7 +235,6 @@
 					$('#form')[0].reset();
 					$('#previewFoto').attr('src', '{{ asset('img/user.svg') }}');
 					$('.err-message').text('');
-
 				}
 				// Klik reset button
 				$('#btnReset').on('click', function() {

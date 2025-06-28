@@ -6,7 +6,7 @@
 
 	<div class="row">
 		<div class="col-md-7 order-2 order-md-1">
-			<form action="{{ route('admin.profil-dinas', 'struktur-organisasi') }}" method="post" enctype="multipart/form-data">
+			<form action="{{ route('dashboard.profil-dinas', 'struktur-organisasi') }}" method="post" enctype="multipart/form-data">
 				@csrf
 				<div class="tile">
 					<h3 class="tile-title">Form Struktur Organisasi</h3>

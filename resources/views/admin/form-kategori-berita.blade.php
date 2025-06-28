@@ -6,7 +6,7 @@
 
 	<div class="row">
 		<div class="col-md-7 order-2 order-md-1">
-			<form action="{{ route('kategori-berita.store') }}" method="post">
+			<form id="form" action="{{ route('dashboard.kategori-berita.store') }}" method="post">
 				@csrf
 				<div class="tile">
 					<h3 class="tile-title">Form Kategori Berita</h3>
@@ -36,59 +36,61 @@
 		<div class="col-md-12">
 			<div class="tile">
 				<div class="tile-body">
-					<table class="table table-hover table-bordered" id="sampleTable">
-						<thead>
-							<tr>
-								<th>#</th>
-								<th>Nama Kategori</th>
-								<th>Aksi</th>
-							</tr>
-						</thead>
-						<tbody>
-							@foreach ($data as $item)
-								<tr style="cursor: default" data-id="{{ $item['id'] }}">
-									<td>{{ $loop->iteration }}.</td>
-									<td>{{ $item->nama }}</td>
-									<td class="btn-group">
-										<form action="{{ route('kategori-berita.destroy', $item->id) }}" method="post">
-											@csrf
-											@method('delete')
-											<button onclick="return confirm('Yakin hapus data ini?')" type="submit" class="btn btn-sm btn-danger"><i
-													class="bi bi-trash fs-5"></i></button>
-										</form>
-									</td>
+					<div class="table-responsive" id="container-table">
+						<table class="table table-hover table-bordered" id="sampleTable">
+							<thead>
+								<tr>
+									<th>#</th>
+									<th>Nama Kategori</th>
+									<th>Aksi</th>
 								</tr>
-							@endforeach
-						</tbody>
+							</thead>
+							<tbody>
+								@foreach ($data as $item)
+									<tr style="cursor: default" data-id="{{ $item['id'] }}">
+										<td>{{ $loop->iteration }}.</td>
+										<td>{{ $item->nama }}</td>
+										<td class="btn-group">
+											<form action="{{ route('dashboard.kategori-berita.destroy', $item->id) }}" method="post">
+												@csrf
+												@method('delete')
+												<button onclick="return confirm('Yakin hapus data ini?')" type="submit" class="btn btn-sm btn-danger"><i
+														class="bi bi-trash fs-5"></i></button>
+											</form>
+										</td>
+									</tr>
+								@endforeach
+							</tbody>
 
-						<script>
-							$(document).ready(function() {
-								// Saat baris diklik
-								$('#sampleTable').on('click', 'tbody tr', function(e) {
-									if ($(e.target).closest('td').is(':last-child')) return;
+							<script>
+								$(document).ready(function() {
+									// Saat baris diklik
+									$('#sampleTable').on('click', 'tbody tr', function(e) {
+										if ($(e.target).closest('td').is(':last-child')) return;
 
-									let valueText = $(this).find('td:nth-child(2)').text().trim();
-									let dataId = $(this).data('id');
+										let valueText = $(this).find('td:nth-child(2)').text().trim();
+										let dataId = $(this).data('id');
 
-									$('#nama').val(valueText);
-									$('#dataId').val(dataId);
-									$('#btnSubmit').text('Ubah');
-									$('#formMethod').val('put');
+										$('#nama').val(valueText);
+										$('#dataId').val(dataId);
+										$('#btnSubmit').text('Ubah');
+										$('#formMethod').val('put');
 
-									// Ganti action ke URL update dengan ID
-									$('form').attr('action', `/dashboard/kategori-berita/${dataId}`);
+										// Ganti action ke URL update dengan ID
+										$('form').attr('action', `/dashboard/kategori-berita/${dataId}`);
+									});
+
+									// Reset form
+									$('#btnReset').on('click', function() {
+										$('#btnSubmit').text('Tambah');
+										$('#dataId').val('');
+										$('#formMethod').val('post'); // reset ke POST
+										$('form').attr('action', `{{ route('dashboard.kategori-berita.store') }}`);
+									});
 								});
-
-								// Reset form
-								$('#btnReset').on('click', function() {
-									$('#btnSubmit').text('Tambah');
-									$('#dataId').val('');
-									$('#formMethod').val('post'); // reset ke POST
-									$('form').attr('action', `{{ route('kategori-berita.store') }}`);
-								});
-							});
-						</script>
-					</table>
+							</script>
+						</table>
+					</div>
 				</div>
 			</div>
 		</div>

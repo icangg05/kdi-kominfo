@@ -4,7 +4,7 @@
 	desc="Profil Pimpinan Diskominfo Kota Kendari"
 	:nav-menu="[['Dashboard'], ['Profil Pimpinan', '#']]">
 
-	<form action="{{ route('admin.profil-pimpinan') }}" method="post" enctype="multipart/form-data">
+	<form action="{{ route('dashboard.profil-pimpinan') }}" method="post" enctype="multipart/form-data">
 		@csrf
 		<div class="row">
 			<div class="col-md-7 order-2 order-md-1">

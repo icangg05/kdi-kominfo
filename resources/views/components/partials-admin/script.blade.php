@@ -101,18 +101,17 @@
 
 <script>
 	$(document).ready(function() {
-		// Saat baris diklik
-		$('#sampleTable').on('click', 'tbody tr', function(e) {
-			// sekarang 'e' sudah dikenali
-			if ($(e.target).closest('td').is(':last-child'))
-				return;
+		$('#container-table').on('click', '#sampleTable tbody tr', function(e) {
+			if ($(e.target).closest('td').is(':last-child')) return;
 
-			let valueText = $(this).find('td:nth-child(2)').text().trim();
 			let dataId = $(this).data('id');
+			let value = $(this).data('value');
+			let icon = $(this).data('icon');
 
 			// Isi ke form
-			$('#konten').val(valueText);
 			$('#dataId').val(dataId);
+			$('#konten').val(value);
+			$('#icon').val(icon);
 			$('#btnSubmit').text('Ubah');
 		});
 
@@ -120,25 +119,11 @@
 		$('#btnReset').on('click', function() {
 			$('#btnSubmit').text('Tambah');
 			$('#dataId').val('');
+			$('#value').val('');
+			$('#icon').val('');
 		});
 	});
 </script>
 
-{{-- Alert --}}
-{{-- <script>
-	$(document).ready(function() {
-		const $alert = $('.custom-alert');
-
-		// Munculkan alert dengan animasi
-		setTimeout(() => {
-			$alert.addClass('show');
-		}, 100);
-
-		// Hilangkan setelah 3 detik
-		setTimeout(() => {
-			$alert.removeClass('show');
-		}, 3500);
-	});
-</script> --}}
 
 @stack('scripts')

@@ -6,7 +6,7 @@
 
 	<div class="row">
 		<div class="col-md-7 order-2 order-md-1">
-			<form action="{{ route('admin.profil-dinas.save', 'foto-diskominfo') }}" method="post" enctype="multipart/form-data">
+			<form action="{{ route('dashboard.profil-dinas.save', 'foto-diskominfo') }}" method="post" enctype="multipart/form-data">
 				@csrf
 				<div class="tile">
 					<h3 class="tile-title">Form Foto Diskominfo</h3>
@@ -36,7 +36,7 @@
 						@foreach ($data->konten as $item)
 							<div style="position: relative;" class="mb-3">
 								<img class="img-fluid" src="{{ asset('storage/' . $item['value']) }}" alt="{{ $item['id'] . '.jpg' }}">
-								<form action="{{ route('admin.profil-dinas.delete', 'foto-diskominfo') }}" method="post"
+								<form action="{{ route('dashboard.profil-dinas.delete', 'foto-diskominfo') }}" method="post"
 									style="position: absolute; top:0; right: 0;">
 									@csrf
 									@method('delete')

@@ -6,7 +6,7 @@
 
 	<div class="row">
 		<div class="col-md-7 order-2 order-md-1">
-			<form action="{{ route('admin.profil-dinas', 'sambutan-kadis') }}" method="post">
+			<form action="{{ route('dashboard.profil-dinas', 'sambutan-kadis') }}" method="post">
         @csrf
 				<div class="tile">
 					<h3 class="tile-title">Form Sambutan Kepala Dinas</h3>

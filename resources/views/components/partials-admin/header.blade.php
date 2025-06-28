@@ -1,5 +1,5 @@
 <header class="app-header">
-	<a class="app-header__logo" href="{{ route('admin.dashboard') }}">Diskominfo</a>
+	<a class="app-header__logo" href="{{ route('dashboard.index') }}">Diskominfo</a>
 
 	<!-- Sidebar toggle button -->
 	<a class="app-sidebar__toggle" href="#" data-toggle="sidebar" aria-label="Hide Sidebar" style="position: relative;">

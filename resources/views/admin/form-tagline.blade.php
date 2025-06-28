@@ -6,7 +6,7 @@
 
 	<div class="row">
 		<div class="col-md-7 order-2 order-md-1">
-			<form action="{{ route('admin.profil-dinas.save', 'tagline-sambutan') }}" method="post" >
+			<form id="form" action="{{ route('dashboard.profil-dinas.save', 'tagline-sambutan') }}" method="post">
 				@csrf
 				<div class="tile">
 					<h3 class="tile-title">Form Tagline</h3>
@@ -33,32 +33,36 @@
 		<div class="col-md-12">
 			<div class="tile">
 				<div class="tile-body">
-					<table class="table table-hover table-bordered" id="sampleTable">
-						<thead>
-							<tr>
-								<th>#</th>
-								<th>Tagline Diskominfo</th>
-								<th>Aksi</th>
-							</tr>
-						</thead>
-						<tbody>
-							@foreach ($data->konten as $item)
-								<tr style="cursor: default" data-id="{{ $item['id'] }}">
-									<td>{{ $loop->iteration }}.</td>
-									<td>{{ $item['value'] }}</td>
-									<td class="btn-group">
-										<form action="{{ route('admin.profil-dinas.delete', 'tagline-sambutan') }}" method="post">
-											@csrf
-											@method('delete')
-											<input type="hidden" name="dataId" value="{{ $item['id'] }}">
-											<button onclick="return confirm('Yakin hapus data ini?')" type="submit" class="btn btn-sm btn-danger"><i
-													class="bi bi-trash fs-5"></i></button>
-										</form>
-									</td>
+					<div class="table-responsive" id="container-table">
+						<table class="table table-hover table-bordered" id="sampleTable">
+							<thead>
+								<tr>
+									<th>#</th>
+									<th>Tagline Diskominfo</th>
+									<th>Aksi</th>
 								</tr>
-							@endforeach
-						</tbody>
-					</table>
+							</thead>
+							<tbody>
+								@foreach ($data->konten as $item)
+									<tr style="cursor: default"
+										data-id="{{ $item['id'] }}"
+										data-value="{{ $item['value'] }}">
+										<td>{{ $loop->iteration }}.</td>
+										<td>{{ $item['value'] }}</td>
+										<td class="btn-group">
+											<form action="{{ route('dashboard.profil-dinas.delete', 'tagline-sambutan') }}" method="post">
+												@csrf
+												@method('delete')
+												<input type="hidden" name="dataId" value="{{ $item['id'] }}">
+												<button onclick="return confirm('Yakin hapus data ini?')" type="submit" class="btn btn-sm btn-danger"><i
+														class="bi bi-trash fs-5"></i></button>
+											</form>
+										</td>
+									</tr>
+								@endforeach
+							</tbody>
+						</table>
+					</div>
 				</div>
 			</div>
 		</div>

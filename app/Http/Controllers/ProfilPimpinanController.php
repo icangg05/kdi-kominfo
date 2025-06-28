@@ -19,8 +19,8 @@ class ProfilPimpinanController extends Controller
   {
     $request->validate([
       'nama'          => 'required',
-      'awal_periode'  => 'required',
-      'akhir_periode' => 'required',
+      'awal_periode'  => 'required|min:4|max:4',
+      'akhir_periode' => 'required|min:4|max:4',
       'konten'        => 'required|string',
       'foto-kadis-1'  => 'image|max:2048',
       'foto-kadis-2'  => 'image|max:2048',
