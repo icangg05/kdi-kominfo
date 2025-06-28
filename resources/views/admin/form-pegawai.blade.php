@@ -43,6 +43,7 @@
 							<div class="col-md-6">
 								<div class="mb-3">
 									<x-admin-textinput.select
+										:data-select="App\Models\Jabatan::whereNot('nama', 'Kepala Dinas')->pluck('nama', 'id')"
 										label="Jabatan"
 										placeholder="Pilh..."
 										key="jabatan_id"
@@ -204,6 +205,7 @@
 						complete: function() {
 							$btn.html(oldText).prop('disabled', false);
 							$('#btnReset').prop('disabled', false);
+							$('#btnSubmit').text('Tambah');
 						}
 					});
 				});

@@ -12,14 +12,20 @@ class PegawaiController extends Controller
 {
   public function index()
   {
-    $data = Pegawai::with('jabatan')->latest()->get();
+    $data = Pegawai::with('jabatan')
+      ->whereHas('jabatan', function ($q) {
+        $q->where('nama', '!=', 'Kepala Dinas');
+      })->latest()->get();
 
     return view('admin.form-pegawai', compact('data'));
   }
 
   public function refreshTable()
   {
-    $data = Pegawai::with('jabatan')->latest()->get();
+    $data = Pegawai::with('jabatan')
+      ->whereHas('jabatan', function ($q) {
+        $q->where('nama', '!=', 'Kepala Dinas');
+      })->latest()->get();
 
     return view('components.partials-admin.pegawai-table', compact('data'));
   }

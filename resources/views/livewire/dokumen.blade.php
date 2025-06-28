@@ -76,8 +76,13 @@
 								data-hs-overlay="#modal-dokumen-{{ $dokumen->id }}">
 								<i class="fas fa-info-circle"></i> Detail
 							</a>
-							<a href="#"
-								class="inline-flex items-center justify-center gap-2 px-4 py-2 bg-primary text-white rounded-lg text-sm hover:bg-primary/90 transition">
+							@php
+								$fileExists = $dokumen->file && Storage::disk('public')->exists($dokumen->file);
+							@endphp
+
+							<a href="{{ $fileExists ? route('download', $dokumen->id) : '#' }}"
+								class="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-lg text-sm transition bg-primary text-white 
+									{{ $fileExists ? 'hover:bg-primary/90' : 'pointer-events-none opacity-50' }}">
 								<i class="fas fa-cloud-download-alt"></i> Unduh
 							</a>
 						</div>
@@ -142,8 +147,9 @@
 
 									<!-- Footer -->
 									<div class="flex justify-between items-center px-4 py-3 border-t border-gray-200">
-										<a href="#"
-											class="inline-flex items-center gap-2 text-sm font-medium bg-primary text-white py-2 px-4 rounded-lg hover:bg-primary/90">
+										<a href="{{ $fileExists ? route('download', $dokumen->id) : '#' }}"
+											class="inline-flex items-center gap-2 text-sm font-medium bg-primary text-white py-2 px-4 rounded-lg
+											{{ $fileExists ? 'hover:bg-primary/90' : 'pointer-events-none opacity-50' }}"">
 											<i class="fas fa-cloud-download-alt"></i> Unduh Dokumen
 										</a>
 										<button type="button" class="text-sm px-4 py-2 rounded-lg border border-gray-300 hover:bg-gray-100"

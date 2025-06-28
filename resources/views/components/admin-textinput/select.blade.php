@@ -5,8 +5,8 @@
 
 <select name="{{ $key }}" id="{{ $key }}" class="form-control select-choices">
 	<option value="">Pilih...</option>
-	@foreach (App\Models\Jabatan::whereNot('nama', 'Kepala Dinas')->pluck('nama', 'id') as $id => $nama)
-		<option value="{{ $id }}">{{ $nama }}</option>
+	@foreach ($dataSelect as $id => $nama)
+		<option @selected($id == old($key)) value="{{ $id }}">{{ $nama }}</option>
 	@endforeach
 </select>
 

@@ -17,6 +17,7 @@ return new class extends Migration
       $table->string('judul');
       $table->string('slug');
       $table->text('konten');
+      $table->date('tanggal');
       $table->string('thumbnail')->nullable();
       $table->unsignedInteger('total_lihat')->default(0);
       $table->timestamps();

@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('judul');
             $table->text('deskripsi');
             $table->string('file');
-            $table->unsignedInteger('total_unduhan');
+            $table->unsignedInteger('total_unduhan')->default(0);
             $table->timestamps();
         });
     }

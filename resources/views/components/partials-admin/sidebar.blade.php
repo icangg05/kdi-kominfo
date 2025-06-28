@@ -64,8 +64,8 @@
 	        ],
 	    ],
 
-	    ['fas fa-newspaper', 'Berita', route('dashboard.index'), request()->is('dashboard/berita*')],
-	    ['fas fa-file-lines', 'Dokumen', route('dashboard.index'), request()->is('dashboard/dokumen*')],
+	    ['fas fa-newspaper', 'Berita', route('dashboard.berita.index'), request()->is('dashboard/berita*')],
+	    ['fas fa-file-lines', 'Dokumen', route('dashboard.dokumen.index'), request()->is('dashboard/dokumen*')],
 	    ['fas fa-photo-film', 'Galeri Diskominfo', route('dashboard.galeri.index'), request()->is('dashboard/galeri*')],
 
 	    [

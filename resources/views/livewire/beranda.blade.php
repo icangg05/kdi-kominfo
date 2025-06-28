@@ -18,17 +18,21 @@
 		@include('livewire.partials.beranda.count-pengunjung')
 		{{-- Section Count Pengunjung --}}
 
-		{{-- Section Galeri --}}
-		@include('livewire.partials.beranda.section-galeri')
-		{{-- Section Galeri --}}
+		@if ($galeri->count() > 0)
+			{{-- Section Galeri --}}
+			@include('livewire.partials.beranda.section-galeri')
+			{{-- Section Galeri --}}
+		@endif
 
 		{{-- Layanan Kominfo --}}
 		@include('livewire.partials.beranda.layanan-kominfo')
 		{{-- Layanan Kominfo --}}
 
-		{{-- Berita --}}
-		@include('livewire.partials.beranda.section-berita')
-		{{-- Berita --}}
+		@if ($berita->count() > 0) 
+			{{-- Berita --}}
+			@include('livewire.partials.beranda.section-berita')
+			{{-- Berita --}}
+		@endif
 	</div>
 	{{-- Row --}}
 

@@ -3,7 +3,7 @@
 	<span class="{{ isset($required) ? 'text-danger' : 'text-dark' }}">*</span>
 @endisset
 
-<input accept="image/*" type="file" value="{{ $value ?? '' }}" @required(isset($required)) id="{{ $key }}" name="{{ $key }}"
+<input type="file" value="{{ $value ?? '' }}" @required(isset($required)) id="{{ $key }}" name="{{ $key }}"
 	class="form-control">
 
 @error($key)

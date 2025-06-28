@@ -16,18 +16,20 @@
 			}
 		}'
 		class="relative">
-		
+
 		<div class="hs-carousel w-full overflow-hidden bg-white rounded-lg">
 			<div class="relative min-h-72 -mx-1">
-				<div class="hs-carousel-body absolute top-0 bottom-0 start-0 flex flex-nowrap opacity-0 transition-transform duration-700">
+				<div
+					class="hs-carousel-body absolute top-0 bottom-0 start-0 flex flex-nowrap opacity-0 transition-transform duration-700">
 
-					@for ($i = 1; $i <= 8; $i++)
+					@foreach ($galeri as $item)
 						<div class="hs-carousel-slide px-1">
 							<div class="h-full">
-								<img src="https://picsum.photos/800/600?random={{ $i }}" alt="Galeri {{ $i }}" class="w-full h-72 object-cover rounded-lg shadow border border-gray-100" />
+								<img src="{{ asset("storage/$item->gambar") }}"
+									class="w-full h-72 object-cover rounded-lg shadow border border-gray-100" />
 							</div>
 						</div>
-					@endfor
+					@endforeach
 
 				</div>
 			</div>

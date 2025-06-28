@@ -21,6 +21,7 @@ class BeritaSeeder extends Seeder
       Berita::create([
         'kategori_berita_id' => $kategoriIds[array_rand($kategoriIds)],
         'judul'              => $judul,
+        'tanggal'            => now(),
         'slug'               => str()->slug($judul),
         'konten'             => "
                     <p><strong>Paragraf pembuka</strong> untuk berita ke-$i.</p>

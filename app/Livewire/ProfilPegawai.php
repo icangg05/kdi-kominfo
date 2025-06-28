@@ -25,7 +25,7 @@ class ProfilPegawai extends Component
 
   public function render()
   {
-    $data = Pegawai::where('nama', 'like', '%' . $this->search . '%')
+    $data = Pegawai::with('jabatan')->where('nama', 'like', '%' . $this->search . '%')
       ->paginate($this->perPage);
 
     return view('livewire.profil-pegawai', compact(

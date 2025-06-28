@@ -1,7 +1,9 @@
 <?php
 
 use App\Http\Controllers\Admin\AuthController;
+use App\Http\Controllers\Admin\BeritaController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\DokumenController;
 use App\Http\Controllers\Admin\GaleriController;
 use App\Http\Controllers\Admin\KategoriBeritaController;
 use App\Http\Controllers\Admin\KategoriDokumenController;
@@ -9,7 +11,7 @@ use App\Http\Controllers\Admin\PegawaiController;
 use App\Http\Controllers\Admin\ProfilDinasController;
 use App\Http\Controllers\ProfilPimpinanController;
 use Illuminate\Support\Facades\Route;
-
+use Illuminate\Support\Facades\Storage;
 
 // Page Login
 Route::get('/login', [AuthController::class, 'login'])->middleware('guest')->name('login');
@@ -30,17 +32,23 @@ Route::get('/profil-dinas/struktur-organisasi', App\Livewire\StrukturOrganisasi:
 // Page Berita
 Route::get('/berita', App\Livewire\Berita::class)->name('berita.index');
 Route::get('/berita/{slug}', App\Livewire\BeritaShow::class)->name('berita.show');
-
 // Page Galeri
 Route::get('/galeri', App\Livewire\Galeri::class)->name('galeri.index');
-
 // Page Dokumen
 Route::get('/dokumen', App\Livewire\Dokumen::class)->name('dokumen.index');
-
 // Page Layanan
 Route::get('/layanan/{nama_layanan}', App\Livewire\Layanan::class)->name('layanan');
+// Download file
+Route::get('/download/{id}', function ($id) {
+  $data = App\Models\Dokumen::findOrFail($id);
+  $path = $data->file;
+  $extension = pathinfo($path, PATHINFO_EXTENSION);
+  $filename = str()->slug($data->judul) . '.' . $extension;
 
+  $data->increment('total_unduhan');
 
+  return Storage::disk('public')->download($path, $filename);
+})->name('download');
 
 // Page Dashboard
 Route::middleware('auth')->prefix('dashboard')->name('dashboard.')->group(function () {
@@ -60,6 +68,12 @@ Route::middleware('auth')->prefix('dashboard')->name('dashboard.')->group(functi
 
   Route::resource('/kategori-berita', KategoriBeritaController::class)->except(['show', 'edit']);
   Route::resource('/kategori-dokumen', KategoriDokumenController::class)->except(['show', 'edit']);
+
+  // Route Berita
+  Route::resource('/berita', BeritaController::class)->except(['show', 'edit']);
+
+  // Route Berita
+  Route::resource('/dokumen', DokumenController::class)->except(['show', 'edit']);
 
   // Route Galeri
   Route::resource('/galeri', GaleriController::class)->except(['show', 'edit']);
