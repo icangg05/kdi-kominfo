@@ -28,7 +28,7 @@ class BeritaController extends Controller
     ]);
 
     if ($request->file('thumbnail'))
-      $path = $request->file('thumbnail')->store('gambar', 'public');
+      $path = $request->file('thumbnail')->store('berita', 'public');
 
     $data                     = new Berita();
     $data->judul              = ucfirst($request->judul);
@@ -54,7 +54,7 @@ class BeritaController extends Controller
     ]);
 
     if ($request->file('thumbnail'))
-      $path = $request->file('thumbnail')->store('gambar', 'public');
+      $path = $request->file('thumbnail')->store('berita', 'public');
 
     $data                     = Berita::findOrFail($id);
     $data->judul              = ucfirst($request->judul);

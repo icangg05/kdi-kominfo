@@ -1,4 +1,11 @@
-<x-layouts.admin
+@php
+	$dataId = old('dataId');
+	$isEdit = !empty($dataId);
+
+	$action = $isEdit ? route('dashboard.dokumen.update', $dataId) : route('dashboard.dokumen.store');
+@endphp<x-layouts.admin
+
+
 	icon="fa fa-file"
 	title="Dokumen"
 	desc="Dokumen Diskominfo Kota Kendari"
@@ -6,9 +13,12 @@
 
 	<div class="row">
 		<div class="col-md-7 order-2 order-md-1">
-			<form id="form" action="{{ route('dashboard.dokumen.store') }}" method="post" enctype="multipart/form-data">
+			<form id="form" action="{{ $action }}" method="post" enctype="multipart/form-data">
 				@csrf
-				<input type="hidden" name="_method" id="formMethod" value="post">
+				<input type="hidden" name="_method" id="formMethod" value="{{ $isEdit ? 'put' : 'post' }}">
+				<input type="hidden" name="dataId" id="dataId" value="{{ old('dataId') }}">
+				<input type="hidden" name="gambarPreview" id="gambarPreview" value="{{ old('gambarPreview') }}">
+
 				<div class="tile">
 					<h3 class="tile-title">Form Dokumen</h3>
 					<div class="tile-body">
@@ -38,11 +48,13 @@
 							<x-admin-textinput.file
 								label="Upload Dokumen"
 								key="file"
-								required />
+								:required="$isEdit ? false : true" />
 						</div>
 					</div>
 					<div class="tile-footer">
-						<button class="btn btn-primary" type="submit" id="btnSubmit">Tambah</button>&nbsp;&nbsp;&nbsp;
+						<button class="btn btn-primary" type="submit" id="btnSubmit">
+							{{ $isEdit ? 'Ubah' : 'Tambah' }}
+						</button>&nbsp;&nbsp;&nbsp;
 						<button class="btn btn-secondary" type="reset" id="btnReset">Reset</button>
 					</div>
 				</div>
@@ -53,7 +65,8 @@
 			<div class="tile">
 				<embed id="previewFile" src="" type="application/pdf" width="100%" height="400px"
 					class="border rounded" />
-				<small id="fileName" class="d-block mt-2 text-muted text-center">Tidak ada file dipilih</small>
+				<small style="font-size: .85rem;" id="fileName" class="d-block mt-2 text-muted text-center">Tidak ada file
+					dipilih</small>
 			</div>
 		</div>
 	</div>
@@ -89,7 +102,7 @@
 										<td>{{ $item->kategori->nama }}</td>
 										<td>{{ Carbon\Carbon::parse($item->created_at)->translatedFormat('d F Y') }}</td>
 										<td>
-											<a href="{{ asset("storage/$item->dokumen") }}">Lihat Dokumen</a>
+											<a href="{{ asset("storage/$item->file") }}">Lihat Dokumen</a>
 										</td>
 										<td class="btn-group">
 											<form action="{{ route('dashboard.dokumen.destroy', $item->id) }}" method="post">
@@ -147,6 +160,7 @@
 			function setupTableClick() {
 				$('#container-table').on('click', '#myTable tbody tr', function(e) {
 					if ($(e.target).closest('td').is(':last-child')) return;
+					$('.err-message').text("");
 
 					const $row = $(this);
 					const dataId = $row.data('id');
@@ -160,7 +174,6 @@
 					$('#deskripsi').val(deskripsi);
 					$('#kategori_dokumen_id').val(kategoriDokumenId);
 
-					// ✅ Kosongkan input file dan preview
 					$('#file').val('');
 					$('#previewFile').removeAttr('src');
 					$('#fileName').text('Tidak ada file dipilih');
@@ -200,11 +213,16 @@
 			}
 
 			function resetForm() {
+				$('#judul').val('');
+				$('#kategori_dokumen_id').val('');
+				$('#deskripsi').val('');
+				$('#file').val('');
+
 				$('#btnSubmit').text('Tambah');
-				$('#form')[0].reset();
 				$('#formMethod').val('post');
 				$('form').attr('action', `{{ route('dashboard.dokumen.store') }}`);
 				$('#file').attr('required', true);
+				$('.err-message').text("");
 
 				// Reset preview
 				document.getElementById('previewFile').removeAttribute('src');

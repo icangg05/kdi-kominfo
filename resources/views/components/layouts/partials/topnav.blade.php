@@ -24,11 +24,11 @@
 		<div class="flex items-center gap-7">
 			<p class="text-xs flex items-center space-x-1">
 				<i class="fa-solid fa-phone text-gray-600"></i>
-				<span class="mt-[4px]">0822-4618-8268</span>
+				<span class="mt-[4px]">{{ $global_telp }}</span>
 			</p>
 			<p class="text-xs flex items-center space-x-1">
 				<i class="fa-solid fa-envelope text-gray-600"></i>
-				<span class="mt-[3px]">diskominfokendari@gmail.com</span>
+				<span class="mt-[3px]">{{ $global_email }}</span>
 			</p>
 		</div>
 		{{-- Right Section --}}

@@ -52,10 +52,14 @@
 					Ikuti Kami
 				</h3>
 				<div class="flex gap-4 text-xl">
-					<a href="#" class="hover:text-white/70 transition"><i class="fa-brands fa-facebook-f"></i></a>
-					<a href="#" class="hover:text-white/70 transition"><i class="fa-brands fa-instagram"></i></a>
-					<a href="#" class="hover:text-white/70 transition"><i class="fa-brands fa-tiktok"></i></a>
-					<a href="#" class="hover:text-white/70 transition"><i class="fa-brands fa-youtube"></i></a>
+					<a @if ($global_fb) target="_blank" @endif href="{{ $global_fb ?? '#' }}"
+						class="hover:text-white/70 transition"><i class="fa-brands fa-facebook-f"></i></a>
+					<a @if ($global_ig) target="_blank" @endif target="_blank" href="{{ $global_ig ?? '#' }}" class="hover:text-white/70 transition"><i
+							class="fa-brands fa-instagram"></i></a>
+					<a @if ($global_tt) target="_blank" @endif target="_blank" href="{{ $global_tt ?? '#' }}" class="hover:text-white/70 transition"><i
+							class="fa-brands fa-tiktok"></i></a>
+					<a @if ($global_yt) target="_blank" @endif target="_blank" href="{{ $global_yt ?? '#' }}" class="hover:text-white/70 transition"><i
+							class="fa-brands fa-youtube"></i></a>
 				</div>
 			</div>
 		</div>

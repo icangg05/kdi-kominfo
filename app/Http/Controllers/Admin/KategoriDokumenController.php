@@ -17,7 +17,7 @@ class KategoriDokumenController extends Controller
 
   public function store(Request $request)
   {
-    $request->validate(['nama' => 'required|unique:kategori_berita']);
+    $request->validate(['nama' => 'required|unique:kategori_dokumen']);
 
     $data       = new KategoriDokumen();
     $data->nama = ucfirst($request->nama);
@@ -30,7 +30,7 @@ class KategoriDokumenController extends Controller
 
   public function update(Request $request, $id)
   {
-    $request->validate(['nama' => 'required|unique:kategori_berita,nama,' . $id]);
+    $request->validate(['nama' => 'required|unique:kategori_dokumen,nama,' . $id]);
 
     $data       = KategoriDokumen::findOrFail($id);
     $data->nama = ucfirst($request->nama);

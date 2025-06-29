@@ -3,11 +3,11 @@
 	<span class="text-danger">*</span>
 @endisset
 <div>
-	<textarea name="{{ $key }}" id="{{ $key }}">{{ $value ?? '' }}</textarea>
+	<textarea name="{{ $key }}" id="{{ $key }}">{{ old($key, $value ?? '') ?? '' }}</textarea>
 	<p class="text-danger err-message" id="err-{{ $key }}"></p>
 
 	@error($key)
-		<p style="margin-top: -14px" class="text-danger" id="err-{{ $key }}">{{ $message }}</p>
+		<p style="margin-top: -14px" class="text-danger err-message" id="err-{{ $key }}">{{ $message }}</p>
 	@enderror
 
 	@push('scripts')

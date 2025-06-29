@@ -146,7 +146,37 @@ class ProfilDinasSeeder extends Seeder
 
       [
         'jenis'  => 'struktur-organisasi',
-        'konten' => 'gambar/struktur-organisasi.webp'
+        'konten' => 'struktur-organisasi/struktur-organisasi.webp'
+      ],
+
+      [
+        'jenis'  => 'pengaturan',
+        'konten' => json_encode([
+          [
+            'id'    => 'telp',
+            'value' => '0822-4618-8268',
+          ],
+          [
+            'id'    => 'email',
+            'value' => 'diskominfokendari@gmail.com',
+          ],
+          [
+            'id'    => 'fb',
+            'value' => null,
+          ],
+          [
+            'id'    => 'ig',
+            'value' => null,
+          ],
+          [
+            'id'    => 'tt',
+            'value' => null,
+          ],
+          [
+            'id'    => 'yt',
+            'value' => null,
+          ],
+        ]),
       ],
     ];
 

@@ -86,7 +86,7 @@ class ProfilDinasController extends Controller
     } else {
       if ($jenis == 'struktur-organisasi') {
         $request->validate(['konten' => 'required|image|max:2048']);
-        $path = $request->file('konten')->store('gambar', 'public');
+        $path = $request->file('konten')->store('struktur-organisasi', 'public');
 
         Storage::disk('public')->delete($data->konten);
 

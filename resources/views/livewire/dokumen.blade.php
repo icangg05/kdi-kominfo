@@ -14,21 +14,21 @@
 				<!-- Pencarian -->
 				<div class="bg-white rounded-xl c2Shadow p-4">
 					<h4 class="text-sm font-semibold text-primary mb-2">Pencarian</h4>
-					<div class="relative">
-						<input wire:model.live.debounce.300ms="search" type="text" placeholder="Cari dokumen..."
+					<form action="{{ route('dokumen.index') }}" class="relative">
+						<input name="search" type="text" placeholder="Cari dokumen..."
 							class="w-full px-4 py-2 pl-10 text-sm border rounded-lg border-gray-300 focus:border-primary focus:ring-0"
 							autocomplete="off">
 						<div class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
 							<i class="fas fa-search"></i>
 						</div>
-					</div>
+					</form>
 				</div>
 
-				@if ($search)
+				@if (request('search'))
 					<div class="block lg:hidden bg-white/70 backdrop-blur-md rounded-xl p-4 c2Shadow">
 						<p class="text-sm text-gray-500 mb-1 font-medium uppercase tracking-wide">Kata Kunci Pencarian</p>
 						<div class="text-primary text-sm lg:text-base font-semibold italic">
-							<i class="fas fa-magnifying-glass mr-1 text-primary/70"></i> {{ $search }}
+							<i class="fas fa-magnifying-glass mr-1 text-primary/70"></i> {{ request('search') }}
 						</div>
 					</div>
 				@endif

@@ -51,7 +51,6 @@ class PegawaiController extends Controller
     $data = Pegawai::findOrFail($request->dataId);
 
     if ($request->hasFile('foto')) {
-      Storage::disk('public')->delete($data->foto);
       $path = $request->file('foto')->store('foto-pegawai', 'public');
     }
 
@@ -88,8 +87,6 @@ class PegawaiController extends Controller
   public function delete(Request $request)
   {
     $pegawai = Pegawai::findOrFail($request->dataId);
-    if ($pegawai->foto)
-      Storage::disk('public')->delete($pegawai->foto);
     $pegawai->delete();
 
     return response()->json(['message' => 'Data berhasil dihapus.']);

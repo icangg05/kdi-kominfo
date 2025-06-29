@@ -20,12 +20,12 @@
 			</a>
 			<ul class="dropdown-menu settings-menu dropdown-menu-right">
 				<li>
-					<a class="dropdown-item" href="page-user.html">
+					<a class="dropdown-item" href="{{ route('dashboard.pengaturan') }}">
 						<i class="fas fa-gear"></i> Pengaturan
 					</a>
 				</li>
 				<li>
-					<a class="dropdown-item" href="page-user.html">
+					<a class="dropdown-item" href="#">
 						<i class="fas fa-user"></i> Profil
 					</a>
 				</li>

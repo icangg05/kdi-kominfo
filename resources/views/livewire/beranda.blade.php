@@ -1,5 +1,4 @@
 <div>
-
 	<!-- Slider -->
 	@include('livewire.partials.beranda.hero-carousel')
 	<!-- End Slider -->

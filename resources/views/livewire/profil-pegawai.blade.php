@@ -46,7 +46,7 @@
 
 						<!-- Tombol -->
 						<button
-							class="mt-6 text-sm lg:text-base bg-white text-indigo-900 font-semibold py-2 px-6 rounded-full shadow hover:shadow-lg transition"
+							class="cursor-pointer mt-6 text-sm lg:text-base bg-white text-indigo-900 font-semibold py-2 px-6 rounded-full shadow hover:shadow-lg transition"
 							aria-haspopup="dialog" aria-expanded="false" aria-controls="hs-vertically-centered-modal"
 							data-hs-overlay="#hs-vertically-centered-modal-{{ $item->id }}">
 							Lihat Profil

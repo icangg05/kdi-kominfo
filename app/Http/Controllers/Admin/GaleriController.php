@@ -26,7 +26,7 @@ class GaleriController extends Controller
       'gambar'  => 'required|image|max:2048',
     ]);
 
-    $path          = $request->file('gambar')->store('gambar', 'public');
+    $path          = $request->file('gambar')->store('galeri', 'public');
     $data          = new Galeri();
     $data->judul   = $request->judul;
     $data->tanggal = $request->tanggal;
@@ -49,7 +49,7 @@ class GaleriController extends Controller
 
     if ($request->file('gambar')) {
       Storage::disk('public')->delete($data->gambar);
-      $path = $request->file('gambar')->store('gambar', 'public');
+      $path = $request->file('gambar')->store('galeri', 'public');
     }
 
     $data->judul   = $request->judul;

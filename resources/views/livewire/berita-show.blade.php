@@ -49,16 +49,37 @@
 					<p class="text-sm font-semibold text-gray-600 mb-3">Bagikan berita ini:</p>
 					<div class="flex flex-wrap gap-3">
 						@php
+							$currentUrl = urlencode(request()->fullUrl());
+							$judul = urlencode($data->judul);
+
 							$shares = [
-							    ['url' => '#', 'icon' => 'fab fa-facebook-f', 'label' => 'Facebook'],
-							    ['url' => '#', 'icon' => 'fab fa-twitter', 'label' => 'Twitter'],
-							    ['url' => '#', 'icon' => 'fab fa-whatsapp', 'label' => 'WhatsApp'],
-							    ['url' => '#', 'icon' => 'fas fa-envelope', 'label' => 'Email'],
+							    [
+							        'url' => "https://www.facebook.com/sharer/sharer.php?u=$currentUrl",
+							        'icon' => 'fab fa-facebook-f',
+							        'label' => 'Facebook',
+							    ],
+							    [
+							        'url' => "https://twitter.com/intent/tweet?url=$currentUrl&text=$judul",
+							        'icon' => 'fab fa-twitter',
+							        'label' => 'Twitter',
+							    ],
+							    [
+							        'url' => "https://api.whatsapp.com/send?text=$judul%20$currentUrl",
+							        'icon' => 'fab fa-whatsapp',
+							        'label' => 'WhatsApp',
+							    ],
+							    [
+							        'url' => "mailto:?subject=$judul&body=$currentUrl",
+							        'icon' => 'fas fa-envelope',
+							        'label' => 'Email',
+							    ],
 							];
 						@endphp
 
+
 						@foreach ($shares as $share)
 							<a href="{{ $share['url'] }}"
+								target="_blank" rel="noopener noreferrer"
 								class="size-8 lg:size-10 flex items-center justify-center rounded-full bg-primary text-white hover:bg-primary/90 transition shadow-md"
 								title="Bagikan ke {{ $share['label'] }}">
 								<i class="{{ $share['icon'] }} text-sm lg:text-base"></i>

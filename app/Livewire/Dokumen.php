@@ -12,16 +12,8 @@ class Dokumen extends Component
   use WithPagination;
 
   #[Url()]
-  public $search   = '';
-  #[Url()]
   public $kategori = '';
 
-
-  public function updatedSearch($value)
-  {
-    $this->resetPage();
-    $this->search = $value;
-  }
 
   public function changeKategori($value)
   {
@@ -39,11 +31,11 @@ class Dokumen extends Component
     if ($this->kategori)
       $data = $data->where('kategori_dokumen.slug', '=', $this->kategori);
 
-    if ($this->search)
-      $data = $data->where('dokumen.judul', 'like', '%' . $this->search . '%');
+    if (request('search'))
+      $data = $data->where('dokumen.judul', 'like', '%' . request('search') . '%');
 
     $data = $data->paginate(6);
-    // dd($data->total());
+    
     return view('livewire.dokumen', compact(
       'data',
     ));

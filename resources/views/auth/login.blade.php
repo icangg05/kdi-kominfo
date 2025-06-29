@@ -1,7 +1,7 @@
 <x-layouts.auth>
 	<section class="login-content">
-		<div class="logo">
-			<h1>Diskominfo Kota Kendari</h1>
+		<div class="logo" style="cursor: pointer">
+			<h1 onclick="window.location.href='{{ route('beranda') }}'">Diskominfo Kota Kendari</h1>
 		</div>
 		<div class="login-box">
 			<form class="login-form" action="{{ route('authenticate') }}" method="post">

@@ -31,14 +31,15 @@
 			{{-- Toggle collap Nav --}}
 
 			{{-- Search Input --}}
-			<div class="hidden lg:block relative">
+			<form action="{{ route('berita.index') }}" method="get" class="hidden lg:block relative">
 				<input type="text"
+					name="search"
 					placeholder="Pencarian"
 					class="bg-white/85 py-2.5 sm:py-3 px-4 ps-11 block w-full border-gray-300 rounded-lg sm:text-sm focus:z-10 focus:border-primary focus:ring-0 disabled:opacity-50 disabled:pointer-events-none">
 				<div class="absolute inset-y-0 start-0 flex items-center pointer-events-none z-20 ps-4">
 					<i class="fa-solid fa-magnifying-glass text-gray-400"></i>
 				</div>
-			</div>
+			</form>
 			{{-- Search Input --}}
 		</div>
 		{{-- Button Toggle & Search --}}

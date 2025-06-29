@@ -17,47 +17,47 @@ class GaleriSeeder extends Seeder
       [
         'judul'   => 'Pembahasan Rancangan Perwali Integrasi Sistem Layanan Digital',
         'tanggal' => '2024-09-04',
-        'gambar'  => 'gambar/galeri-1.webp',
+        'gambar'  => 'galeri/galeri-1.webp',
       ],
       [
         'judul'   => 'Musyawarah ke-X Orari Lokal Kendari Tahun 2024',
         'tanggal' => '2024-09-28',
-        'gambar'  => 'gambar/galeri-2.webp',
+        'gambar'  => 'galeri/galeri-2.webp',
       ],
       [
         'judul'   => 'Sosialisasi Aplkasi Chatina',
         'tanggal' => '2024-10-09',
-        'gambar'  => 'gambar/galeri-3.webp',
+        'gambar'  => 'galeri/galeri-3.webp',
       ],
       [
         'judul'   => 'Sosialisasi Aplikasi Chatina pada Masyarakat Wua-Wua',
         'tanggal' => '2024-10-11',
-        'gambar'  => 'gambar/galeri-4.webp',
+        'gambar'  => 'galeri/galeri-4.webp',
       ],
       [
         'judul'   => 'Kegiatan FGD Pemberdayaan Kemitraan Ekonomi dan Komunikasi Publik',
         'tanggal' => '2024-10-30',
-        'gambar'  => 'gambar/galeri-5.webp',
+        'gambar'  => 'galeri/galeri-5.webp',
       ],
       [
         'judul'   => 'Rapat Pembentukan Layanan Call Center 112',
         'tanggal' => '2025-05-28',
-        'gambar'  => 'gambar/galeri-6.webp',
+        'gambar'  => 'galeri/galeri-6.webp',
       ],
       [
         'judul'   => 'Pembahasan SDI dan SIPD antara Diskominfo Konawe dan Kendari',
         'tanggal' => '2025-06-12',
-        'gambar'  => 'gambar/galeri-7.webp',
+        'gambar'  => 'galeri/galeri-7.webp',
       ],
       [
         'judul'   => 'Semarak HUT ke-79 RI',
         'tanggal' => '2024-08-15',
-        'gambar'  => 'gambar/galeri-8.webp',
+        'gambar'  => 'galeri/galeri-8.webp',
       ],
       [
         'judul'   => 'Inspektorat Gelar Sosialisasi SPI',
         'tanggal' => '2024--6-30',
-        'gambar'  => 'gambar/galeri-9.webp',
+        'gambar'  => 'galeri/galeri-9.webp',
       ],
     ];
 

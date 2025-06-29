@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\GaleriController;
 use App\Http\Controllers\Admin\KategoriBeritaController;
 use App\Http\Controllers\Admin\KategoriDokumenController;
 use App\Http\Controllers\Admin\PegawaiController;
+use App\Http\Controllers\Admin\PengaturanController;
 use App\Http\Controllers\Admin\ProfilDinasController;
 use App\Http\Controllers\ProfilPimpinanController;
 use Illuminate\Support\Facades\Route;
@@ -53,6 +54,8 @@ Route::get('/download/{id}', function ($id) {
 // Page Dashboard
 Route::middleware('auth')->prefix('dashboard')->name('dashboard.')->group(function () {
   Route::get('/', [DashboardController::class, 'index'])->name('index');
+  Route::get('/pengaturan', [PengaturanController::class, 'index'])->name('pengaturan');
+  Route::post('/pengaturan', [PengaturanController::class, 'update'])->name('pengaturan.update');
 
   Route::get('/profil-pimpinan', [ProfilPimpinanController::class, 'index'])->name('profil-pimpinan');
   Route::post('/profil-pimpinan', [ProfilPimpinanController::class, 'save'])->name('profil-pimpinan.save');

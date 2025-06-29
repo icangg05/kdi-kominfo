@@ -74,7 +74,8 @@
 	        '#',
 	        request()->is('dashboard/pengaturan*') ||
 	        request()->routeIs('dashboard.kategori-berita.index') ||
-	        request()->routeIs('dashboard.kategori-dokumen.index'),
+	        request()->routeIs('dashboard.kategori-dokumen.index') ||
+	        request()->routeIs('dashboard.pengaturan'),
 	        [
 	            [
 	                'far fa-circle',
@@ -88,7 +89,12 @@
 	                route('dashboard.kategori-dokumen.index'),
 	                request()->routeIs('dashboard.kategori-dokumen.index'),
 	            ],
-	            ['far fa-circle', 'Pengaturan', '#', request()->is('pengaturan')],
+	            [
+	                'far fa-circle',
+	                'Pengaturan',
+	                route('dashboard.pengaturan'),
+									request()->routeIs('dashboard.pengaturan')
+	            ],
 	        ],
 	    ],
 	];
