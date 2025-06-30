@@ -19,11 +19,27 @@
 								required />
 						</div>
 						<div>
-							<x-admin-textinput.input
+							<x-admin-textinput.select
+								:data-select="[
+									'fas fa-bullhorn'    => '📢 Bullhorn',
+									'fas fa-envelope'    => '✉️ Envelope',
+									'fas fa-globe'       => '🌐 Globe',
+									'fas fa-info-circle' => 'ℹ️ Info Circle',
+									'fas fa-phone'       => '📞 Phone',
+									'fas fa-cogs'        => '⚙️ Cogs',
+									'fas fa-users'       => '👥 Users',
+									'fas fa-wifi'        => '📶 Wifi',
+									'fas fa-camera'      => '📷 Camera',
+									'fas fa-comments'    => '💬 Comments',
+									'fas fa-lightbulb'   => '💡 Lightbulb',
+									'fas fa-chart-line'  => '📈 Chart Line',
+									'fas fa-file-alt'    => '📄 File Alt',
+									'fas fa-briefcase'   => '💼 Briefcase'
+								]"
 								label="Label Icon"
-								placeholder="Tulis nama icon font awesome..."
 								key="icon"
-								required />
+								required
+							/>
 						</div>
 
 						{{-- Tambahkan hidden input untuk dataId --}}

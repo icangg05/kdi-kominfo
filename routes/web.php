@@ -11,8 +11,13 @@ use App\Http\Controllers\Admin\PegawaiController;
 use App\Http\Controllers\Admin\PengaturanController;
 use App\Http\Controllers\Admin\ProfilDinasController;
 use App\Http\Controllers\ProfilPimpinanController;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
+
+Route::get('/seed', function() {
+  return Artisan::call('migrate:fresh --seed');
+});
 
 // Page Login
 Route::get('/login', [AuthController::class, 'login'])->middleware('guest')->name('login');

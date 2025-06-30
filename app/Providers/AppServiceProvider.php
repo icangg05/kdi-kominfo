@@ -21,7 +21,7 @@ class AppServiceProvider extends ServiceProvider
    */
   public function boot(): void
   {
-    View::composer(['components.layouts.app', 'components.*'], function ($view) {
+    View::composer(['components.layouts.app', 'components.*', 'livewire.*'], function ($view) {
       $pengaturan = ProfilDinas::where('jenis', 'pengaturan')->first();
       $konten     = $pengaturan->konten;
 

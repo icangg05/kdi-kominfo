@@ -24,7 +24,7 @@ class DatabaseSeeder extends Seeder
       'name'     => 'Admin',
       'username' => 'admin',
       'email'    => 'diskominfokendari@gmail.com',
-      'password' => 'admin123'
+      'password' => '2025kominfo'
     ]);
 
 

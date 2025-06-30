@@ -21,7 +21,7 @@
 		<div class="mt-16">
 			<div class="text-start lg:text-center mb-10">
 				<h2 class="text-xl lg:text-3xl font-bold text-primary">Fungsi Diskominfo</h2>
-				<p class="mt-2 max-w-xl mx-auto text-cText">
+				<p class="text-sm lg:text-base mt-2 max-w-xl mx-auto text-cText">
 					Fungsi-fungsi berikut menjadi dasar dalam pelaksanaan tugas pelayanan publik dan pengelolaan teknologi informasi di
 					Kota Kendari.
 				</p>

@@ -119,27 +119,27 @@ class ProfilDinasSeeder extends Seeder
           [
             'id'    => 1,
             'value' => 'Perumusan kebijakan teknis di bidang komunikasi dan informatika, persandian, dan statistik.',
-            'icon'  => 'fa-solid fa-lightbulb',
+            'icon'  => 'fas fa-lightbulb',
           ],
           [
             'id'    => 2,
             'value' => 'Pelaksanaan kebijakan di bidang komunikasi dan informatika, persandian, dan statistik.',
-            'icon'  => 'fa-solid fa-gears',
+            'icon'  => 'fas fa-cogs', // fa-gears => fa-cogs (nama resmi Font Awesome Free)
           ],
           [
             'id'    => 3,
             'value' => 'Pelaksanaan evaluasi dan pelaporan di bidang komunikasi dan informatika, persandian, dan statistik.',
-            'icon'  => 'fa-solid fa-chart-line',
+            'icon'  => 'fas fa-chart-line',
           ],
           [
             'id'    => 4,
             'value' => 'Pelaksanaan administrasi dinas sesuai dengan lingkup tugasnya.',
-            'icon'  => 'fa-solid fa-file-lines',
+            'icon'  => 'fas fa-file-alt', // fa-file-lines => fa-file-alt
           ],
           [
             'id'    => 5,
             'value' => 'Pelaksanaan fungsi lain yang diberikan oleh Wali Kota sesuai dengan tugas dan fungsinya.',
-            'icon'  => 'fa-solid fa-briefcase',
+            'icon'  => 'fas fa-briefcase',
           ]
         ]),
       ],

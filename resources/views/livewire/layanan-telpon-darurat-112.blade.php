@@ -98,7 +98,6 @@
 					</div>
 				</div>
 			</section>
-
 		</div>
 	</x-layouts.page-berita>
 </div>

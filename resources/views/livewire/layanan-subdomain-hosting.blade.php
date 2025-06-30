@@ -77,9 +77,9 @@
 			<h2 class="text-lg font-semibold text-primary mb-2">Hubungi Kami</h2>
 			<p class="mb-3">Untuk pertanyaan atau pengajuan layanan, silakan hubungi:</p>
 			<ul class="space-y-1 text-sm">
-				<li><i class="fas fa-envelope text-primary mr-1"></i> Email: <a href="mailto:kominfo@kendarikota.go.id"
-						class="text-blue-600 hover:underline">kominfo@kendarikota.go.id</a></li>
-				<li><i class="fas fa-phone-alt text-primary mr-1"></i> Telepon: (0401) 1234567</li>
+				<li><i class="fas fa-envelope text-primary mr-1"></i> Email: <a href="mailto:{{ $global_email }}"
+						class="text-blue-600 hover:underline">{{ $global_email }}</a></li>
+				<li><i class="fas fa-phone-alt text-primary mr-1"></i> Telepon: {{ $global_telp }}</li>
 				<li><i class="fas fa-map-marker-alt text-primary mr-1"></i> Jl. Balaikota Blok A, Kendari</li>
 			</ul>
 		</section>
