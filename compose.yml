@@ -1,0 +1,61 @@
+services:
+  caddy:
+    image: caddy:2-alpine
+    container_name: kdi-caddy
+    restart: unless-stopped
+    ports:
+      - "8000:80"
+    volumes:
+      - ./docker/caddy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy-data:/data
+      - caddy-config:/config
+    depends_on:
+      - app
+      - web
+
+  app:
+    build:
+      context: .
+      dockerfile: docker/php/Dockerfile
+    container_name: kdi-app
+    restart: unless-stopped
+    env_file: .env
+    volumes:
+      - app-storage:/app/storage/app
+    depends_on:
+      db:
+        condition: service_healthy
+
+  web:
+    build:
+      context: ./web
+      dockerfile: ../docker/node/Dockerfile
+    container_name: kdi-web
+    restart: unless-stopped
+    environment:
+      API_URL: http://app:8000
+    depends_on:
+      - app
+
+  db:
+    image: mysql:8.4
+    container_name: kdi-db
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: ${DB_DATABASE:-db_kominfo}
+      MYSQL_USER: ${DB_USERNAME:-kominfo}
+      MYSQL_PASSWORD: ${DB_PASSWORD:-secret}
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD:-secret}
+    volumes:
+      - db-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-p${DB_PASSWORD:-secret}"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+volumes:
+  db-data:
+  caddy-data:
+  caddy-config:
+  app-storage:

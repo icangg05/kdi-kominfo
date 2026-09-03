@@ -1,0 +1,86 @@
+---
+import Ikon from '../../components/Ikon.astro';
+import JudulHalaman from '../../components/JudulHalaman.astro';
+import KartuBerita from '../../components/KartuBerita.astro';
+import KosongAda from '../../components/KosongAda.astro';
+import Paginasi from '../../components/Paginasi.astro';
+import Base from '../../layouts/Base.astro';
+import { api, query, type Berita, type Halaman, type Kategori } from '../../lib/api';
+
+const p = Astro.url.searchParams;
+const search = p.get('search') ?? '';
+const kategori = p.get('kategori') ?? '';
+const page = Number(p.get('page') ?? 1) || 1;
+
+const [daftar, global] = await Promise.all([
+  api<Halaman<Berita>>(`/berita${query({ search, kategori, page })}`, Astro.request),
+  api<{ kategoriBerita: Kategori[] }>('/pengaturan'),
+]);
+
+const dasar = Object.fromEntries(
+  Object.entries({ search, kategori }).filter(([, v]) => v !== ''),
+) as Record<string, string>;
+---
+
+<Base judul="Berita" deskripsi="Kabar dan siaran pers Diskominfo Kota Kendari.">
+  <JudulHalaman
+    judul="Berita"
+    keterangan="Kabar terbaru seputar kegiatan, layanan, dan kebijakan Diskominfo Kota Kendari."
+    remah={[{ label: 'Berita' }]}
+  />
+
+  <div class="wadah py-12">
+    <div class="mb-8 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+      <!-- Filter kategori: tautan biasa supaya tetap jalan tanpa JavaScript. -->
+      <div class="flex flex-wrap gap-2">
+        <a
+          href={`/berita${query({ search })}`}
+          class:list={[
+            'rounded-full border px-4 py-1.5 text-sm transition',
+            kategori === '' ? 'border-biru-600 bg-biru-600 font-semibold text-white' : 'border-biru-200 hover:bg-biru-50',
+          ]}
+        >
+          Semua
+        </a>
+        {global.kategoriBerita.map((k) => (
+          <a
+            href={`/berita${query({ search, kategori: k.slug })}`}
+            class:list={[
+              'rounded-full border px-4 py-1.5 text-sm transition',
+              kategori === k.slug ? 'border-biru-600 bg-biru-600 font-semibold text-white' : 'border-biru-200 hover:bg-biru-50',
+            ]}
+          >
+            {k.nama}
+          </a>
+        ))}
+      </div>
+
+      <form method="get" action="/berita" class="relative w-full lg:w-72" role="search">
+        {kategori && <input type="hidden" name="kategori" value={kategori} />}
+        <label for="cari-berita" class="sr-only">Cari berita</label>
+        <input
+          id="cari-berita"
+          type="search"
+          name="search"
+          value={search}
+          placeholder="Cari berita…"
+          class="w-full rounded-lg border border-biru-200 py-2.5 pl-4 pr-11 text-sm outline-none transition focus:border-biru-500 focus:ring-2 focus:ring-biru-200"
+        />
+        <button type="submit" class="absolute right-1 top-1/2 -translate-y-1/2 rounded-md p-2 text-biru-600 hover:bg-biru-50" aria-label="Cari">
+          <Ikon nama="cari" class="size-4" />
+        </button>
+      </form>
+    </div>
+
+    {daftar.data.length > 0 ? (
+      <>
+        <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          {daftar.data.map((b) => <KartuBerita berita={b} />)}
+        </div>
+        <Paginasi halaman={daftar.meta.page} halamanTerakhir={daftar.meta.lastPage} dasar={dasar} />
+      </>
+    ) : (
+      <KosongAda pesan={search ? `Tidak ada berita yang cocok dengan “${search}”.` : 'Belum ada berita di kategori ini.'} />
+    )}
+  </div>
+</Base>

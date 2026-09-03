@@ -1,0 +1,20 @@
+# Override pengembangan: kode di-bind mount dan Astro berjalan dengan HMR.
+#   docker compose -f compose.yml -f compose.dev.yml up -d
+services:
+  app:
+    volumes:
+      - ./:/app
+      - app-storage:/app/storage/app
+
+  web:
+    build:
+      target: deps
+    command: npm run dev -- --host 0.0.0.0
+    environment:
+      NODE_ENV: development
+    volumes:
+      - ./web:/srv
+      - web-node-modules:/srv/node_modules
+
+volumes:
+  web-node-modules:

@@ -10,6 +10,12 @@ class Galeri extends Model
   protected $table = 'galeri';
   protected $guarded = [];
 
+  protected function casts(): array
+  {
+    return ['tanggal' => 'date'];
+  }
+
+
   public $timestamps = false;
 
   protected static function booted()

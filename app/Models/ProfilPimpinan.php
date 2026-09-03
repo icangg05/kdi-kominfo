@@ -10,9 +10,15 @@ class ProfilPimpinan extends Model
   protected $guarded = [];
 
 
-  public function getFotoAttribute($value)
+  public function getFotoAttribute(?string $value): mixed
   {
-    $decoded = json_decode($value, true);
+    $decoded = json_decode((string) $value, true);
+
     return is_array($decoded) ? $decoded : $value;
+  }
+
+  public function setFotoAttribute(mixed $value): void
+  {
+    $this->attributes['foto'] = is_array($value) ? json_encode(array_values($value)) : $value;
   }
 }

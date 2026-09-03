@@ -1,0 +1,11 @@
+---
+interface Props {
+  pesan?: string;
+}
+
+const { pesan = 'Belum ada data untuk ditampilkan.' } = Astro.props;
+---
+
+<div class="rounded-kartu border border-dashed border-biru-200 bg-biru-50/50 px-6 py-16 text-center">
+  <p class="text-sm text-teks-lembut">{pesan}</p>
+</div>

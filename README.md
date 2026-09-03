@@ -1,61 +1,113 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Website Dinas Kominfo Kota Kendari
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Situs publik dan panel admin Dinas Komunikasi dan Informatika Kota Kendari.
 
-## About Laravel
+## Arsitektur
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+Satu Caddy di depan, dua runtime di belakangnya:
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+```
+                    ┌─────────────────────────────┐
+  Browser  ──────▶  │  Caddy  (:8000)             │
+                    └──────┬───────────────┬──────┘
+                           │               │
+   /admin, /api, /storage, │               │  sisanya
+   /download, /livewire*   │               │
+                           ▼               ▼
+                  ┌────────────────┐  ┌──────────────┐
+                  │ Laravel 13     │  │ Astro 7 SSR  │
+                  │ Octane +       │  │ Node         │
+                  │ FrankenPHP     │◀─┤ (ambil data  │
+                  │ Filament 5     │  │  lewat /api) │
+                  └───────┬────────┘  └──────────────┘
+                          ▼
+                     MySQL 8.4
+```
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+Situs publik dirender Astro; Laravel hanya melayani API JSON, panel admin, dan berkas.
+Astro memanggil API lewat jaringan Docker internal (`http://app:8000`), bukan lewat internet.
 
-## Learning Laravel
+## Tumpukan teknologi
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+| Bagian | Teknologi |
+|---|---|
+| Bahasa | PHP 8.4 |
+| Framework | Laravel 13 |
+| Server aplikasi | Laravel Octane di atas FrankenPHP |
+| Reverse proxy | Caddy 2 |
+| Panel admin | Filament 5 |
+| Situs publik | Astro 7 (SSR, adapter Node) |
+| CSS | Tailwind CSS 4.3 |
+| Basis data | MySQL 8.4 |
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+**Catatan Livewire.** Livewire tidak dipakai di situs publik, tetapi tetap terpasang
+sebagai dependensi wajib Filament 5 (`filament/support` membutuhkan `livewire/livewire ^4.1`).
+Cakupannya hanya `/admin`.
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## Menjalankan
 
-## Laravel Sponsors
+### Produksi
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+```bash
+cp .env.example .env
+docker compose up -d --build
+docker compose exec app php artisan key:generate
+docker compose exec app php artisan migrate --seed
+docker compose exec app php artisan storage:link
+```
 
-### Premium Partners
+Situs di `http://localhost:8000`, panel admin di `http://localhost:8000/admin`.
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+Seeder membuat satu akun admin dari `ADMIN_EMAIL` dan `ADMIN_PASSWORD` di `.env`.
+Belum ada pembagian role — setiap akun yang bisa masuk punya akses penuh yang sama,
+jadi menambah akun kedua tidak membatasi apa pun. **Ganti `ADMIN_PASSWORD` sebelum
+naik ke server sungguhan.**
 
-## Contributing
+### Pengembangan
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+Menambahkan bind mount kode dan menjalankan Astro dengan HMR:
 
-## Code of Conduct
+```bash
+docker compose -f compose.yml -f compose.dev.yml up -d --build
+```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+### Pengujian
 
-## Security Vulnerabilities
+```bash
+docker compose exec app php artisan test
+```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+Pengujian memakai SQLite in-memory, dipaksa di `tests/bootstrap.php`. Ini tidak
+bisa hanya diatur lewat `phpunit.xml`: compose menyuntikkan `DB_*` sebagai variabel
+lingkungan asli yang mendarat di `$_SERVER`, dan Laravel membaca `$_SERVER` lebih
+dulu daripada `$_ENV` — sehingga `<env force="true">` kalah dan pengujian akan
+menghantam basis data pengembangan.
 
-## License
+## Struktur
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+```
+app/
+  Filament/          Resource, halaman, dan widget panel admin
+  Http/Controllers/
+    Api/SiteController.php   Satu-satunya sumber data untuk Astro
+  Models/
+web/                 Situs publik Astro
+  src/pages/         Rute halaman
+  src/components/    Komponen tampilan
+  src/lib/           Klien API, navigasi, konten statis
+  src/styles/        Token tema Komdigi
+docker/
+  caddy/Caddyfile    Aturan pembagian rute
+  php/Dockerfile     Image FrankenPHP + Octane
+  node/Dockerfile    Image Astro (multi-stage)
+```
+
+## Mengelola konten
+
+Semua lewat `/admin`:
+
+- **Konten** — Berita, Kategori Berita, Galeri, Dokumen, Kategori Dokumen
+- **Profil Dinas** — Isi Halaman (sambutan, sejarah, visi, misi, tugas, fungsi,
+  struktur organisasi, foto kantor), Profil Pimpinan, Pegawai, Jabatan
+- **Pengaturan** — nomor telepon, email, dan tautan media sosial yang tampil
+  di bilah atas dan footer situs publik

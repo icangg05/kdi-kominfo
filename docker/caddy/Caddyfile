@@ -1,0 +1,20 @@
+{
+	admin off
+}
+
+:80 {
+	encode zstd gzip
+
+	# Panel admin Filament, API, aset Filament, dan berkas unggahan tetap di Laravel/Octane.
+	# Catatan: Livewire 4 menyajikan asetnya di prefix berhash (/livewire-39dcd574/...),
+	# jadi polanya harus /livewire* — /livewire/* tidak akan pernah cocok.
+	@laravel path /admin* /api/* /download/* /storage/* /livewire* /css/filament/* /js/filament/* /fonts/filament/* /up
+	handle @laravel {
+		reverse_proxy app:8000
+	}
+
+	# Sisanya adalah situs publik Astro.
+	handle {
+		reverse_proxy web:4321
+	}
+}

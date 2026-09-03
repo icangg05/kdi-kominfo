@@ -1,0 +1,27 @@
+---
+import JudulHalaman from '../../components/JudulHalaman.astro';
+import KosongAda from '../../components/KosongAda.astro';
+import Base from '../../layouts/Base.astro';
+import { api } from '../../lib/api';
+
+const data = await api<{ gambar: string | null }>('/profil-dinas/struktur-organisasi', Astro.request);
+---
+
+<Base judul="Struktur Organisasi" deskripsi="Bagan struktur organisasi Diskominfo Kota Kendari.">
+  <JudulHalaman
+    judul="Struktur Organisasi"
+    keterangan="Bagan susunan organisasi Dinas Komunikasi dan Informatika Kota Kendari."
+    remah={[{ label: 'Profil Dinas' }, { label: 'Struktur Organisasi' }]}
+  />
+
+  <div class="wadah py-12">
+    <!-- Bagan lebar: digulir di dalam wadahnya sendiri, halaman tidak ikut melebar. -->
+    {data.gambar ? (
+      <div class="overflow-x-auto rounded-kartu border border-biru-100 bg-white p-4">
+        <img src={data.gambar} alt="Bagan struktur organisasi Diskominfo Kota Kendari" class="mx-auto min-w-3xl" />
+      </div>
+    ) : (
+      <KosongAda pesan="Bagan struktur organisasi belum diunggah." />
+    )}
+  </div>
+</Base>

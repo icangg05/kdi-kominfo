@@ -1,0 +1,237 @@
+---
+import Ikon from '../components/Ikon.astro';
+import JudulBagian from '../components/JudulBagian.astro';
+import Karusel from '../components/Karusel.astro';
+import KartuBerita from '../components/KartuBerita.astro';
+import Base from '../layouts/Base.astro';
+import { api, tanggalPanjang, type Berita } from '../lib/api';
+import { bidangDinas, daftarLayanan, layananUtama, slideBeranda } from '../lib/konten';
+
+type Beranda = {
+  sambutanKadis: string | null;
+  taglineSambutan: string[];
+  kadis: { nama: string; foto: unknown; awal_periode: number; akhir_periode: number } | null;
+  galeri: { judul: string; tanggal: string | null; gambar: string | null }[];
+  berita: Berita[];
+  pengunjung: { hariIni: number; total: number };
+};
+
+const data = await api<Beranda>('/beranda', Astro.request);
+
+const fotoKadis = Array.isArray(data.kadis?.foto)
+  ? (data.kadis!.foto as { value?: string }[] | string[])
+      .map((f) => (typeof f === 'string' ? f : f.value))
+      .filter(Boolean)[0]
+  : null;
+
+const angka = (n: number) => n.toLocaleString('id-ID');
+---
+
+<Base judul="Beranda">
+  <!-- Hero -->
+  <section class="relative isolate flex min-h-[32rem] items-center text-white lg:min-h-[38rem]">
+    <Karusel gambar={slideBeranda} />
+
+    <div class="wadah relative py-20">
+      <p class="mb-4 inline-flex items-center rounded-full border border-white/25 bg-white/10 px-4 py-1.5 text-xs font-medium backdrop-blur">
+        Pemerintah Kota Kendari
+      </p>
+      <h1 class="max-w-3xl text-3xl font-extrabold leading-tight tracking-tight lg:text-5xl">
+        Dinas Komunikasi dan Informatika Kota Kendari
+      </h1>
+      <p class="mt-5 max-w-2xl text-biru-100 lg:text-lg">
+        Mendorong transformasi digital pemerintahan dan pelayanan publik yang cepat,
+        terbuka, dan mudah dijangkau seluruh warga Kota Kendari.
+      </p>
+
+      <div class="mt-8 flex flex-wrap gap-3">
+        <a
+          href="#layanan"
+          class="inline-flex items-center gap-2 rounded-lg bg-white px-5 py-3 text-sm font-semibold text-biru-700 transition hover:bg-biru-50"
+        >
+          Lihat Layanan
+          <Ikon nama="panah-kanan" class="size-4" />
+        </a>
+        <a
+          href="/berita"
+          class="inline-flex items-center gap-2 rounded-lg border border-white/30 px-5 py-3 text-sm font-semibold transition hover:bg-white/10"
+        >
+          Berita Terbaru
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Tiga layanan utama, mengambang di atas batas hero. -->
+  <section class="wadah -mt-14 relative z-10">
+    <div class="grid gap-5 lg:grid-cols-3">
+      {layananUtama.map((l) => (
+        <a
+          href={l.href}
+          class="group relative overflow-hidden rounded-kartu bg-biru-600 p-6 text-white shadow-xl shadow-biru-950/15 transition hover:bg-biru-700"
+        >
+          <p class="text-xs font-light text-biru-100">{l.kategori}</p>
+          <h2 class="mt-1 text-lg font-bold">{l.judul}</h2>
+          <p class="mt-3 mb-5 text-sm font-light leading-snug text-biru-100">{l.ringkas}</p>
+          <span class="inline-flex items-center gap-2 text-sm font-semibold">
+            Selengkapnya
+            <Ikon nama="panah-kanan" class="size-4 transition group-hover:translate-x-1" />
+          </span>
+        </a>
+      ))}
+    </div>
+  </section>
+
+  <!-- Sambutan kepala dinas -->
+  {data.sambutanKadis && (
+    <section class="wadah py-20">
+      <div class="grid items-start gap-12 lg:grid-cols-[380px_1fr]">
+        <div class="overflow-hidden rounded-kartu bg-biru-50">
+          {fotoKadis ? (
+            <img src={fotoKadis} alt={`Foto ${data.kadis?.nama ?? 'Kepala Dinas'}`} class="aspect-3/4 w-full object-cover" />
+          ) : (
+            <div class="flex aspect-3/4 items-center justify-center text-biru-300">
+              <Ikon nama="orang" class="size-16" />
+            </div>
+          )}
+          {data.kadis && (
+            <div class="bg-biru-800 p-5 text-white">
+              <p class="font-semibold">{data.kadis.nama}</p>
+              <p class="text-sm text-biru-200">
+                Kepala Dinas · {data.kadis.awal_periode}–{data.kadis.akhir_periode}
+              </p>
+            </div>
+          )}
+        </div>
+
+        <div>
+          <JudulBagian judul="Sambutan Kepala Dinas" tengah={false} />
+          <div class="prosa" set:html={data.sambutanKadis} />
+
+          {data.taglineSambutan.length > 0 && (
+            <ul class="mt-8 flex flex-wrap gap-2">
+              {data.taglineSambutan.map((t) => (
+                <li class="rounded-full border border-biru-200 bg-biru-50 px-4 py-1.5 text-sm font-medium text-biru-700">
+                  {t}
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+      </div>
+    </section>
+  )}
+
+  <!-- Statistik kunjungan -->
+  <section class="bg-biru-800 motif-komdigi py-14 text-white">
+    <div class="wadah grid gap-8 text-center sm:grid-cols-3">
+      <div>
+        <p class="text-4xl font-extrabold">{angka(data.pengunjung.hariIni)}</p>
+        <p class="mt-1 text-sm text-biru-200">Pengunjung hari ini</p>
+      </div>
+      <div>
+        <p class="text-4xl font-extrabold">{angka(data.pengunjung.total)}</p>
+        <p class="mt-1 text-sm text-biru-200">Total pengunjung</p>
+      </div>
+      <div>
+        <p class="text-4xl font-extrabold">112</p>
+        <p class="mt-1 text-sm text-biru-200">Panggilan darurat 24 jam</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Daftar layanan -->
+  <section id="layanan" class="wadah scroll-mt-28 py-20">
+    <JudulBagian
+      judul="Layanan Diskominfo"
+      keterangan="Layanan untuk mendukung kebutuhan teknologi informasi dan komunikasi di lingkungan Pemerintah Kota Kendari."
+    />
+
+    <div class="grid gap-6 md:grid-cols-2">
+      {daftarLayanan.map((l) => (
+        <a href={l.href} class="group flex gap-5 rounded-kartu border border-biru-100 p-6 transition hover:border-biru-300 hover:bg-biru-50/60">
+          <span class="flex size-12 shrink-0 items-center justify-center rounded-xl bg-biru-50 text-biru-600 transition group-hover:bg-biru-600 group-hover:text-white">
+            <Ikon nama="berkas" class="size-6" />
+          </span>
+          <div>
+            <h3 class="mb-2 font-bold text-biru-900">{l.judul}</h3>
+            <p class="text-sm text-teks-lembut">{l.isi}</p>
+          </div>
+        </a>
+      ))}
+    </div>
+  </section>
+
+  <!-- Bidang dinas -->
+  <section class="bg-biru-50/60 py-20">
+    <div class="wadah">
+      <JudulBagian
+        judul="Bidang Layanan"
+        keterangan="Diskominfo Kota Kendari terbagi ke dalam beberapa bidang yang menangani layanan teknologi informasi dan komunikasi."
+      />
+
+      <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+        {bidangDinas.map((b) => (
+          <div class="rounded-kartu border border-biru-100 bg-white p-6">
+            <span class="mb-4 flex size-12 items-center justify-center rounded-xl bg-biru-600/10 text-biru-600">
+              <Ikon nama="gedung" class="size-6" />
+            </span>
+            <h3 class="mb-2 font-bold leading-snug text-biru-900">{b.judul}</h3>
+            <p class="text-sm text-teks-lembut">{b.isi}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Berita terbaru -->
+  {data.berita.length > 0 && (
+    <section class="wadah py-20">
+      <JudulBagian judul="Berita Terbaru" keterangan="Kabar terkini seputar kegiatan dan layanan Diskominfo Kota Kendari." />
+
+      <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        {data.berita.map((b) => <KartuBerita berita={b} />)}
+      </div>
+
+      <div class="mt-10 text-center">
+        <a href="/berita" class="inline-flex items-center gap-2 rounded-lg bg-biru-600 px-5 py-3 text-sm font-semibold text-white transition hover:bg-biru-700">
+          Lihat semua berita
+          <Ikon nama="panah-kanan" class="size-4" />
+        </a>
+      </div>
+    </section>
+  )}
+
+  <!-- Galeri -->
+  {data.galeri.length > 0 && (
+    <section class="wadah pb-20">
+      <JudulBagian judul="Galeri Kegiatan" keterangan="Dokumentasi kegiatan Diskominfo Kota Kendari." />
+
+      <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {data.galeri.map((g, i) => (
+          <figure class:list={['group relative overflow-hidden rounded-kartu bg-biru-50', i === 0 && 'lg:col-span-2 lg:row-span-2']}>
+            {g.gambar && (
+              <img
+                src={g.gambar}
+                alt={g.judul}
+                loading="lazy"
+                class:list={['w-full object-cover transition duration-500 group-hover:scale-105', i === 0 ? 'h-full min-h-64' : 'h-56']}
+              />
+            )}
+            <figcaption class="absolute inset-x-0 bottom-0 bg-linear-to-t from-biru-950/90 to-transparent p-4 text-white">
+              <p class="text-sm font-semibold">{g.judul}</p>
+              <p class="text-xs text-biru-200">{tanggalPanjang(g.tanggal)}</p>
+            </figcaption>
+          </figure>
+        ))}
+      </div>
+
+      <div class="mt-10 text-center">
+        <a href="/galeri" class="inline-flex items-center gap-2 rounded-lg border border-biru-200 px-5 py-3 text-sm font-semibold text-biru-700 transition hover:bg-biru-50">
+          Lihat semua galeri
+          <Ikon nama="panah-kanan" class="size-4" />
+        </a>
+      </div>
+    </section>
+  )}
+</Base>

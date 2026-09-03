@@ -9,20 +9,15 @@ use Symfony\Component\HttpFoundation\Response;
 
 class VisitorMiddleware
 {
-  /**
-   * Handle an incoming request.
-   *
-   * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
-   */
   public function handle(Request $request, Closure $next): Response
   {
-    $ip    = request()->ip();
-    $today = now()->toDateString();
-
-    Visitor::firstOrCreate([
-      'ip'   => $ip,
-      'date' => $today,
-    ]);
+    // Hanya hitung kunjungan halaman publik, bukan aset atau panel admin.
+    if ($request->is('api/*') && ! $request->is('api/pengaturan')) {
+      Visitor::firstOrCreate([
+        'ip' => $request->ip(),
+        'date' => now()->toDateString(),
+      ]);
+    }
 
     return $next($request);
   }

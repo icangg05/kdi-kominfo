@@ -1,0 +1,118 @@
+---
+import Ikon from './Ikon.astro';
+import { tautanFooter } from '../lib/navigasi';
+
+interface Props {
+  telp?: string;
+  email?: string;
+  fb?: string | null;
+  ig?: string | null;
+  tt?: string | null;
+  yt?: string | null;
+}
+
+const { telp, email, fb, ig, tt, yt } = Astro.props;
+
+const sosial = [
+  { url: fb, nama: 'facebook' as const, label: 'Facebook' },
+  { url: ig, nama: 'instagram' as const, label: 'Instagram' },
+  { url: yt, nama: 'youtube' as const, label: 'YouTube' },
+  { url: tt, nama: 'tiktok' as const, label: 'TikTok' },
+].filter((s) => Boolean(s.url));
+---
+
+<footer class="mt-20 bg-biru-800 motif-komdigi text-biru-100">
+  <div class="wadah grid gap-10 py-14 md:grid-cols-2 lg:grid-cols-[1.2fr_repeat(3,1fr)]">
+    <div>
+      <div class="flex items-center gap-3">
+        <img src="/img/kominfo-logo.webp" alt="" class="h-12 w-auto" width="48" height="48" />
+        <span class="leading-tight text-white">
+          <span class="block text-base font-bold tracking-wide uppercase">Diskominfo</span>
+          <span class="block text-xs text-biru-200">Kota Kendari</span>
+        </span>
+      </div>
+      <p class="mt-5 max-w-sm text-sm leading-relaxed">
+        Mendukung transformasi digital dan pelayanan publik berbasis teknologi informasi
+        di Kota Kendari.
+      </p>
+    </div>
+
+    {tautanFooter.map((kolom) => (
+      <nav aria-label={kolom.judul}>
+        <h2 class="mb-4 text-sm font-semibold text-white">{kolom.judul}</h2>
+        <ul class="space-y-3 text-sm">
+          {kolom.item.map((item) => (
+            <li>
+              <a href={item.href} class="transition hover:text-white">{item.label}</a>
+            </li>
+          ))}
+        </ul>
+      </nav>
+    ))}
+  </div>
+
+  <div class="wadah">
+    <div class="h-px bg-white/15"></div>
+  </div>
+
+  <div class="wadah flex flex-col gap-6 py-8 text-sm lg:flex-row lg:items-center lg:justify-between">
+    <p class="flex items-start gap-3">
+      <Ikon nama="gedung" class="mt-0.5 size-5 shrink-0" />
+      <span>Jl. Drs. H. Abdullah Silondae No. 5,<br />Kendari, Sulawesi Tenggara</span>
+    </p>
+
+    {telp && (
+      <a href={`tel:${telp.replace(/[^+\d]/g, '')}`} class="flex items-center gap-3 font-semibold text-white">
+        <Ikon nama="telepon" class="size-5 shrink-0" />
+        {telp}
+      </a>
+    )}
+
+    {email && (
+      <a href={`mailto:${email}`} class="flex items-center gap-3 font-semibold text-white">
+        <Ikon nama="amplop" class="size-5 shrink-0" />
+        {email}
+      </a>
+    )}
+
+    {sosial.length > 0 && (
+      <div class="flex items-center gap-5">
+        {sosial.map((s) => (
+          <a href={s.url!} target="_blank" rel="noopener noreferrer" aria-label={s.label} class="transition hover:text-white">
+            <Ikon nama={s.nama} class="size-5" />
+          </a>
+        ))}
+      </div>
+    )}
+  </div>
+
+  <div class="bg-biru-950">
+    <p class="wadah py-5 text-center text-xs text-biru-200">
+      &copy; {new Date().getFullYear()} Dinas Komunikasi dan Informatika Kota Kendari.
+      Seluruh hak cipta dilindungi.
+    </p>
+  </div>
+</footer>
+
+<!-- Tombol kembali ke atas, muncul setelah menggulir. -->
+<button
+  type="button"
+  data-ke-atas
+  hidden
+  class="fixed bottom-6 right-6 z-40 rounded-full border border-biru-200 bg-white p-3 text-biru-700 shadow-lg shadow-biru-950/15 transition hover:bg-biru-50"
+  aria-label="Kembali ke atas"
+>
+  <Ikon nama="panah-atas" class="size-5" />
+</button>
+
+<script>
+  const tombol = document.querySelector<HTMLButtonElement>('[data-ke-atas]');
+
+  const perbarui = () => {
+    if (tombol) tombol.hidden = window.scrollY < 400;
+  };
+
+  perbarui();
+  window.addEventListener('scroll', perbarui, { passive: true });
+  tombol?.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+</script>

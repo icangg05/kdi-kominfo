@@ -1,0 +1,117 @@
+---
+import Ikon from '../components/Ikon.astro';
+import JudulHalaman from '../components/JudulHalaman.astro';
+import KosongAda from '../components/KosongAda.astro';
+import Paginasi from '../components/Paginasi.astro';
+import Base from '../layouts/Base.astro';
+import { api, query, type Halaman, type Kategori } from '../lib/api';
+
+type Dokumen = {
+  id: number;
+  judul: string;
+  deskripsi: string;
+  kategori: Kategori | null;
+  totalUnduhan: number;
+  ekstensi: string;
+  unduh: string;
+};
+
+const p = Astro.url.searchParams;
+const search = p.get('search') ?? '';
+const kategori = p.get('kategori') ?? '';
+const page = Number(p.get('page') ?? 1) || 1;
+
+const [daftar, global] = await Promise.all([
+  api<Halaman<Dokumen>>(`/dokumen${query({ search, kategori, page })}`, Astro.request),
+  api<{ kategoriDokumen: Kategori[] }>('/pengaturan'),
+]);
+
+const dasar = Object.fromEntries(
+  Object.entries({ search, kategori }).filter(([, v]) => v !== ''),
+) as Record<string, string>;
+---
+
+<Base judul="Dokumen" deskripsi="Unduh dokumen resmi dan produk hukum Diskominfo Kota Kendari.">
+  <JudulHalaman
+    judul="Dokumen"
+    keterangan="Dokumen publik, produk hukum, dan laporan yang dapat diunduh secara bebas."
+    remah={[{ label: 'Dokumen' }]}
+  />
+
+  <div class="wadah py-12">
+    <div class="mb-8 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+      <div class="flex flex-wrap gap-2">
+        <a
+          href={`/dokumen${query({ search })}`}
+          class:list={[
+            'rounded-full border px-4 py-1.5 text-sm transition',
+            kategori === '' ? 'border-biru-600 bg-biru-600 font-semibold text-white' : 'border-biru-200 hover:bg-biru-50',
+          ]}
+        >
+          Semua
+        </a>
+        {global.kategoriDokumen.map((k) => (
+          <a
+            href={`/dokumen${query({ search, kategori: k.slug })}`}
+            class:list={[
+              'rounded-full border px-4 py-1.5 text-sm transition',
+              kategori === k.slug ? 'border-biru-600 bg-biru-600 font-semibold text-white' : 'border-biru-200 hover:bg-biru-50',
+            ]}
+          >
+            {k.nama}
+          </a>
+        ))}
+      </div>
+
+      <form method="get" action="/dokumen" class="relative w-full lg:w-72" role="search">
+        {kategori && <input type="hidden" name="kategori" value={kategori} />}
+        <label for="cari-dokumen" class="sr-only">Cari dokumen</label>
+        <input
+          id="cari-dokumen"
+          type="search"
+          name="search"
+          value={search}
+          placeholder="Cari dokumen…"
+          class="w-full rounded-lg border border-biru-200 py-2.5 pl-4 pr-11 text-sm outline-none transition focus:border-biru-500 focus:ring-2 focus:ring-biru-200"
+        />
+        <button type="submit" class="absolute right-1 top-1/2 -translate-y-1/2 rounded-md p-2 text-biru-600 hover:bg-biru-50" aria-label="Cari">
+          <Ikon nama="cari" class="size-4" />
+        </button>
+      </form>
+    </div>
+
+    {daftar.data.length > 0 ? (
+      <>
+        <ul class="grid gap-5 md:grid-cols-2">
+          {daftar.data.map((d) => (
+            <li class="flex gap-5 rounded-kartu border border-biru-100 p-5 transition hover:border-biru-300 hover:bg-biru-50/50">
+              <span class="flex size-12 shrink-0 items-center justify-center rounded-xl bg-biru-50 text-biru-600">
+                <Ikon nama="berkas" class="size-6" />
+              </span>
+
+              <div class="min-w-0 flex-1">
+                {d.kategori && <p class="mb-1 text-xs font-semibold text-biru-600">{d.kategori.nama}</p>}
+                <h2 class="font-bold leading-snug text-biru-900">{d.judul}</h2>
+                <p class="mt-2 line-clamp-2 text-sm text-teks-lembut">{d.deskripsi}</p>
+
+                <div class="mt-4 flex items-center gap-4">
+                  <a
+                    href={d.unduh}
+                    class="inline-flex items-center gap-2 rounded-lg bg-biru-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-biru-700"
+                  >
+                    <Ikon nama="unduh" class="size-4" />
+                    Unduh {d.ekstensi.toUpperCase()}
+                  </a>
+                  <span class="text-xs text-teks-lembut">{d.totalUnduhan} kali diunduh</span>
+                </div>
+              </div>
+            </li>
+          ))}
+        </ul>
+        <Paginasi halaman={daftar.meta.page} halamanTerakhir={daftar.meta.lastPage} dasar={dasar} />
+      </>
+    ) : (
+      <KosongAda pesan={search ? `Tidak ada dokumen yang cocok dengan “${search}”.` : 'Belum ada dokumen di kategori ini.'} />
+    )}
+  </div>
+</Base>

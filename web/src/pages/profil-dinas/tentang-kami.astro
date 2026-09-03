@@ -1,0 +1,67 @@
+---
+import JudulBagian from '../../components/JudulBagian.astro';
+import JudulHalaman from '../../components/JudulHalaman.astro';
+import Base from '../../layouts/Base.astro';
+import { api } from '../../lib/api';
+
+type Data = {
+  sejarah: string | null;
+  visi: string | null;
+  misi: string[];
+  fotoDiskominfo: string[];
+  awalPeriode: number | null;
+};
+
+const data = await api<Data>('/profil-dinas/tentang-kami', Astro.request);
+---
+
+<Base judul="Tentang Kami" deskripsi="Sejarah, visi, dan misi Diskominfo Kota Kendari.">
+  <JudulHalaman
+    judul="Tentang Kami"
+    keterangan="Sejarah, visi, dan misi Dinas Komunikasi dan Informatika Kota Kendari."
+    remah={[{ label: 'Profil Dinas' }, { label: 'Tentang Kami' }]}
+  />
+
+  <div class="wadah py-12">
+    {data.fotoDiskominfo.length > 0 && (
+      <div class="mb-14 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        {data.fotoDiskominfo.map((f) => (
+          <img src={f} alt="" loading="lazy" class="aspect-4/3 w-full rounded-kartu object-cover" />
+        ))}
+      </div>
+    )}
+
+    {data.sejarah && (
+      <section class="mb-16">
+        <JudulBagian judul="Sejarah Singkat" tengah={false} />
+        <div class="prosa max-w-4xl" set:html={data.sejarah} />
+      </section>
+    )}
+
+    <div class="grid gap-8 lg:grid-cols-2">
+      {data.visi && (
+        <section class="rounded-kartu bg-biru-800 motif-komdigi p-8 text-white">
+          <h2 class="mb-4 text-xl font-bold">Visi</h2>
+          <p class="text-lg leading-relaxed text-biru-100 italic">{data.visi}</p>
+          {data.awalPeriode && <p class="mt-6 text-sm text-biru-200">Periode {data.awalPeriode}</p>}
+        </section>
+      )}
+
+      {data.misi.length > 0 && (
+        <section class="rounded-kartu border border-biru-100 p-8">
+          <h2 class="mb-5 text-xl font-bold text-biru-900">Misi</h2>
+          <ol class="space-y-4">
+            {data.misi.map((m, i) => (
+              <li class="flex gap-4">
+                <span class="flex size-7 shrink-0 items-center justify-center rounded-full bg-biru-600 text-xs font-bold text-white">
+                  {i + 1}
+                </span>
+                <p class="text-sm leading-relaxed text-teks-lembut">{m}</p>
+              </li>
+            ))}
+          </ol>
+        </section>
+      )}
+    </div>
+  </div>
+</Base>

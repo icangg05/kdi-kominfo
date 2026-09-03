@@ -1,0 +1,15 @@
+---
+interface Props {
+  judul: string;
+  keterangan?: string;
+  tengah?: boolean;
+}
+
+const { judul, keterangan, tengah = true } = Astro.props;
+---
+
+<div class:list={['mb-10', tengah && 'mx-auto max-w-2xl text-center']}>
+  <span class="mb-3 inline-block h-1 w-12 rounded-full bg-biru-600"></span>
+  <h2 class="text-2xl font-bold tracking-tight text-biru-900 lg:text-3xl">{judul}</h2>
+  {keterangan && <p class="mt-3 text-teks-lembut">{keterangan}</p>}
+</div>

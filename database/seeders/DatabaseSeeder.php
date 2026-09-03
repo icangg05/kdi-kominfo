@@ -13,18 +13,12 @@ class DatabaseSeeder extends Seeder
    */
   public function run(): void
   {
+    // Belum ada pembagian role: setiap akun punya akses penuh yang sama,
+    // jadi satu akun saja. Kredensial diambil dari env agar tidak ikut ke repo.
     User::create([
-      'name'     => 'Superadmin',
-      'username' => 'superadmin',
-      'email'    => 'ilmifaizan1112@gamil.com',
-      'password' => 'superadmin()123'
-    ]);
-
-    User::create([
-      'name'     => 'Admin',
-      'username' => 'admin',
-      'email'    => 'diskominfokendari@gmail.com',
-      'password' => '2025kominfo'
+      'name'     => 'Admin Diskominfo',
+      'email'    => env('ADMIN_EMAIL', 'diskominfokendari@gmail.com'),
+      'password' => env('ADMIN_PASSWORD', 'rahasia123'),
     ]);
 
 

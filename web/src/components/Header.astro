@@ -1,0 +1,137 @@
+---
+import Ikon from './Ikon.astro';
+import { menuUtama } from '../lib/navigasi';
+
+interface Props {
+  telp?: string;
+  email?: string;
+  jalurAktif: string;
+}
+
+const { telp, email, jalurAktif } = Astro.props;
+
+const aktif = (href: string) => href === '/' ? jalurAktif === '/' : jalurAktif.startsWith(href.split('/').slice(0, 2).join('/'));
+
+const hariIni = new Date().toLocaleDateString('id-ID', {
+  weekday: 'long', day: 'numeric', month: 'long', year: 'numeric',
+});
+---
+
+<header class="sticky top-0 z-50">
+  <!-- Bilah informasi: tanggal di kiri, kontak di kanan. -->
+  <div class="hidden bg-biru-950 text-biru-100 lg:block">
+    <div class="wadah flex items-center justify-between py-2 text-xs">
+      <p class="flex items-center gap-2">
+        <Ikon nama="kalender" class="size-4" />
+        {hariIni}
+      </p>
+      <div class="flex items-center gap-6">
+        {telp && (
+          <a href={`tel:${telp.replace(/[^+\d]/g, '')}`} class="flex items-center gap-2 hover:text-white">
+            <Ikon nama="telepon" class="size-4" />
+            {telp}
+          </a>
+        )}
+        {email && (
+          <a href={`mailto:${email}`} class="flex items-center gap-2 hover:text-white">
+            <Ikon nama="amplop" class="size-4" />
+            {email}
+          </a>
+        )}
+      </div>
+    </div>
+  </div>
+
+  <!-- Bilah navigasi utama. -->
+  <div class="bg-biru-600 motif-komdigi text-white shadow-lg shadow-biru-950/10">
+    <div class="wadah flex items-center justify-between gap-6 py-3">
+      <a href="/" class="flex items-center gap-3">
+        <img src="/img/kominfo-logo.webp" alt="Logo Diskominfo Kota Kendari" class="h-11 w-auto" width="44" height="44" />
+        <span class="leading-tight">
+          <span class="block text-sm font-bold tracking-wide uppercase">Diskominfo</span>
+          <span class="block text-[11px] text-biru-100">Kota Kendari</span>
+        </span>
+      </a>
+
+      <nav class="hidden items-center gap-1 lg:flex" aria-label="Navigasi utama">
+        {menuUtama.map((item) => (
+          <div class="group relative">
+            <a
+              href={item.href}
+              class:list={[
+                'relative flex items-center gap-1 rounded-lg px-3 py-2 text-sm font-medium transition hover:bg-white/10',
+                aktif(item.href) && 'bg-white/10',
+              ]}
+              aria-current={aktif(item.href) ? 'page' : undefined}
+            >
+              {item.label}
+              {item.anak && <Ikon nama="chevron" class="size-3.5 transition group-hover:rotate-180" />}
+            </a>
+
+            {item.anak && (
+              <div class="invisible absolute left-0 top-full w-60 pt-2 opacity-0 transition group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100">
+                <ul class="overflow-hidden rounded-kartu border border-biru-100 bg-white py-1 shadow-xl shadow-biru-950/10">
+                  {item.anak.map((anak) => (
+                    <li>
+                      <a
+                        href={anak.href}
+                        class:list={[
+                          'block px-4 py-2.5 text-sm text-teks-lembut transition hover:bg-biru-50 hover:text-biru-700',
+                          jalurAktif === anak.href && 'bg-biru-50 font-semibold text-biru-700',
+                        ]}
+                      >
+                        {anak.label}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </div>
+        ))}
+      </nav>
+
+      <button
+        type="button"
+        class="rounded-lg p-2 transition hover:bg-white/10 lg:hidden"
+        aria-label="Buka menu"
+        aria-expanded="false"
+        aria-controls="menu-seluler"
+        data-tombol-menu
+      >
+        <Ikon nama="menu" class="size-6" />
+      </button>
+    </div>
+
+    <!-- Menu seluler: daftar datar, semua submenu ikut terbuka. -->
+    <nav id="menu-seluler" hidden class="border-t border-white/15 lg:hidden" aria-label="Navigasi seluler">
+      <ul class="wadah space-y-1 py-3">
+        {menuUtama.map((item) => (
+          <li>
+            <a href={item.href} class="block rounded-lg px-3 py-2 text-sm font-medium hover:bg-white/10">{item.label}</a>
+            {item.anak && (
+              <ul class="ml-3 border-l border-white/20 pl-3">
+                {item.anak.map((anak) => (
+                  <li>
+                    <a href={anak.href} class="block rounded-lg px-3 py-2 text-sm text-biru-100 hover:bg-white/10">{anak.label}</a>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </li>
+        ))}
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<script>
+  const tombol = document.querySelector<HTMLButtonElement>('[data-tombol-menu]');
+  const menu = document.getElementById('menu-seluler');
+
+  tombol?.addEventListener('click', () => {
+    const terbuka = tombol.getAttribute('aria-expanded') === 'true';
+    tombol.setAttribute('aria-expanded', String(!terbuka));
+    if (menu) menu.hidden = terbuka;
+  });
+</script>

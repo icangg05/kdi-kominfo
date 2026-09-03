@@ -1,32 +1,26 @@
-FROM php:8.3-apache
+FROM dunglas/frankenphp:php8.4
 
-# Install dependencies dan Node.js 22.16.0
-RUN apt-get update && apt-get install -y \
-    build-essential \
-    libpng-dev \
-    libjpeg-dev \
-    libonig-dev \
-    libxml2-dev \
-    zip \
-    unzip \
-    curl \
-    libzip-dev \
-    git \
-    ca-certificates \
-    gnupg \
-    && curl -fsSL https://deb.nodesource.com/setup_22.x | bash - \
-    && apt-get install -y nodejs \
-    && npm install -g npm@latest \
-    && docker-php-ext-install mysqli pdo_mysql mbstring exif pcntl bcmath gd zip
+RUN install-php-extensions \
+    pdo_mysql pdo_sqlite intl gd zip bcmath exif pcntl sockets opcache redis
 
-# Install Composer
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
-# Aktifkan mod rewrite Apache
-RUN a2enmod rewrite
+WORKDIR /app
 
-# Salin file konfigurasi apache custom
-COPY docker/apache/000-default.conf /etc/apache2/sites-available/000-default.conf
+COPY composer.json composer.lock ./
+RUN composer install --no-scripts --no-autoloader --no-interaction --prefer-dist
 
-# Set working directory
-WORKDIR /var/www/html
+COPY . .
+
+# Rahasia tidak ikut masuk image (lihat .dockerignore); nilainya datang dari
+# env_file compose. Dotenv tetap butuh berkasnya ada, dan berkas kosong
+# tidak menimpa variabel lingkungan yang sudah diset.
+RUN touch .env && \
+    composer dump-autoload --optimize && \
+    mkdir -p storage/framework/{cache,sessions,views} storage/logs bootstrap/cache && \
+    chmod -R 777 storage bootstrap/cache
+
+ENV OCTANE_SERVER=frankenphp
+EXPOSE 8000
+
+CMD ["php", "artisan", "octane:start", "--server=frankenphp", "--host=0.0.0.0", "--port=8000"]

@@ -56,7 +56,7 @@ class GaleriSeeder extends Seeder
       ],
       [
         'judul'   => 'Inspektorat Gelar Sosialisasi SPI',
-        'tanggal' => '2024--6-30',
+        'tanggal' => '2024-06-30',
         'gambar'  => 'galeri/galeri-9.webp',
       ],
     ];

@@ -1,0 +1,58 @@
+---
+import Footer from '../components/Footer.astro';
+import Header from '../components/Header.astro';
+import { api } from '../lib/api';
+import '../styles/global.css';
+
+interface Props {
+  judul: string;
+  deskripsi?: string;
+}
+
+const { judul, deskripsi = 'Situs resmi Dinas Komunikasi dan Informatika Kota Kendari.' } = Astro.props;
+
+type Global = {
+  pengaturan: Record<string, string | null>;
+  kategoriBerita: { nama: string; slug: string }[];
+  kategoriDokumen: { nama: string; slug: string }[];
+};
+
+// Kontak dan media sosial dikelola dari panel admin, jadi diambil di setiap render.
+let global: Global = { pengaturan: {}, kategoriBerita: [], kategoriDokumen: [] };
+
+try {
+  global = await api<Global>('/pengaturan');
+} catch {
+  // Situs tetap tampil walau API sedang tidak bisa dihubungi.
+}
+
+const { telp, email, fb, ig, tt, yt } = global.pengaturan;
+const judulPenuh = `${judul} — Diskominfo Kota Kendari`;
+---
+
+<html lang="id">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" href="/favicon.ico" />
+    <title>{judulPenuh}</title>
+    <meta name="description" content={deskripsi} />
+    <meta property="og:title" content={judulPenuh} />
+    <meta property="og:description" content={deskripsi} />
+    <meta property="og:type" content="website" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  </head>
+  <body class="flex min-h-screen flex-col">
+    <a href="#konten" class="sr-only focus:not-sr-only focus:absolute focus:z-50 focus:m-3 focus:rounded-lg focus:bg-white focus:px-4 focus:py-2 focus:text-biru-700">
+      Lewati ke konten utama
+    </a>
+
+    <Header telp={telp ?? undefined} email={email ?? undefined} jalurAktif={Astro.url.pathname} />
+
+    <main id="konten" class="flex-1">
+      <slot />
+    </main>
+
+    <Footer telp={telp ?? undefined} email={email ?? undefined} fb={fb} ig={ig} tt={tt} yt={yt} />
+  </body>
+</html>

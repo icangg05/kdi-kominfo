@@ -10,6 +10,12 @@ class Berita extends Model
   protected $table = 'berita';
   protected $guarded = [];
 
+  protected function casts(): array
+  {
+    return ['tanggal' => 'date'];
+  }
+
+
 
   public function kategori()
   {

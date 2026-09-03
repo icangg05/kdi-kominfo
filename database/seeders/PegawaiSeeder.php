@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Jabatan;
 use App\Models\Pegawai;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -13,6 +14,10 @@ class PegawaiSeeder extends Seeder
    */
   public function run(): void
   {
+    // Ambil id jabatan yang benar-benar ada; menebak 1..15 rusak begitu
+    // AUTO_INCREMENT bergeser (mis. saat seeding kedua di dalam test).
+    $jabatanIds = Jabatan::pluck('id')->all();
+
     $data = [];
 
     for ($i = 1; $i <= 25; $i++) {
@@ -20,7 +25,7 @@ class PegawaiSeeder extends Seeder
         'nama'          => 'Pegawai ' . $i,
         'nip'           => '19850' . rand(10000000, 99999999),
         'foto'          => null,
-        'jabatan_id'    => rand(1, 15), // asumsi JabatanSeeder sudah insert 15 data
+        'jabatan_id'    => $jabatanIds[array_rand($jabatanIds)],
         'tanggal_lahir' => now()->subYears(rand(25, 55))->subDays(rand(0, 365)),
         'alamat'        => 'Jl. Contoh Alamat No. ' . $i . ', Kendari',
         'created_at'    => now(),

@@ -12,6 +12,9 @@ return Application::configure(basePath: dirname(__DIR__))
     health: '/up',
   )
   ->withMiddleware(function (Middleware $middleware): void {
+    // Caddy -> Astro -> Octane: IP asli pengunjung hanya bisa dipercaya
+    // dari dalam jaringan Docker, karena itu proxy-nya dipercaya penuh di sini.
+    $middleware->trustProxies(at: '*');
     $middleware->append(VisitorMiddleware::class);
   })
   ->withExceptions(function (Exceptions $exceptions): void {

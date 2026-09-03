@@ -1,0 +1,63 @@
+---
+interface Props {
+  halaman: number;
+  halamanTerakhir: number;
+  /** Query string dasar tanpa parameter `page`, mis. `?kategori=umum`. */
+  dasar?: Record<string, string>;
+}
+
+const { halaman, halamanTerakhir, dasar = {} } = Astro.props;
+
+const tautan = (n: number) => {
+  const q = new URLSearchParams(dasar);
+  if (n > 1) q.set('page', String(n));
+  const s = q.toString();
+  return s ? `?${s}` : Astro.url.pathname;
+};
+
+// Tampilkan maksimal 5 nomor di sekitar halaman aktif.
+const mulai = Math.max(1, Math.min(halaman - 2, halamanTerakhir - 4));
+const nomor = Array.from({ length: Math.min(5, halamanTerakhir) }, (_, i) => mulai + i)
+  .filter((n) => n <= halamanTerakhir);
+---
+
+{halamanTerakhir > 1 && (
+  <nav class="mt-10 flex items-center justify-center gap-2" aria-label="Paginasi">
+    <a
+      href={tautan(halaman - 1)}
+      class:list={[
+        'rounded-lg border border-biru-200 px-3 py-2 text-sm transition',
+        halaman <= 1 ? 'pointer-events-none opacity-40' : 'hover:bg-biru-50',
+      ]}
+      aria-disabled={halaman <= 1}
+    >
+      Sebelumnya
+    </a>
+
+    {nomor.map((n) => (
+      <a
+        href={tautan(n)}
+        aria-current={n === halaman ? 'page' : undefined}
+        class:list={[
+          'min-w-10 rounded-lg border px-3 py-2 text-center text-sm transition',
+          n === halaman
+            ? 'border-biru-600 bg-biru-600 font-semibold text-white'
+            : 'border-biru-200 hover:bg-biru-50',
+        ]}
+      >
+        {n}
+      </a>
+    ))}
+
+    <a
+      href={tautan(halaman + 1)}
+      class:list={[
+        'rounded-lg border border-biru-200 px-3 py-2 text-sm transition',
+        halaman >= halamanTerakhir ? 'pointer-events-none opacity-40' : 'hover:bg-biru-50',
+      ]}
+      aria-disabled={halaman >= halamanTerakhir}
+    >
+      Berikutnya
+    </a>
+  </nav>
+)}

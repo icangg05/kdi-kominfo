@@ -1,0 +1,61 @@
+---
+import Ikon from '../../components/Ikon.astro';
+import JudulHalaman from '../../components/JudulHalaman.astro';
+import Base from '../../layouts/Base.astro';
+import { api } from '../../lib/api';
+
+type Data = {
+  nama: string | null;
+  awalPeriode: number | null;
+  akhirPeriode: number | null;
+  konten: string | null;
+  foto: string[];
+};
+
+const data = await api<Data>('/profil-pimpinan', Astro.request);
+const [utama, ...lainnya] = data.foto;
+---
+
+<Base judul="Profil Pimpinan" deskripsi={`Profil ${data.nama ?? 'Kepala Dinas'} Kominfo Kota Kendari.`}>
+  <JudulHalaman
+    judul="Profil Pimpinan"
+    keterangan="Profil Kepala Dinas Komunikasi dan Informatika Kota Kendari."
+    remah={[{ label: 'Profil Dinas' }, { label: 'Profil Pimpinan' }]}
+  />
+
+  <div class="wadah py-12">
+    <div class="grid gap-12 lg:grid-cols-[360px_1fr]">
+      <aside>
+        <div class="overflow-hidden rounded-kartu bg-biru-50">
+          {utama ? (
+            <img src={utama} alt={`Foto ${data.nama ?? ''}`} class="aspect-3/4 w-full object-cover" />
+          ) : (
+            <div class="flex aspect-3/4 items-center justify-center text-biru-300">
+              <Ikon nama="orang" class="size-16" />
+            </div>
+          )}
+        </div>
+
+        <div class="mt-4 rounded-kartu bg-biru-800 p-5 text-white">
+          <p class="text-lg font-bold">{data.nama}</p>
+          <p class="mt-1 text-sm text-biru-200">Kepala Dinas Kominfo Kota Kendari</p>
+          {data.awalPeriode && (
+            <p class="mt-3 inline-block rounded-full bg-white/15 px-3 py-1 text-xs">
+              Periode {data.awalPeriode}–{data.akhirPeriode}
+            </p>
+          )}
+        </div>
+
+        {lainnya.length > 0 && (
+          <div class="mt-4 grid grid-cols-3 gap-3">
+            {lainnya.map((f) => (
+              <img src={f} alt="" loading="lazy" class="aspect-square w-full rounded-lg object-cover" />
+            ))}
+          </div>
+        )}
+      </aside>
+
+      {data.konten && <div class="prosa" set:html={data.konten} />}
+    </div>
+  </div>
+</Base>

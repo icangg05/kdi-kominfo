@@ -1,0 +1,30 @@
+---
+interface Props {
+  judul: string;
+  keterangan?: string;
+  remah?: { label: string; href?: string }[];
+}
+
+const { judul, keterangan, remah = [] } = Astro.props;
+---
+
+<section class="bg-biru-800 motif-komdigi text-white">
+  <div class="wadah py-12 lg:py-16">
+    {remah.length > 0 && (
+      <nav aria-label="Remah roti" class="mb-3">
+        <ol class="flex flex-wrap items-center gap-2 text-xs text-biru-200">
+          <li><a href="/" class="hover:text-white">Beranda</a></li>
+          {remah.map((r) => (
+            <>
+              <li aria-hidden="true">/</li>
+              <li>{r.href ? <a href={r.href} class="hover:text-white">{r.label}</a> : <span class="text-white">{r.label}</span>}</li>
+            </>
+          ))}
+        </ol>
+      </nav>
+    )}
+
+    <h1 class="text-3xl font-bold tracking-tight lg:text-4xl">{judul}</h1>
+    {keterangan && <p class="mt-3 max-w-2xl text-biru-100">{keterangan}</p>}
+  </div>
+</section>
