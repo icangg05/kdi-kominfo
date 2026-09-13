@@ -1,12 +1,13 @@
-@import url("https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,300..800;1,300..800&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wdth,wght@0,85..100,300..700;1,85..100,300..700&display=swap");
 @import "tailwindcss";
 
 /*
- * Bahasa visual mengikuti situs Komdigi: biru tua pekat, bidang putih bersih,
- * sudut membulat, dan bentuk kotak-membulat sebagai motif latar.
+ * Bahasa visual "aula pelayanan": dinding aula terang, papan display navy
+ * dengan angka LED amber, dan tanda loket berwarna per zona layanan.
+ * Semua sudut memakai `rounded` (4px) — keputusan pemilik, jangan diperbesar.
  */
 @theme {
-  --font-sans: "Public Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
 
   --color-biru-50: #f2f7fd;
   --color-biru-100: #e2edfa;
@@ -20,19 +21,53 @@
   --color-biru-900: #0b2f5c;
   --color-biru-950: #071f3d;
 
-  --color-teks: #1f2937;
-  --color-teks-lembut: #4b5563;
+  /* Aula dan papan display */
+  --color-aula: #f3f5f9;
+  --color-papan: #0d1526;
+  --color-bezel: #25324d;
+  --color-led: #ffb000;
 
-  --radius-kartu: 0.875rem;
+  --color-tinta: #0f1a2e;
+  --color-teks: #1c2536;
+  --color-teks-lembut: #4a5568;
+  --color-garis: #d9dfea;
+}
+
+/* Zona loket dipakai lewat var() dinamis di beranda, jadi variabelnya selalu dikeluarkan. */
+@theme static {
+  /* Zona loket: warna pekat untuk bidang, varian terang untuk teks di atas papan. */
+  --color-zona-a: #0b4ea2;
+  --color-zona-b: #0a7e6e;
+  --color-zona-c: #c0266d;
+  --color-zona-d: #d62d20;
+  --color-zona-a-terang: #6aa6f2;
+  --color-zona-b-terang: #3cc9ae;
+  --color-zona-c-terang: #f36aa6;
+  --color-zona-d-terang: #ff6a5c;
 }
 
 @layer base {
   html {
     scroll-behavior: smooth;
+    scrollbar-color: #9aa8c2 var(--color-aula);
   }
 
   body {
-    @apply bg-white font-sans text-teks antialiased;
+    @apply bg-aula font-sans text-teks antialiased;
+  }
+
+  ::selection {
+    background: var(--color-led);
+    color: var(--color-papan);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-zona-a);
+    outline-offset: 2px;
+  }
+
+  .papan :focus-visible {
+    outline-color: var(--color-led);
   }
 
   /* Isi dari RichEditor admin dirender apa adanya, jadi elemennya digayakan di sini. */
@@ -41,7 +76,7 @@
   }
 
   .prosa :where(h2, h3, h4) {
-    @apply mt-8 mb-3 font-semibold text-biru-900;
+    @apply mt-8 mb-3 font-semibold text-tinta;
   }
 
   .prosa :where(h2) { @apply text-2xl; }
@@ -50,25 +85,91 @@
 
   .prosa :where(ul) { @apply mb-4 list-disc space-y-2 pl-5 text-teks-lembut; }
   .prosa :where(ol) { @apply mb-4 list-decimal space-y-2 pl-5 text-teks-lembut; }
-  .prosa :where(a) { @apply text-biru-600 underline underline-offset-2 hover:text-biru-800; }
+  .prosa :where(a) { @apply text-biru-600 underline decoration-biru-300 underline-offset-3 hover:text-biru-800; }
   .prosa :where(strong) { @apply font-semibold text-teks; }
-  .prosa :where(img) { @apply my-6 rounded-kartu; }
-  .prosa :where(blockquote) { @apply my-6 border-l-4 border-biru-200 pl-4 italic text-teks-lembut; }
+  .prosa :where(img) { @apply my-6 rounded; }
+  .prosa :where(blockquote) { @apply my-6 border-l-2 border-biru-300 pl-4 italic text-teks-lembut; }
   .prosa :where(table) { @apply my-6 w-full text-left text-sm; }
   .prosa :where(th, td) { @apply border border-biru-100 px-3 py-2; }
 }
 
 @utility wadah {
-  @apply mx-auto w-full max-w-[1200px] px-4 lg:px-8;
+  @apply mx-auto w-full max-w-[1280px] px-4 lg:px-8;
 }
 
-/* Motif kotak-membulat khas Komdigi untuk latar bagian gelap. */
+/* Lebar 85% dari IBM Plex Sans untuk judul dan papan penanda. */
+@utility sempit {
+  font-stretch: 85%;
+}
+
+/* Angka papan display: amber, lebar tetap. Tekstur titik (`led-titik`) hanya untuk angka berukuran display, sekitar 4rem ke atas. */
+@utility led {
+  color: var(--color-led);
+  font-stretch: 85%;
+  font-variant-numeric: tabular-nums;
+}
+
+@utility led-titik {
+  -webkit-mask-image: radial-gradient(circle, #000 58%, transparent 64%);
+  mask-image: radial-gradient(circle, #000 58%, transparent 64%);
+  -webkit-mask-size: 4px 4px;
+  mask-size: 4px 4px;
+}
+
+/* Bingkai logam papan display; sambungan antarmodul lebih gelap dari bingkainya. */
+@utility bingkai-papan {
+  @apply rounded bg-bezel p-1.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.1),0_32px_64px_-32px_rgba(13,21,38,0.65)] sm:p-2;
+}
+
+/* Motif lama untuk bidang gelap halaman dalam. */
 @utility motif-komdigi {
   background-image:
     radial-gradient(circle at 88% 18%, rgba(255, 255, 255, 0.07) 0, transparent 38%),
     radial-gradient(circle at 12% 88%, rgba(255, 255, 255, 0.05) 0, transparent 42%);
 }
 
-@utility garis-bawah-aktif {
-  @apply after:absolute after:inset-x-0 after:-bottom-1 after:h-0.5 after:rounded-full after:bg-white after:content-[''];
+@keyframes teks-jalan {
+  to { transform: translateX(-50%); }
+}
+
+/* Kode loket berkedip dua kali seperti papan antrean memanggil. */
+@keyframes panggil {
+  0%, 50%, 100% { opacity: 1; }
+  25%, 75% { opacity: 0.2; }
+}
+
+/* Papan menyala baris demi baris saat halaman dibuka. */
+@keyframes nyala {
+  from { opacity: 0; filter: brightness(1.8); }
+  to { opacity: 1; filter: none; }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .nyala {
+    animation: nyala 700ms cubic-bezier(0.16, 1, 0.3, 1) both;
+    animation-delay: calc(var(--i, 0) * 90ms);
+  }
+
+  .teks-jalan {
+    animation: teks-jalan var(--durasi, 60s) linear infinite;
+  }
+
+  .teks-jalan-wadah:hover .teks-jalan,
+  .teks-jalan-wadah:focus-within .teks-jalan {
+    animation-play-state: paused;
+  }
+
+  .loket:hover .loket-kode,
+  .loket:focus-visible .loket-kode {
+    animation: panggil 900ms steps(1, end) 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  ::before,
+  ::after {
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

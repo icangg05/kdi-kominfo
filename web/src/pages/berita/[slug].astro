@@ -31,7 +31,7 @@ try {
         </nav>
 
         {berita.kategori && (
-          <a href={`/berita?kategori=${berita.kategori.slug}`} class="mb-4 inline-block rounded-full bg-white/15 px-3 py-1 text-xs font-semibold">
+          <a href={`/berita?kategori=${berita.kategori.slug}`} class="mb-4 inline-block rounded bg-white/15 px-3 py-1 text-xs font-semibold">
             {berita.kategori.nama}
           </a>
         )}
@@ -49,7 +49,7 @@ try {
       <div class="grid gap-12 lg:grid-cols-[1fr_320px]">
         <div>
           {berita.thumbnail && (
-            <img src={berita.thumbnail} alt="" class="mb-8 aspect-16/9 w-full rounded-kartu object-cover" />
+            <img src={berita.thumbnail} alt="" class="mb-8 aspect-16/9 w-full rounded object-cover" />
           )}
           <div class="prosa max-w-none" set:html={berita.konten} />
         </div>
@@ -60,7 +60,7 @@ try {
             <ul class="space-y-5">
               {berita.lainnya.map((b) => (
                 <li class="flex gap-4">
-                  <a href={`/berita/${b.slug}`} class="size-20 shrink-0 overflow-hidden rounded-lg bg-biru-50">
+                  <a href={`/berita/${b.slug}`} class="size-20 shrink-0 overflow-hidden rounded bg-biru-50">
                     {b.thumbnail && <img src={b.thumbnail} alt="" loading="lazy" class="size-full object-cover" />}
                   </a>
                   <div>

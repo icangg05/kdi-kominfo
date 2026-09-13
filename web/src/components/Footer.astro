@@ -21,29 +21,35 @@ const sosial = [
 ].filter((s) => Boolean(s.url));
 ---
 
-<footer class="mt-20 bg-biru-800 motif-komdigi text-biru-100">
-  <div class="wadah grid gap-10 py-14 md:grid-cols-2 lg:grid-cols-[1.2fr_repeat(3,1fr)]">
+<footer class="papan bg-papan text-biru-200">
+  <!-- Pita empat warna zona loket, penanda aula pelayanan. -->
+  <div class="grid h-1.5 grid-cols-4" aria-hidden="true">
+    <span class="bg-zona-a"></span>
+    <span class="bg-zona-b"></span>
+    <span class="bg-zona-c"></span>
+    <span class="bg-zona-d"></span>
+  </div>
+
+  <div class="wadah grid gap-10 py-14 sm:grid-cols-2 lg:grid-cols-[1.4fr_repeat(3,1fr)] lg:py-16">
     <div>
-      <div class="flex items-center gap-3">
-        <img src="/img/kominfo-logo.webp" alt="" class="h-12 w-auto" width="48" height="48" />
-        <span class="leading-tight text-white">
-          <span class="block text-base font-bold tracking-wide uppercase">Diskominfo</span>
-          <span class="block text-xs text-biru-200">Kota Kendari</span>
-        </span>
-      </div>
+      <img src="/img/kominfo-logo.webp" alt="Diskominfo Kota Kendari" class="h-12 w-auto" width="176" height="48" />
       <p class="mt-5 max-w-sm text-sm leading-relaxed">
-        Mendukung transformasi digital dan pelayanan publik berbasis teknologi informasi
-        di Kota Kendari.
+        Dinas Komunikasi dan Informatika Kota Kendari. Penyelenggara layanan informasi publik
+        dan infrastruktur TIK Pemerintah Kota Kendari.
       </p>
+      <a href="tel:112" class="mt-6 inline-flex items-center gap-3 rounded border border-bezel px-4 py-2.5 transition hover:border-zona-d-terang">
+        <span class="sempit text-2xl leading-none font-bold text-zona-d-terang">112</span>
+        <span class="text-xs leading-tight">Hubungi 112<br />24 jam, bebas pulsa</span>
+      </a>
     </div>
 
     {tautanFooter.map((kolom) => (
       <nav aria-label={kolom.judul}>
-        <h2 class="mb-4 text-sm font-semibold text-white">{kolom.judul}</h2>
+        <h2 class="sempit mb-4 text-base font-semibold text-white">{kolom.judul}</h2>
         <ul class="space-y-3 text-sm">
           {kolom.item.map((item) => (
             <li>
-              <a href={item.href} class="transition hover:text-white">{item.label}</a>
+              <a href={item.href} class="transition hover:text-led">{item.label}</a>
             </li>
           ))}
         </ul>
@@ -51,55 +57,55 @@ const sosial = [
     ))}
   </div>
 
-  <div class="wadah">
-    <div class="h-px bg-white/15"></div>
-  </div>
+  <div class="border-t border-bezel">
+    <div class="wadah flex flex-col gap-5 py-7 text-sm lg:flex-row lg:items-center lg:justify-between">
+      <p class="flex items-start gap-3">
+        <Ikon nama="gedung" class="mt-0.5 size-5 shrink-0 text-led" />
+        <span>Jl. Drs. H. Abdullah Silondae No. 5, Kendari, Sulawesi Tenggara</span>
+      </p>
 
-  <div class="wadah flex flex-col gap-6 py-8 text-sm lg:flex-row lg:items-center lg:justify-between">
-    <p class="flex items-start gap-3">
-      <Ikon nama="gedung" class="mt-0.5 size-5 shrink-0" />
-      <span>Jl. Drs. H. Abdullah Silondae No. 5,<br />Kendari, Sulawesi Tenggara</span>
-    </p>
-
-    {telp && (
-      <a href={`tel:${telp.replace(/[^+\d]/g, '')}`} class="flex items-center gap-3 font-semibold text-white">
-        <Ikon nama="telepon" class="size-5 shrink-0" />
-        {telp}
-      </a>
-    )}
-
-    {email && (
-      <a href={`mailto:${email}`} class="flex items-center gap-3 font-semibold text-white">
-        <Ikon nama="amplop" class="size-5 shrink-0" />
-        {email}
-      </a>
-    )}
-
-    {sosial.length > 0 && (
-      <div class="flex items-center gap-5">
-        {sosial.map((s) => (
-          <a href={s.url!} target="_blank" rel="noopener noreferrer" aria-label={s.label} class="transition hover:text-white">
-            <Ikon nama={s.nama} class="size-5" />
+      <div class="flex flex-wrap items-center gap-x-8 gap-y-3">
+        {telp && (
+          <a href={`tel:${telp.replace(/[^+\d]/g, '')}`} class="flex items-center gap-2.5 font-semibold text-white hover:text-led">
+            <Ikon nama="telepon" class="size-5 shrink-0 text-led" />
+            {telp}
           </a>
-        ))}
+        )}
+
+        {email && (
+          <a href={`mailto:${email}`} class="flex items-center gap-2.5 font-semibold text-white hover:text-led">
+            <Ikon nama="amplop" class="size-5 shrink-0 text-led" />
+            {email}
+          </a>
+        )}
+
+        {sosial.length > 0 && (
+          <div class="flex items-center gap-4">
+            {sosial.map((s) => (
+              <a href={s.url!} target="_blank" rel="noopener noreferrer" aria-label={s.label} class="transition hover:text-led">
+                <Ikon nama={s.nama} class="size-5" />
+              </a>
+            ))}
+          </div>
+        )}
       </div>
-    )}
+    </div>
   </div>
 
-  <div class="bg-biru-950">
-    <p class="wadah py-5 text-center text-xs text-biru-200">
-      &copy; {new Date().getFullYear()} Dinas Komunikasi dan Informatika Kota Kendari.
-      Seluruh hak cipta dilindungi.
+  <div class="border-t border-bezel">
+    <p class="wadah py-5 text-xs text-biru-300">
+      &copy; {new Date().getFullYear()} Dinas Komunikasi dan Informatika Kota Kendari. Seluruh hak cipta dilindungi.
     </p>
   </div>
 </footer>
 
-<!-- Tombol kembali ke atas, muncul setelah menggulir. -->
+<!-- Tombol kembali ke atas: muncul setelah penanda 400px keluar dari layar. -->
+<span data-penanda-atas class="pointer-events-none absolute top-[400px] left-0 size-px" aria-hidden="true"></span>
 <button
   type="button"
   data-ke-atas
   hidden
-  class="fixed bottom-6 right-6 z-40 rounded-full border border-biru-200 bg-white p-3 text-biru-700 shadow-lg shadow-biru-950/15 transition hover:bg-biru-50"
+  class="fixed right-5 bottom-5 z-40 rounded bg-papan p-3 text-led shadow-[0_12px_28px_-10px_rgba(13,21,38,0.6)] transition hover:bg-biru-900"
   aria-label="Kembali ke atas"
 >
   <Ikon nama="panah-atas" class="size-5" />
@@ -107,12 +113,13 @@ const sosial = [
 
 <script>
   const tombol = document.querySelector<HTMLButtonElement>('[data-ke-atas]');
+  const penanda = document.querySelector('[data-penanda-atas]');
 
-  const perbarui = () => {
-    if (tombol) tombol.hidden = window.scrollY < 400;
-  };
+  if (tombol && penanda) {
+    new IntersectionObserver(([e]) => {
+      tombol.hidden = e.isIntersecting || e.boundingClientRect.top > 0;
+    }).observe(penanda);
 
-  perbarui();
-  window.addEventListener('scroll', perbarui, { passive: true });
-  tombol?.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+    tombol.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+  }
 </script>

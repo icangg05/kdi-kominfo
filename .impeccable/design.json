@@ -1,0 +1,558 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-09-13T18:35:36.091396+00:00",
+  "title": "Design System: Diskominfo Kota Kendari",
+  "extensions": {
+    "colorMeta": {
+      "office-blue": {
+        "role": "primary",
+        "displayName": "Office Blue",
+        "canonical": "#0b4ea2",
+        "tonalRamp": [
+          "#071f3d",
+          "#0b2f5c",
+          "#0f3c75",
+          "#0b4ea2",
+          "#2777c8",
+          "#8bb9ea",
+          "#c0d8f4",
+          "#f2f7fd"
+        ]
+      },
+      "office-blue-deep": {
+        "role": "primary",
+        "displayName": "Office Blue Deep",
+        "canonical": "#0f3c75",
+        "tonalRamp": [
+          "#071f3d",
+          "#0b2f5c",
+          "#0f3c75",
+          "#0b4ea2",
+          "#2777c8",
+          "#8bb9ea",
+          "#c0d8f4",
+          "#f2f7fd"
+        ]
+      },
+      "office-blue-dark": {
+        "role": "primary",
+        "displayName": "Office Blue Dark",
+        "canonical": "#0b2f5c",
+        "tonalRamp": [
+          "#071f3d",
+          "#0b2f5c",
+          "#0f3c75",
+          "#0b4ea2",
+          "#2777c8",
+          "#8bb9ea",
+          "#c0d8f4",
+          "#f2f7fd"
+        ]
+      },
+      "office-blue-bright": {
+        "role": "primary",
+        "displayName": "Office Blue Bright",
+        "canonical": "#2777c8",
+        "tonalRamp": [
+          "#071f3d",
+          "#0b2f5c",
+          "#0f3c75",
+          "#0b4ea2",
+          "#2777c8",
+          "#8bb9ea",
+          "#c0d8f4",
+          "#f2f7fd"
+        ]
+      },
+      "blue-soft-rule": {
+        "role": "primary",
+        "displayName": "Blue Soft Rule",
+        "canonical": "#8bb9ea",
+        "tonalRamp": [
+          "#071f3d",
+          "#0b2f5c",
+          "#0f3c75",
+          "#0b4ea2",
+          "#2777c8",
+          "#8bb9ea",
+          "#c0d8f4",
+          "#f2f7fd"
+        ]
+      },
+      "category-blue": {
+        "role": "primary",
+        "displayName": "Category Blue",
+        "canonical": "#0d478e",
+        "tonalRamp": [
+          "#071f3d",
+          "#0b2f5c",
+          "#0f3c75",
+          "#0b4ea2",
+          "#2777c8",
+          "#8bb9ea",
+          "#c0d8f4",
+          "#f2f7fd"
+        ]
+      },
+      "papan-navy": {
+        "role": "primary",
+        "displayName": "Papan Navy",
+        "canonical": "#0d1526",
+        "tonalRamp": [
+          "#050a14",
+          "#0d1526",
+          "#111b30",
+          "#25324d",
+          "#4a5568",
+          "#9aa8c2",
+          "#d9dfea",
+          "#f3f5f9"
+        ]
+      },
+      "papan-seam": {
+        "role": "neutral",
+        "displayName": "Papan Seam",
+        "canonical": "#050a14",
+        "tonalRamp": [
+          "#050a14",
+          "#0d1526",
+          "#111b30",
+          "#25324d",
+          "#4a5568",
+          "#9aa8c2",
+          "#d9dfea",
+          "#f3f5f9"
+        ]
+      },
+      "bezel-steel": {
+        "role": "neutral",
+        "displayName": "Bezel Steel",
+        "canonical": "#25324d",
+        "tonalRamp": [
+          "#050a14",
+          "#0d1526",
+          "#111b30",
+          "#25324d",
+          "#4a5568",
+          "#9aa8c2",
+          "#d9dfea",
+          "#f3f5f9"
+        ]
+      },
+      "led-amber": {
+        "role": "secondary",
+        "displayName": "LED Amber",
+        "canonical": "#ffb000",
+        "tonalRamp": [
+          "#3d2a00",
+          "#6b4a00",
+          "#a36f00",
+          "#d69300",
+          "#ffb000",
+          "#ffc433",
+          "#ffdb85",
+          "#fff3d6"
+        ]
+      },
+      "zone-a": {
+        "role": "tertiary",
+        "displayName": "Zone A Blue",
+        "canonical": "#0b4ea2",
+        "tonalRamp": [
+          "#0b4ea2",
+          "#6aa6f2"
+        ]
+      },
+      "zone-b": {
+        "role": "tertiary",
+        "displayName": "Zone B Teal",
+        "canonical": "#0a7e6e",
+        "tonalRamp": [
+          "#0a7e6e",
+          "#3cc9ae"
+        ]
+      },
+      "zone-c": {
+        "role": "tertiary",
+        "displayName": "Zone C Magenta",
+        "canonical": "#c0266d",
+        "tonalRamp": [
+          "#c0266d",
+          "#f36aa6"
+        ]
+      },
+      "zone-d": {
+        "role": "tertiary",
+        "displayName": "Zone 112 Red",
+        "canonical": "#d62d20",
+        "tonalRamp": [
+          "#b8241a",
+          "#d62d20",
+          "#ff6a5c"
+        ]
+      },
+      "zone-a-lit": {
+        "role": "tertiary",
+        "displayName": "Zone A Lit",
+        "canonical": "#6aa6f2"
+      },
+      "zone-b-lit": {
+        "role": "tertiary",
+        "displayName": "Zone B Lit",
+        "canonical": "#3cc9ae"
+      },
+      "zone-c-lit": {
+        "role": "tertiary",
+        "displayName": "Zone C Lit",
+        "canonical": "#f36aa6"
+      },
+      "zone-d-lit": {
+        "role": "tertiary",
+        "displayName": "Zone 112 Lit",
+        "canonical": "#ff6a5c"
+      },
+      "emergency-press": {
+        "role": "tertiary",
+        "displayName": "Emergency Press",
+        "canonical": "#b8241a"
+      },
+      "aula-wall": {
+        "role": "neutral",
+        "displayName": "Aula Wall",
+        "canonical": "#f3f5f9",
+        "tonalRamp": [
+          "#050a14",
+          "#0d1526",
+          "#111b30",
+          "#25324d",
+          "#4a5568",
+          "#9aa8c2",
+          "#d9dfea",
+          "#f3f5f9"
+        ]
+      },
+      "surface-white": {
+        "role": "neutral",
+        "displayName": "Surface White",
+        "canonical": "#ffffff"
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "Ink",
+        "canonical": "#0f1a2e"
+      },
+      "body-text": {
+        "role": "neutral",
+        "displayName": "Body Text",
+        "canonical": "#1c2536"
+      },
+      "muted-text": {
+        "role": "neutral",
+        "displayName": "Muted Text",
+        "canonical": "#4a5568"
+      },
+      "rule-line": {
+        "role": "neutral",
+        "displayName": "Rule Line",
+        "canonical": "#d9dfea"
+      },
+      "blue-mist": {
+        "role": "neutral",
+        "displayName": "Blue Mist",
+        "canonical": "#c0d8f4",
+        "tonalRamp": [
+          "#071f3d",
+          "#0b2f5c",
+          "#0f3c75",
+          "#0b4ea2",
+          "#2777c8",
+          "#8bb9ea",
+          "#c0d8f4",
+          "#f2f7fd"
+        ]
+      },
+      "blue-pale": {
+        "role": "neutral",
+        "displayName": "Blue Pale",
+        "canonical": "#e2edfa",
+        "tonalRamp": [
+          "#071f3d",
+          "#0b2f5c",
+          "#0f3c75",
+          "#0b4ea2",
+          "#2777c8",
+          "#8bb9ea",
+          "#c0d8f4",
+          "#f2f7fd"
+        ]
+      },
+      "blue-wash": {
+        "role": "neutral",
+        "displayName": "Blue Wash",
+        "canonical": "#f2f7fd",
+        "tonalRamp": [
+          "#071f3d",
+          "#0b2f5c",
+          "#0f3c75",
+          "#0b4ea2",
+          "#2777c8",
+          "#8bb9ea",
+          "#c0d8f4",
+          "#f2f7fd"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "Office name on the hero board only; 85% width."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Section headings beside the section sign; 112 board heading."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Panel headings; 85% width."
+      },
+      "title-small": {
+        "displayName": "Title Small",
+        "purpose": "Card and list titles."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Running text, 46ch to 68ch measures."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Buttons, text links, tab names."
+      },
+      "caption": {
+        "displayName": "Caption",
+        "purpose": "Topbar, meta rows, legal line."
+      },
+      "led-display": {
+        "displayName": "LED Display",
+        "purpose": "Display-size numerals (about 4rem and up) with the 4px dot mask."
+      },
+      "led-small": {
+        "displayName": "LED Small",
+        "purpose": "Clock, visitor counts, ticker dates, day tiles, step numbers; solid amber, no mask."
+      }
+    },
+    "shadows": [
+      {
+        "name": "board-frame",
+        "value": "inset 0 1px 0 rgba(255,255,255,0.1), 0 32px 64px -32px rgba(13,21,38,0.65)",
+        "purpose": "Steel bezel around a display board."
+      },
+      {
+        "name": "nav-drop",
+        "value": "0 10px 30px -18px rgba(13,21,38,0.7)",
+        "purpose": "Under the sticky nav."
+      },
+      {
+        "name": "menu-float",
+        "value": "0 18px 40px -16px rgba(13,21,38,0.35)",
+        "purpose": "Dropdown menus."
+      },
+      {
+        "name": "card-lift",
+        "value": "0 18px 36px -20px rgba(13,21,38,0.35)",
+        "purpose": "News card hover only."
+      },
+      {
+        "name": "floating-button",
+        "value": "0 12px 28px -10px rgba(13,21,38,0.6)",
+        "purpose": "Back-to-top button."
+      }
+    ],
+    "motion": [
+      {
+        "name": "nyala",
+        "value": "700ms cubic-bezier(0.16, 1, 0.3, 1), 90ms stagger per module",
+        "purpose": "Board modules power on from brightness 1.8 on load."
+      },
+      {
+        "name": "panggil",
+        "value": "900ms steps(1, end), 1 iteration",
+        "purpose": "Counter code blinks twice on hover or focus."
+      },
+      {
+        "name": "zone-rise",
+        "value": "500ms cubic-bezier(0.16, 1, 0.3, 1)",
+        "purpose": "Zone fill rises up a counter tile."
+      },
+      {
+        "name": "teks-jalan",
+        "value": "linear infinite, 9s per news item",
+        "purpose": "News ticker; pauses on hover or focus."
+      },
+      {
+        "name": "reduced-motion",
+        "value": "prefers-reduced-motion: reduce",
+        "purpose": "All board motion off; ticker becomes a scrollable static row."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "sm",
+        "value": "640px"
+      },
+      {
+        "name": "md",
+        "value": "768px"
+      },
+      {
+        "name": "lg",
+        "value": "1024px"
+      },
+      {
+        "name": "xl",
+        "value": "1280px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "LED Primary Button",
+      "kind": "button",
+      "refersTo": "button-led",
+      "description": "Primary call to action on a navy display board.",
+      "html": "<div class=\"ds-papan\"><a class=\"ds-btn-led\" href=\"#\">Ajukan layanan <svg viewBox=\"0 0 24 24\" width=\"16\" height=\"16\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\"><path d=\"M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3\"/></svg></a> <a class=\"ds-btn-ghost\" href=\"#\">Baca berita dinas</a></div>",
+      "css": ".ds-papan{background:#0d1526;padding:24px;display:flex;gap:12px;flex-wrap:wrap}.ds-btn-led,.ds-btn-ghost{font-family:'IBM Plex Sans',ui-sans-serif,system-ui,sans-serif;display:inline-flex;align-items:center;gap:8px;border-radius:4px;padding:12px 20px;font-size:14px;font-weight:600;text-decoration:none;transition:background .15s,border-color .15s}.ds-btn-led{background:#ffb000;color:#0d1526}.ds-btn-led:hover{background:#ffc433}.ds-btn-led:active,.ds-btn-ghost:active{transform:translateY(1px)}.ds-btn-ghost{border:1px solid rgba(255,255,255,.25);color:#fff}.ds-btn-ghost:hover{border-color:rgba(255,255,255,.6);background:rgba(255,255,255,.05)}.ds-papan :focus-visible{outline:2px solid #ffb000;outline-offset:2px}"
+    },
+    {
+      "name": "Emergency Button",
+      "kind": "button",
+      "refersTo": "button-emergency",
+      "description": "Hubungi 112; the only use of zone red as an action.",
+      "html": "<a class=\"ds-btn-112\" href=\"tel:112\"><svg viewBox=\"0 0 24 24\" width=\"16\" height=\"16\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\"><path d=\"M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 0 0 2.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293a.75.75 0 0 1-.98.24A14.9 14.9 0 0 1 6.11 12.9a.75.75 0 0 1 .24-.98l1.293-.97c.362-.271.527-.734.417-1.173L6.954 5.352A1.125 1.125 0 0 0 5.863 4.5H4.5A2.25 2.25 0 0 0 2.25 6.75Z\"/></svg>Hubungi 112</a>",
+      "css": ".ds-btn-112{font-family:'IBM Plex Sans',ui-sans-serif,system-ui,sans-serif;display:inline-flex;align-items:center;gap:8px;background:#d62d20;color:#fff;border-radius:4px;padding:12px 20px;font-size:14px;font-weight:600;text-decoration:none;transition:background .15s}.ds-btn-112:hover{background:#b8241a}.ds-btn-112:active{transform:translateY(1px)}.ds-btn-112:focus-visible{outline:2px solid #0b4ea2;outline-offset:2px}"
+    },
+    {
+      "name": "Category Chip",
+      "kind": "chip",
+      "refersTo": "chip-category",
+      "description": "News category tag on the wall.",
+      "html": "<a class=\"ds-chip\" href=\"#\">Info Teknologi</a>",
+      "css": ".ds-chip{font-family:'IBM Plex Sans',ui-sans-serif,system-ui,sans-serif;display:inline-block;background:#f2f7fd;color:#0d478e;border-radius:4px;padding:4px 8px;font-size:12px;font-weight:600;text-decoration:none}.ds-chip:hover{background:#e2edfa}.ds-chip:focus-visible{outline:2px solid #0b4ea2;outline-offset:2px}"
+    },
+    {
+      "name": "News Card",
+      "kind": "card",
+      "refersTo": "card-news",
+      "description": "White bordered card; navy media ground shows the category when no photo exists.",
+      "html": "<article class=\"ds-card\"><div class=\"ds-card-media\"><span>Pengumuman</span></div><div class=\"ds-card-body\"><span class=\"ds-chip2\">Pengumuman</span><h3>Judul berita dinas</h3><p>Ringkasan berita dalam tiga baris paling banyak.</p><div class=\"ds-card-meta\">14 September 2026 &middot; 70 kali dibaca</div></div></article>",
+      "css": ".ds-card{font-family:'IBM Plex Sans',ui-sans-serif,system-ui,sans-serif;max-width:360px;border:1px solid #d9dfea;border-radius:4px;background:#fff;overflow:hidden;transition:border-color .15s,box-shadow .15s}.ds-card:hover{border-color:#8bb9ea;box-shadow:0 18px 36px -20px rgba(13,21,38,.35)}.ds-card-media{aspect-ratio:16/9;background:#0d1526;display:flex;align-items:flex-end;padding:20px}.ds-card-media span{font-stretch:85%;font-size:24px;font-weight:600;line-height:1;color:rgba(255,255,255,.9)}.ds-card-body{padding:20px}.ds-chip2{display:inline-block;background:#f2f7fd;color:#0d478e;border-radius:4px;padding:4px 8px;font-size:12px;font-weight:600}.ds-card h3{margin:12px 0 8px;font-size:18px;font-weight:600;line-height:1.375;color:#0f1a2e}.ds-card:hover h3{color:#0b4ea2}.ds-card p{margin:0 0 16px;font-size:14px;color:#4a5568}.ds-card-meta{border-top:1px solid #d9dfea;padding-top:12px;font-size:12px;color:#4a5568}"
+    },
+    {
+      "name": "Topbar and Nav",
+      "kind": "nav",
+      "refersTo": "nav-bar",
+      "description": "Navy topbar with live WITA clock and greeting, navy nav with amber active underline.",
+      "html": "<header class=\"ds-head\"><div class=\"ds-top\"><span class=\"ds-clock\">09.41.07</span><small>WITA</small><i></i><span>Selamat pagi</span></div><nav class=\"ds-nav\"><strong class=\"ds-logo\">Diskominfo</strong><a class=\"on\" href=\"#\">Beranda</a><a href=\"#\">Profil Dinas</a><a href=\"#\">Layanan</a><a href=\"#\">Berita</a></nav></header>",
+      "css": ".ds-head{font-family:'IBM Plex Sans',ui-sans-serif,system-ui,sans-serif;background:#0d1526}.ds-top{display:flex;align-items:baseline;gap:8px;height:36px;align-items:center;padding:0 16px;border-bottom:1px solid #25324d;font-size:12px;color:#c0d8f4}.ds-clock{color:#ffb000;font-stretch:85%;font-variant-numeric:tabular-nums;font-weight:700;font-size:18px;line-height:1}.ds-top small{color:#ffb000;font-weight:700;font-size:12px}.ds-top i{width:1px;height:12px;background:#25324d}.ds-nav{display:flex;align-items:stretch;height:68px;padding:0 16px;gap:4px}.ds-logo{color:#fff;align-self:center;margin-right:24px}.ds-nav a{position:relative;display:flex;align-items:center;padding:0 14px;font-size:15px;font-weight:500;color:#e2edfa;text-decoration:none}.ds-nav a::after{content:'';position:absolute;left:14px;right:14px;bottom:0;height:3px;background:#ffb000;transform:scaleX(0);transform-origin:left;transition:transform .15s}.ds-nav a:hover,.ds-nav a.on{color:#fff}.ds-nav a:hover::after,.ds-nav a.on::after{transform:scaleX(1)}.ds-nav a:focus-visible{outline:2px solid #ffb000;outline-offset:2px}"
+    },
+    {
+      "name": "Loket Counter",
+      "kind": "custom",
+      "refersTo": "loket-tile",
+      "description": "Service counter tile; zone fill rises and the code blinks when called.",
+      "html": "<a class=\"ds-loket\" href=\"#\" style=\"--zona:#0a7e6e;--zona-terang:#3cc9ae\"><span class=\"ds-loket-fill\"></span><span class=\"ds-loket-kode\">B</span><span class=\"ds-loket-txt\"><b>Email Dinas</b><small>Akun resmi @kendarikota.go.id</small></span></a>",
+      "css": ".ds-loket{font-family:'IBM Plex Sans',ui-sans-serif,system-ui,sans-serif;position:relative;isolation:isolate;display:flex;flex-direction:column;justify-content:space-between;min-height:144px;width:260px;padding:24px;background:#0d1526;overflow:hidden;text-decoration:none}.ds-loket-fill{position:absolute;inset:0;z-index:-1;background:var(--zona);transform:scaleY(.045);transform-origin:top;transition:transform .5s cubic-bezier(.16,1,.3,1)}.ds-loket:hover .ds-loket-fill,.ds-loket:focus-visible .ds-loket-fill{transform:scaleY(1)}.ds-loket-kode{font-stretch:85%;font-size:60px;font-weight:700;line-height:1;color:var(--zona-terang);transition:color .15s}.ds-loket:hover .ds-loket-kode,.ds-loket:focus-visible .ds-loket-kode{color:#fff;animation:ds-panggil 900ms steps(1,end) 1}.ds-loket-txt b{display:block;color:#fff;font-weight:600;margin-top:20px}.ds-loket-txt small{display:block;font-size:14px;color:#c0d8f4}.ds-loket:focus-visible{outline:2px solid #ffb000;outline-offset:2px}@keyframes ds-panggil{0%,50%,100%{opacity:1}25%,75%{opacity:.2}}"
+    },
+    {
+      "name": "Display Board with LED Numerals",
+      "kind": "custom",
+      "description": "Bezel-framed board; dot mask on display-size numerals only, small numerals solid.",
+      "html": "<div class=\"ds-bezel\"><div class=\"ds-board\"><div class=\"ds-mod\"><span class=\"ds-led ds-led-titik ds-big\">03</span></div><div class=\"ds-mod ds-strip\">Pengunjung hari ini <strong class=\"ds-led\">2</strong></div></div></div>",
+      "css": ".ds-bezel{font-family:'IBM Plex Sans',ui-sans-serif,system-ui,sans-serif;background:#25324d;padding:8px;border-radius:4px;box-shadow:inset 0 1px 0 rgba(255,255,255,.1),0 32px 64px -32px rgba(13,21,38,.65)}.ds-board{display:grid;gap:1px;background:#050a14;overflow:hidden}.ds-mod{background:#0d1526;padding:24px}.ds-strip{padding:10px 24px;font-size:12px;color:#c0d8f4;display:flex;gap:8px;align-items:baseline}.ds-led{color:#ffb000;font-stretch:85%;font-variant-numeric:tabular-nums;font-weight:700;line-height:1}.ds-strip .ds-led{font-size:18px}.ds-big{font-size:112px;letter-spacing:-.025em}.ds-led-titik{-webkit-mask-image:radial-gradient(circle,#000 58%,transparent 64%);mask-image:radial-gradient(circle,#000 58%,transparent 64%);-webkit-mask-size:4px 4px;mask-size:4px 4px}"
+    },
+    {
+      "name": "Section Sign",
+      "kind": "custom",
+      "refersTo": "section-sign",
+      "description": "Wayfinding heading: navy square with amber arrow beside a condensed headline.",
+      "html": "<div class=\"ds-sign\"><span class=\"ds-sign-box\"><svg viewBox=\"0 0 24 24\" width=\"20\" height=\"20\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\"><path d=\"M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3\"/></svg></span><h2>Berita terbaru</h2></div>",
+      "css": ".ds-sign{font-family:'IBM Plex Sans',ui-sans-serif,system-ui,sans-serif;display:flex;align-items:flex-start;gap:16px}.ds-sign-box{display:flex;align-items:center;justify-content:center;width:44px;height:44px;flex-shrink:0;margin-top:4px;border-radius:4px;background:#0d1526;color:#ffb000}.ds-sign h2{margin:0;font-stretch:85%;font-size:40px;font-weight:600;line-height:1.25;letter-spacing:-.025em;color:#0f1a2e}"
+    }
+  ],
+  "narrative": {
+    "northStar": "Aula Loket Pelayanan",
+    "overview": "The site is a public service hall. The light hall wall (aula) is the page ground; set into it are navy display boards (papan) framed by a steel bezel, lit with amber LED numerals, and four service counters (loket) each wearing its zone color. A visitor reads the hall the way they would read a real one: the board names the office, calls the counters, and runs the news ticker along its base; the wall carries the readable material (requirements, news, welcome, divisions, gallery) in white panels with thin rules.\n\nAuthority comes from precision, not ornament. The palette is restrained on the wall and saturated only where a counter or a board speaks. Blue stays the base identity: office blue is zone A, the link color, and the focus ring. Density is moderate; sections breathe at 64px on phones and 96px on desktop, and the board modules butt against each other with 1px dark seams rather than floating as separate cards.\n\nMotion is board behavior: modules power on row by row on load, counter codes blink twice when called (hover or focus), the zone color rises up a counter tile, and the ticker scrolls and pauses on hover. All of it sits behind `prefers-reduced-motion: no-preference`.",
+    "keyCharacteristics": [
+      "Light hall wall with navy display boards set into it; boards are the only dark grounds.",
+      "Amber LED numerals for everything that counts or tells time.",
+      "Four zone colors (A blue, B teal, C magenta, 112 red) as the counter wayfinding system.",
+      "One family, IBM Plex Sans; headings and board signage at 85% width.",
+      "One corner radius, 4px, everywhere.",
+      "Seamed modules (1px gaps over a darker ground) instead of floating cards."
+    ],
+    "rules": [
+      {
+        "name": "The Blue Base Rule",
+        "body": "Blue is the identity. New surfaces start from the wall, navy, and office blue; zone teal, magenta, and red never replace blue as a page's main color.",
+        "section": "colors"
+      },
+      {
+        "name": "The Zone Belongs To The Counter Rule",
+        "body": "Zone colors mark the four services and nothing else (the footer's four-color strip is the counters' own signature). Do not use teal or magenta as general accents, and use zone D red only for 112 and emergency action.",
+        "section": "colors"
+      },
+      {
+        "name": "The Amber Is Signal Rule",
+        "body": "Amber appears on navy, as numerals, the primary board CTA, icons, and the active marker. It never fills large wall areas and is never body text on white.",
+        "section": "colors"
+      },
+      {
+        "name": "The One Family Rule",
+        "body": "IBM Plex Sans is the only typeface. Display and signage use `font-stretch: 85%` of the same variable family (wdth axis 85 to 100); never add a second face, including a monospace for numerals.",
+        "section": "typography"
+      },
+      {
+        "name": "The Dot Mask Threshold Rule",
+        "body": "The LED dot mask (4px radial mask) is only for display-size numerals, about 4rem and up. Small LED numerals (the clock, visitor counters, ticker dates, news day tiles, step numbers) stay solid amber; the mask breaks their legibility.",
+        "section": "typography"
+      },
+      {
+        "name": "The Formal Voice Rule",
+        "body": "Public copy is formal Indonesian, sentence case, with no em dashes and no marketing language.",
+        "section": "typography"
+      },
+      {
+        "name": "The Flat Wall Rule",
+        "body": "Content on the wall is flat at rest: white panels with 1px rules. Shadow appears only on the board frame, floating chrome, and hover.",
+        "section": "elevation"
+      },
+      {
+        "name": "The Four Pixel Rule",
+        "body": "Border radius is `rounded` (4px) everywhere. Never `rounded-lg`, `rounded-xl`, `rounded-full`, or anything larger, on any element.",
+        "section": "shapes"
+      }
+    ],
+    "dos": [
+      "**Do** use IBM Plex Sans only, with `font-stretch: 85%` for display, headings, board signage, and LED numerals.",
+      "**Do** use the 4px radius (`rounded`) on every rounded element.",
+      "**Do** keep blue as the base identity: aula wall, papan navy, office blue.",
+      "**Do** show a live WITA (Asia/Makassar) clock with a time-of-day greeting in the topbar.",
+      "**Do** place the official logo (`web/public/img/kominfo-logo.webp`, white wordmark) only on a papan navy ground; this is why the nav and footer are navy.",
+      "**Do** set counting and time numerals in amber LED style with tabular figures, and apply the dot mask only at display size (about 4rem and up).",
+      "**Do** drive counter color from the zone key through `--zona` and `--zona-terang`: solid zone on surfaces, lit zone for text on navy.",
+      "**Do** build boards and grids as seamed modules with 1px gaps, not separate floating cards.",
+      "**Do** gate board motion (power-on, counter call, ticker) behind `prefers-reduced-motion: no-preference`.",
+      "**Do** write public copy in formal Indonesian, sentence case."
+    ],
+    "donts": [
+      "**Don't** use `rounded-lg`, `rounded-xl`, `rounded-full`, or any radius above 4px.",
+      "**Don't** add a second typeface, a monospace, or a system display face.",
+      "**Don't** show a date in the topbar.",
+      "**Don't** put the logo on the white wall or a light ground; the white wordmark disappears.",
+      "**Don't** apply the LED dot mask to small numerals (clock, visitor counts, ticker dates, news day tiles, step numbers).",
+      "**Don't** use zone teal or magenta as general accents, or zone red for anything but 112 and emergency action.",
+      "**Don't** use em dashes in public copy.",
+      "**Don't** return to the blue carousel hero with three floating cards.",
+      "**Don't** treat the inner pages' blue page-title band with radial motif as the system; it is the pre-hall state awaiting migration."
+    ]
+  }
+}

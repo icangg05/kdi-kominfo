@@ -26,7 +26,7 @@ const nomor = Array.from({ length: Math.min(5, halamanTerakhir) }, (_, i) => mul
     <a
       href={tautan(halaman - 1)}
       class:list={[
-        'rounded-lg border border-biru-200 px-3 py-2 text-sm transition',
+        'rounded border border-biru-200 px-3 py-2 text-sm transition',
         halaman <= 1 ? 'pointer-events-none opacity-40' : 'hover:bg-biru-50',
       ]}
       aria-disabled={halaman <= 1}
@@ -39,7 +39,7 @@ const nomor = Array.from({ length: Math.min(5, halamanTerakhir) }, (_, i) => mul
         href={tautan(n)}
         aria-current={n === halaman ? 'page' : undefined}
         class:list={[
-          'min-w-10 rounded-lg border px-3 py-2 text-center text-sm transition',
+          'min-w-10 rounded border px-3 py-2 text-center text-sm transition',
           n === halaman
             ? 'border-biru-600 bg-biru-600 font-semibold text-white'
             : 'border-biru-200 hover:bg-biru-50',
@@ -52,7 +52,7 @@ const nomor = Array.from({ length: Math.min(5, halamanTerakhir) }, (_, i) => mul
     <a
       href={tautan(halaman + 1)}
       class:list={[
-        'rounded-lg border border-biru-200 px-3 py-2 text-sm transition',
+        'rounded border border-biru-200 px-3 py-2 text-sm transition',
         halaman >= halamanTerakhir ? 'pointer-events-none opacity-40' : 'hover:bg-biru-50',
       ]}
       aria-disabled={halaman >= halamanTerakhir}

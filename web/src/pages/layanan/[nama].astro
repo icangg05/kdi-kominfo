@@ -29,7 +29,7 @@ const { pengaturan } = await api<{ pengaturan: Record<string, string | null> }>(
         {isi.bagian.paragraf?.map((p) => <p class="mb-4 leading-relaxed text-teks-lembut">{p}</p>)}
 
         {isi.bagian.poin && (
-          <ul class="mt-6 space-y-3 rounded-kartu bg-biru-50 p-6">
+          <ul class="mt-6 space-y-3 rounded bg-biru-50 p-6">
             {isi.bagian.poin.map((p) => (
               <li class="flex gap-3 text-sm text-teks-lembut">
                 <Ikon nama="panah-kanan" class="mt-0.5 size-4 shrink-0 text-biru-600" />
@@ -40,7 +40,7 @@ const { pengaturan } = await api<{ pengaturan: Record<string, string | null> }>(
         )}
       </div>
 
-      <img src={isi.gambar} alt="" class="mx-auto w-full max-w-md rounded-kartu object-contain" />
+      <img src={isi.gambar} alt="" class="mx-auto w-full max-w-md rounded object-contain" />
     </section>
 
     {isi.fitur && (
@@ -48,7 +48,7 @@ const { pengaturan } = await api<{ pengaturan: Record<string, string | null> }>(
         <h2 class="mb-6 text-xl font-bold text-biru-900">Fitur yang Tersedia</h2>
         <ul class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {isi.fitur.map((f) => (
-            <li class="flex items-center gap-3 rounded-kartu border border-biru-100 px-5 py-4 text-sm">
+            <li class="flex items-center gap-3 rounded border border-biru-100 px-5 py-4 text-sm">
               <Ikon nama="panah-kanan" class="size-4 shrink-0 text-biru-600" />
               {f}
             </li>
@@ -62,7 +62,7 @@ const { pengaturan } = await api<{ pengaturan: Record<string, string | null> }>(
         <h2 class="mb-6 text-xl font-bold text-biru-900">Keunggulan Layanan</h2>
         <div class="grid gap-5 md:grid-cols-3">
           {isi.keunggulan.map((k) => (
-            <div class="rounded-kartu border border-biru-100 p-6">
+            <div class="rounded border border-biru-100 p-6">
               <h3 class="mb-2 font-bold text-biru-900">{k.judul}</h3>
               <p class="text-sm text-teks-lembut">{k.isi}</p>
             </div>
@@ -73,12 +73,12 @@ const { pengaturan } = await api<{ pengaturan: Record<string, string | null> }>(
 
     <div class="mt-16 grid gap-8 lg:grid-cols-2">
       {isi.syarat && (
-        <section class="rounded-kartu border border-biru-100 p-7">
+        <section class="rounded border border-biru-100 p-7">
           <h2 class="mb-5 text-xl font-bold text-biru-900">Persyaratan Pengajuan</h2>
           <ol class="space-y-3">
             {isi.syarat.map((s, i) => (
               <li class="flex gap-3 text-sm text-teks-lembut">
-                <span class="flex size-6 shrink-0 items-center justify-center rounded-full bg-biru-50 text-xs font-bold text-biru-700">{i + 1}</span>
+                <span class="flex size-6 shrink-0 items-center justify-center rounded bg-biru-50 text-xs font-bold text-biru-700">{i + 1}</span>
                 {s}
               </li>
             ))}
@@ -87,12 +87,12 @@ const { pengaturan } = await api<{ pengaturan: Record<string, string | null> }>(
       )}
 
       {isi.prosedur && (
-        <section class="rounded-kartu bg-biru-800 motif-komdigi p-7 text-white">
+        <section class="rounded bg-biru-800 motif-komdigi p-7 text-white">
           <h2 class="mb-5 text-xl font-bold">Prosedur Pengajuan</h2>
           <ol class="space-y-3">
             {isi.prosedur.map((p, i) => (
               <li class="flex gap-3 text-sm text-biru-100">
-                <span class="flex size-6 shrink-0 items-center justify-center rounded-full bg-white/15 text-xs font-bold">{i + 1}</span>
+                <span class="flex size-6 shrink-0 items-center justify-center rounded bg-white/15 text-xs font-bold">{i + 1}</span>
                 {p}
               </li>
             ))}
@@ -102,7 +102,7 @@ const { pengaturan } = await api<{ pengaturan: Record<string, string | null> }>(
     </div>
 
     <!-- Kontak diambil dari pengaturan admin supaya tidak perlu diubah di dua tempat. -->
-    <section class="mt-16 rounded-kartu border border-biru-100 bg-biru-50/60 p-8">
+    <section class="mt-16 rounded border border-biru-100 bg-biru-50/60 p-8">
       <h2 class="mb-2 text-xl font-bold text-biru-900">Hubungi Kami</h2>
       <p class="mb-6 text-sm text-teks-lembut">Untuk pertanyaan atau pengajuan layanan, silakan hubungi:</p>
 

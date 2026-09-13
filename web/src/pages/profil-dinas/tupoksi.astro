@@ -17,18 +17,18 @@ const data = await api<{ tugas: string | null; fungsi: string[] }>('/profil-dina
   <div class="wadah py-12">
     {data.tugas && (
       <section class="mb-16">
-        <JudulBagian judul="Tugas" tengah={false} />
+        <JudulBagian judul="Tugas" />
         <div class="prosa max-w-4xl" set:html={data.tugas} />
       </section>
     )}
 
     {data.fungsi.length > 0 && (
       <section>
-        <JudulBagian judul="Fungsi" tengah={false} />
+        <JudulBagian judul="Fungsi" />
         <ol class="grid gap-5 md:grid-cols-2">
           {data.fungsi.map((f, i) => (
-            <li class="flex gap-4 rounded-kartu border border-biru-100 p-5">
-              <span class="flex size-8 shrink-0 items-center justify-center rounded-full bg-biru-50 text-sm font-bold text-biru-700">
+            <li class="flex gap-4 rounded border border-biru-100 p-5">
+              <span class="flex size-8 shrink-0 items-center justify-center rounded bg-biru-50 text-sm font-bold text-biru-700">
                 {i + 1}
               </span>
               <p class="text-sm leading-relaxed text-teks-lembut">{f}</p>

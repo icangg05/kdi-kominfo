@@ -44,7 +44,7 @@ const dasar = Object.fromEntries(
         <a
           href={`/dokumen${query({ search })}`}
           class:list={[
-            'rounded-full border px-4 py-1.5 text-sm transition',
+            'rounded border px-4 py-1.5 text-sm transition',
             kategori === '' ? 'border-biru-600 bg-biru-600 font-semibold text-white' : 'border-biru-200 hover:bg-biru-50',
           ]}
         >
@@ -54,7 +54,7 @@ const dasar = Object.fromEntries(
           <a
             href={`/dokumen${query({ search, kategori: k.slug })}`}
             class:list={[
-              'rounded-full border px-4 py-1.5 text-sm transition',
+              'rounded border px-4 py-1.5 text-sm transition',
               kategori === k.slug ? 'border-biru-600 bg-biru-600 font-semibold text-white' : 'border-biru-200 hover:bg-biru-50',
             ]}
           >
@@ -72,9 +72,9 @@ const dasar = Object.fromEntries(
           name="search"
           value={search}
           placeholder="Cari dokumen…"
-          class="w-full rounded-lg border border-biru-200 py-2.5 pl-4 pr-11 text-sm outline-none transition focus:border-biru-500 focus:ring-2 focus:ring-biru-200"
+          class="w-full rounded border border-biru-200 py-2.5 pl-4 pr-11 text-sm outline-none transition focus:border-biru-500 focus:ring-2 focus:ring-biru-200"
         />
-        <button type="submit" class="absolute right-1 top-1/2 -translate-y-1/2 rounded-md p-2 text-biru-600 hover:bg-biru-50" aria-label="Cari">
+        <button type="submit" class="absolute right-1 top-1/2 -translate-y-1/2 rounded p-2 text-biru-600 hover:bg-biru-50" aria-label="Cari">
           <Ikon nama="cari" class="size-4" />
         </button>
       </form>
@@ -84,8 +84,8 @@ const dasar = Object.fromEntries(
       <>
         <ul class="grid gap-5 md:grid-cols-2">
           {daftar.data.map((d) => (
-            <li class="flex gap-5 rounded-kartu border border-biru-100 p-5 transition hover:border-biru-300 hover:bg-biru-50/50">
-              <span class="flex size-12 shrink-0 items-center justify-center rounded-xl bg-biru-50 text-biru-600">
+            <li class="flex gap-5 rounded border border-biru-100 p-5 transition hover:border-biru-300 hover:bg-biru-50/50">
+              <span class="flex size-12 shrink-0 items-center justify-center rounded bg-biru-50 text-biru-600">
                 <Ikon nama="berkas" class="size-6" />
               </span>
 
@@ -97,7 +97,7 @@ const dasar = Object.fromEntries(
                 <div class="mt-4 flex items-center gap-4">
                   <a
                     href={d.unduh}
-                    class="inline-flex items-center gap-2 rounded-lg bg-biru-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-biru-700"
+                    class="inline-flex items-center gap-2 rounded bg-biru-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-biru-700"
                   >
                     <Ikon nama="unduh" class="size-4" />
                     Unduh {d.ekstensi.toUpperCase()}

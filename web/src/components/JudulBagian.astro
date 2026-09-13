@@ -1,15 +1,32 @@
 ---
+import Ikon from './Ikon.astro';
+
+/** Judul bagian bergaya papan penunjuk arah aula: kotak panah, judul, tautan opsional di kanan. */
 interface Props {
   judul: string;
   keterangan?: string;
-  tengah?: boolean;
+  tautan?: { label: string; href: string };
+  id?: string;
 }
 
-const { judul, keterangan, tengah = true } = Astro.props;
+const { judul, keterangan, tautan, id } = Astro.props;
 ---
 
-<div class:list={['mb-10', tengah && 'mx-auto max-w-2xl text-center']}>
-  <span class="mb-3 inline-block h-1 w-12 rounded-full bg-biru-600"></span>
-  <h2 class="text-2xl font-bold tracking-tight text-biru-900 lg:text-3xl">{judul}</h2>
-  {keterangan && <p class="mt-3 text-teks-lembut">{keterangan}</p>}
+<div class="mb-8 flex flex-wrap items-end justify-between gap-x-8 gap-y-4 lg:mb-10">
+  <div class="flex items-start gap-4">
+    <span class="mt-1 flex size-10 shrink-0 items-center justify-center rounded bg-papan text-led lg:size-11" aria-hidden="true">
+      <Ikon nama="panah-kanan" class="size-5" />
+    </span>
+    <div>
+      <h2 id={id} class="sempit text-3xl font-semibold leading-tight tracking-tight text-balance text-tinta lg:text-[2.5rem]">{judul}</h2>
+      {keterangan && <p class="mt-2 max-w-[62ch] text-teks-lembut">{keterangan}</p>}
+    </div>
+  </div>
+
+  {tautan && (
+    <a href={tautan.href} class="group inline-flex items-center gap-2 text-sm font-semibold text-biru-600 hover:text-biru-800">
+      {tautan.label}
+      <Ikon nama="panah-kanan" class="size-4 transition-transform group-hover:translate-x-1" />
+    </a>
+  )}
 </div>

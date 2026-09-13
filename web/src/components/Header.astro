@@ -1,6 +1,7 @@
 ---
 import Ikon from './Ikon.astro';
 import { menuUtama } from '../lib/navigasi';
+import { waktuWita } from '../lib/waktu';
 
 interface Props {
   telp?: string;
@@ -12,28 +13,29 @@ const { telp, email, jalurAktif } = Astro.props;
 
 const aktif = (href: string) => href === '/' ? jalurAktif === '/' : jalurAktif.startsWith(href.split('/').slice(0, 2).join('/'));
 
-const hariIni = new Date().toLocaleDateString('id-ID', {
-  weekday: 'long', day: 'numeric', month: 'long', year: 'numeric',
-});
+// Jam dirender dulu di server supaya bilah tidak kosong sebelum skrip berjalan.
+const awal = waktuWita();
 ---
 
 <header class="sticky top-0 z-50">
-  <!-- Bilah informasi: tanggal di kiri, kontak di kanan. -->
-  <div class="hidden bg-biru-950 text-biru-100 lg:block">
-    <div class="wadah flex items-center justify-between py-2 text-xs">
-      <p class="flex items-center gap-2">
-        <Ikon nama="kalender" class="size-4" />
-        {hariIni}
+  <!-- Bilah informasi: jam WITA di kiri, kontak di kanan. -->
+  <div class="border-b border-bezel bg-papan text-biru-200">
+    <div class="wadah flex h-9 items-center justify-between gap-4 text-xs">
+      <p class="flex items-center gap-2.5">
+        <Ikon nama="jam" class="size-4 text-led" />
+        <span class="led flex items-baseline gap-1.5 font-bold"><time data-jam class="text-lg leading-none">{awal.jam}</time><span class="text-xs">WITA</span></span>
+        <span class="hidden h-3 w-px bg-bezel sm:block" aria-hidden="true"></span>
+        <span class="hidden sm:inline" data-sapaan>{awal.sapaan}</span>
       </p>
       <div class="flex items-center gap-6">
         {telp && (
-          <a href={`tel:${telp.replace(/[^+\d]/g, '')}`} class="flex items-center gap-2 hover:text-white">
+          <a href={`tel:${telp.replace(/[^+\d]/g, '')}`} class="hidden items-center gap-2 transition hover:text-white md:flex">
             <Ikon nama="telepon" class="size-4" />
             {telp}
           </a>
         )}
         {email && (
-          <a href={`mailto:${email}`} class="flex items-center gap-2 hover:text-white">
+          <a href={`mailto:${email}`} class="hidden items-center gap-2 transition hover:text-white lg:flex">
             <Ikon nama="amplop" class="size-4" />
             {email}
           </a>
@@ -43,24 +45,20 @@ const hariIni = new Date().toLocaleDateString('id-ID', {
   </div>
 
   <!-- Bilah navigasi utama. -->
-  <div class="bg-biru-600 motif-komdigi text-white shadow-lg shadow-biru-950/10">
-    <div class="wadah flex items-center justify-between gap-6 py-3">
-      <a href="/" class="flex items-center gap-3">
-        <img src="/img/kominfo-logo.webp" alt="Logo Diskominfo Kota Kendari" class="h-11 w-auto" width="44" height="44" />
-        <span class="leading-tight">
-          <span class="block text-sm font-bold tracking-wide uppercase">Diskominfo</span>
-          <span class="block text-[11px] text-biru-100">Kota Kendari</span>
-        </span>
+  <div class="papan bg-papan text-white shadow-[0_10px_30px_-18px_rgba(13,21,38,0.7)]">
+    <div class="wadah flex h-[68px] items-center justify-between gap-6">
+      <a href="/" class="shrink-0">
+        <img src="/img/kominfo-logo.webp" alt="Diskominfo Kota Kendari" class="h-11 w-auto" width="162" height="44" />
       </a>
 
-      <nav class="hidden items-center gap-1 lg:flex" aria-label="Navigasi utama">
+      <nav class="hidden h-full items-stretch lg:flex" aria-label="Navigasi utama">
         {menuUtama.map((item) => (
-          <div class="group relative">
+          <div class="group relative flex">
             <a
               href={item.href}
               class:list={[
-                'relative flex items-center gap-1 rounded-lg px-3 py-2 text-sm font-medium transition hover:bg-white/10',
-                aktif(item.href) && 'bg-white/10',
+                'relative flex items-center gap-1 px-3.5 text-[15px] font-medium transition-colors after:absolute after:inset-x-3.5 after:bottom-0 after:h-[3px] after:origin-left after:scale-x-0 after:bg-led after:transition-transform hover:text-white hover:after:scale-x-100',
+                aktif(item.href) ? 'text-white after:scale-x-100' : 'text-biru-100',
               ]}
               aria-current={aktif(item.href) ? 'page' : undefined}
             >
@@ -69,15 +67,15 @@ const hariIni = new Date().toLocaleDateString('id-ID', {
             </a>
 
             {item.anak && (
-              <div class="invisible absolute left-0 top-full w-60 pt-2 opacity-0 transition group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100">
-                <ul class="overflow-hidden rounded-kartu border border-biru-100 bg-white py-1 shadow-xl shadow-biru-950/10">
+              <div class="invisible absolute left-0 top-full w-64 translate-y-1 opacity-0 transition group-hover:visible group-hover:translate-y-0 group-hover:opacity-100 group-focus-within:visible group-focus-within:translate-y-0 group-focus-within:opacity-100">
+                <ul class="overflow-hidden rounded border border-garis bg-white py-1.5 shadow-[0_18px_40px_-16px_rgba(13,21,38,0.35)]">
                   {item.anak.map((anak) => (
                     <li>
                       <a
                         href={anak.href}
                         class:list={[
-                          'block px-4 py-2.5 text-sm text-teks-lembut transition hover:bg-biru-50 hover:text-biru-700',
-                          jalurAktif === anak.href && 'bg-biru-50 font-semibold text-biru-700',
+                          'block px-4 py-2.5 text-sm transition hover:bg-aula hover:text-biru-600',
+                          jalurAktif === anak.href ? 'bg-aula font-semibold text-biru-600' : 'text-teks-lembut',
                         ]}
                       >
                         {anak.label}
@@ -91,29 +89,40 @@ const hariIni = new Date().toLocaleDateString('id-ID', {
         ))}
       </nav>
 
-      <button
-        type="button"
-        class="rounded-lg p-2 transition hover:bg-white/10 lg:hidden"
-        aria-label="Buka menu"
-        aria-expanded="false"
-        aria-controls="menu-seluler"
-        data-tombol-menu
-      >
-        <Ikon nama="menu" class="size-6" />
-      </button>
+      <div class="flex items-center gap-2">
+        <a
+          href="tel:112"
+          class="flex items-center gap-2 rounded bg-zona-d px-3.5 py-2 text-sm font-semibold text-white transition hover:bg-[#b8241a] active:translate-y-px"
+        >
+          <Ikon nama="telepon" class="size-4" />
+          <span class="sm:hidden">112</span>
+          <span class="hidden sm:inline">Hubungi 112</span>
+        </a>
+
+        <button
+          type="button"
+          class="rounded p-2 text-white transition hover:bg-white/10 lg:hidden"
+          aria-label="Buka menu"
+          aria-expanded="false"
+          aria-controls="menu-seluler"
+          data-tombol-menu
+        >
+          <Ikon nama="menu" class="size-6" />
+        </button>
+      </div>
     </div>
 
     <!-- Menu seluler: daftar datar, semua submenu ikut terbuka. -->
-    <nav id="menu-seluler" hidden class="border-t border-white/15 lg:hidden" aria-label="Navigasi seluler">
+    <nav id="menu-seluler" hidden class="max-h-[calc(100dvh-104px)] overflow-y-auto border-t border-bezel lg:hidden" aria-label="Navigasi seluler">
       <ul class="wadah space-y-1 py-3">
         {menuUtama.map((item) => (
           <li>
-            <a href={item.href} class="block rounded-lg px-3 py-2 text-sm font-medium hover:bg-white/10">{item.label}</a>
+            <a href={item.href} class="block rounded px-3 py-2.5 text-[15px] font-semibold text-white hover:bg-white/10">{item.label}</a>
             {item.anak && (
-              <ul class="ml-3 border-l border-white/20 pl-3">
+              <ul class="mb-2 ml-3 border-l border-bezel pl-3">
                 {item.anak.map((anak) => (
                   <li>
-                    <a href={anak.href} class="block rounded-lg px-3 py-2 text-sm text-biru-100 hover:bg-white/10">{anak.label}</a>
+                    <a href={anak.href} class="block rounded px-3 py-2 text-sm text-biru-200 hover:bg-white/10 hover:text-white">{anak.label}</a>
                   </li>
                 ))}
               </ul>
@@ -126,6 +135,8 @@ const hariIni = new Date().toLocaleDateString('id-ID', {
 </header>
 
 <script>
+  import { waktuWita } from '../lib/waktu';
+
   const tombol = document.querySelector<HTMLButtonElement>('[data-tombol-menu]');
   const menu = document.getElementById('menu-seluler');
 
@@ -134,4 +145,19 @@ const hariIni = new Date().toLocaleDateString('id-ID', {
     tombol.setAttribute('aria-expanded', String(!terbuka));
     if (menu) menu.hidden = terbuka;
   });
+
+  const jam = document.querySelector('[data-jam]');
+  const sapaan = document.querySelector('[data-sapaan]');
+
+  const tik = () => {
+    const w = waktuWita();
+    if (jam) jam.textContent = w.jam;
+    if (sapaan) sapaan.textContent = w.sapaan;
+  };
+
+  tik();
+  setTimeout(() => {
+    tik();
+    setInterval(tik, 1000);
+  }, 1000 - (Date.now() % 1000));
 </script>
