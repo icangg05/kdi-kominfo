@@ -23,6 +23,8 @@ class PanelAdminTest extends TestCase
       'kategori berita' => ['/admin/kategori-beritas'],
       'galeri' => ['/admin/galeris'],
       'buat galeri' => ['/admin/galeris/create'],
+      'video' => ['/admin/videos'],
+      'buat video' => ['/admin/videos/create'],
       'dokumen' => ['/admin/dokumens'],
       'buat dokumen' => ['/admin/dokumens/create'],
       'kategori dokumen' => ['/admin/kategori-dokumens'],
@@ -48,6 +50,14 @@ class PanelAdminTest extends TestCase
   public function test_tamu_diarahkan_ke_login(): void
   {
     $this->get('/admin')->assertRedirect('/admin/login');
+  }
+
+  public function test_halaman_login_memakai_tata_letak_instansi(): void
+  {
+    $this->get('/admin/login')
+      ->assertSuccessful()
+      ->assertSee('Masuk ke Panel Admin')
+      ->assertSee('Kelola informasi publik Kota Kendari');
   }
 
   public function test_akun_hasil_seeder_bisa_login(): void

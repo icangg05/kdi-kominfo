@@ -1,3 +1,6 @@
+username: diskominfokendari@gmail.com
+password: rahasia123
+
 # Website Dinas Kominfo Kota Kendari
 
 Situs publik dan panel admin Dinas Komunikasi dan Informatika Kota Kendari.

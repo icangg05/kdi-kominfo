@@ -1,397 +1,400 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-09-13T18:35:36.091396+00:00",
+  "generatedAt": "2026-09-14T01:48:34.660827+00:00",
   "title": "Design System: Diskominfo Kota Kendari",
   "extensions": {
     "colorMeta": {
-      "office-blue": {
+      "biru-50": {
         "role": "primary",
-        "displayName": "Office Blue",
-        "canonical": "#0b4ea2",
-        "tonalRamp": [
-          "#071f3d",
-          "#0b2f5c",
-          "#0f3c75",
-          "#0b4ea2",
-          "#2777c8",
-          "#8bb9ea",
-          "#c0d8f4",
-          "#f2f7fd"
-        ]
-      },
-      "office-blue-deep": {
-        "role": "primary",
-        "displayName": "Office Blue Deep",
-        "canonical": "#0f3c75",
-        "tonalRamp": [
-          "#071f3d",
-          "#0b2f5c",
-          "#0f3c75",
-          "#0b4ea2",
-          "#2777c8",
-          "#8bb9ea",
-          "#c0d8f4",
-          "#f2f7fd"
-        ]
-      },
-      "office-blue-dark": {
-        "role": "primary",
-        "displayName": "Office Blue Dark",
-        "canonical": "#0b2f5c",
-        "tonalRamp": [
-          "#071f3d",
-          "#0b2f5c",
-          "#0f3c75",
-          "#0b4ea2",
-          "#2777c8",
-          "#8bb9ea",
-          "#c0d8f4",
-          "#f2f7fd"
-        ]
-      },
-      "office-blue-bright": {
-        "role": "primary",
-        "displayName": "Office Blue Bright",
-        "canonical": "#2777c8",
-        "tonalRamp": [
-          "#071f3d",
-          "#0b2f5c",
-          "#0f3c75",
-          "#0b4ea2",
-          "#2777c8",
-          "#8bb9ea",
-          "#c0d8f4",
-          "#f2f7fd"
-        ]
-      },
-      "blue-soft-rule": {
-        "role": "primary",
-        "displayName": "Blue Soft Rule",
-        "canonical": "#8bb9ea",
-        "tonalRamp": [
-          "#071f3d",
-          "#0b2f5c",
-          "#0f3c75",
-          "#0b4ea2",
-          "#2777c8",
-          "#8bb9ea",
-          "#c0d8f4",
-          "#f2f7fd"
-        ]
-      },
-      "category-blue": {
-        "role": "primary",
-        "displayName": "Category Blue",
-        "canonical": "#0d478e",
-        "tonalRamp": [
-          "#071f3d",
-          "#0b2f5c",
-          "#0f3c75",
-          "#0b4ea2",
-          "#2777c8",
-          "#8bb9ea",
-          "#c0d8f4",
-          "#f2f7fd"
-        ]
-      },
-      "papan-navy": {
-        "role": "primary",
-        "displayName": "Papan Navy",
-        "canonical": "#0d1526",
-        "tonalRamp": [
-          "#050a14",
-          "#0d1526",
-          "#111b30",
-          "#25324d",
-          "#4a5568",
-          "#9aa8c2",
-          "#d9dfea",
-          "#f3f5f9"
-        ]
-      },
-      "papan-seam": {
-        "role": "neutral",
-        "displayName": "Papan Seam",
-        "canonical": "#050a14",
-        "tonalRamp": [
-          "#050a14",
-          "#0d1526",
-          "#111b30",
-          "#25324d",
-          "#4a5568",
-          "#9aa8c2",
-          "#d9dfea",
-          "#f3f5f9"
-        ]
-      },
-      "bezel-steel": {
-        "role": "neutral",
-        "displayName": "Bezel Steel",
-        "canonical": "#25324d",
-        "tonalRamp": [
-          "#050a14",
-          "#0d1526",
-          "#111b30",
-          "#25324d",
-          "#4a5568",
-          "#9aa8c2",
-          "#d9dfea",
-          "#f3f5f9"
-        ]
-      },
-      "led-amber": {
-        "role": "secondary",
-        "displayName": "LED Amber",
-        "canonical": "#ffb000",
-        "tonalRamp": [
-          "#3d2a00",
-          "#6b4a00",
-          "#a36f00",
-          "#d69300",
-          "#ffb000",
-          "#ffc433",
-          "#ffdb85",
-          "#fff3d6"
-        ]
-      },
-      "zone-a": {
-        "role": "tertiary",
-        "displayName": "Zone A Blue",
-        "canonical": "#0b4ea2",
-        "tonalRamp": [
-          "#0b4ea2",
-          "#6aa6f2"
-        ]
-      },
-      "zone-b": {
-        "role": "tertiary",
-        "displayName": "Zone B Teal",
-        "canonical": "#0a7e6e",
-        "tonalRamp": [
-          "#0a7e6e",
-          "#3cc9ae"
-        ]
-      },
-      "zone-c": {
-        "role": "tertiary",
-        "displayName": "Zone C Magenta",
-        "canonical": "#c0266d",
-        "tonalRamp": [
-          "#c0266d",
-          "#f36aa6"
-        ]
-      },
-      "zone-d": {
-        "role": "tertiary",
-        "displayName": "Zone 112 Red",
-        "canonical": "#d62d20",
-        "tonalRamp": [
-          "#b8241a",
-          "#d62d20",
-          "#ff6a5c"
-        ]
-      },
-      "zone-a-lit": {
-        "role": "tertiary",
-        "displayName": "Zone A Lit",
-        "canonical": "#6aa6f2"
-      },
-      "zone-b-lit": {
-        "role": "tertiary",
-        "displayName": "Zone B Lit",
-        "canonical": "#3cc9ae"
-      },
-      "zone-c-lit": {
-        "role": "tertiary",
-        "displayName": "Zone C Lit",
-        "canonical": "#f36aa6"
-      },
-      "zone-d-lit": {
-        "role": "tertiary",
-        "displayName": "Zone 112 Lit",
-        "canonical": "#ff6a5c"
-      },
-      "emergency-press": {
-        "role": "tertiary",
-        "displayName": "Emergency Press",
-        "canonical": "#b8241a"
-      },
-      "aula-wall": {
-        "role": "neutral",
-        "displayName": "Aula Wall",
-        "canonical": "#f3f5f9",
-        "tonalRamp": [
-          "#050a14",
-          "#0d1526",
-          "#111b30",
-          "#25324d",
-          "#4a5568",
-          "#9aa8c2",
-          "#d9dfea",
-          "#f3f5f9"
-        ]
-      },
-      "surface-white": {
-        "role": "neutral",
-        "displayName": "Surface White",
-        "canonical": "#ffffff"
-      },
-      "ink": {
-        "role": "neutral",
-        "displayName": "Ink",
-        "canonical": "#0f1a2e"
-      },
-      "body-text": {
-        "role": "neutral",
-        "displayName": "Body Text",
-        "canonical": "#1c2536"
-      },
-      "muted-text": {
-        "role": "neutral",
-        "displayName": "Muted Text",
-        "canonical": "#4a5568"
-      },
-      "rule-line": {
-        "role": "neutral",
-        "displayName": "Rule Line",
-        "canonical": "#d9dfea"
-      },
-      "blue-mist": {
-        "role": "neutral",
-        "displayName": "Blue Mist",
-        "canonical": "#c0d8f4",
-        "tonalRamp": [
-          "#071f3d",
-          "#0b2f5c",
-          "#0f3c75",
-          "#0b4ea2",
-          "#2777c8",
-          "#8bb9ea",
-          "#c0d8f4",
-          "#f2f7fd"
-        ]
-      },
-      "blue-pale": {
-        "role": "neutral",
-        "displayName": "Blue Pale",
-        "canonical": "#e2edfa",
-        "tonalRamp": [
-          "#071f3d",
-          "#0b2f5c",
-          "#0f3c75",
-          "#0b4ea2",
-          "#2777c8",
-          "#8bb9ea",
-          "#c0d8f4",
-          "#f2f7fd"
-        ]
-      },
-      "blue-wash": {
-        "role": "neutral",
-        "displayName": "Blue Wash",
+        "displayName": "Biru Pucat",
         "canonical": "#f2f7fd",
         "tonalRamp": [
           "#071f3d",
           "#0b2f5c",
           "#0f3c75",
+          "#0d478e",
           "#0b4ea2",
           "#2777c8",
           "#8bb9ea",
-          "#c0d8f4",
-          "#f2f7fd"
+          "#e2edfa"
+        ]
+      },
+      "biru-100": {
+        "role": "primary",
+        "displayName": "Biru Fallback Kartu",
+        "canonical": "#e2edfa",
+        "tonalRamp": [
+          "#071f3d",
+          "#0b2f5c",
+          "#0f3c75",
+          "#0d478e",
+          "#0b4ea2",
+          "#2777c8",
+          "#8bb9ea",
+          "#e2edfa"
+        ]
+      },
+      "biru-200": {
+        "role": "primary",
+        "displayName": "Biru Keterangan",
+        "canonical": "#c0d8f4",
+        "tonalRamp": [
+          "#071f3d",
+          "#0b2f5c",
+          "#0f3c75",
+          "#0d478e",
+          "#0b4ea2",
+          "#2777c8",
+          "#8bb9ea",
+          "#e2edfa"
+        ]
+      },
+      "biru-300": {
+        "role": "primary",
+        "displayName": "Biru Ikon",
+        "canonical": "#8bb9ea",
+        "tonalRamp": [
+          "#071f3d",
+          "#0b2f5c",
+          "#0f3c75",
+          "#0d478e",
+          "#0b4ea2",
+          "#2777c8",
+          "#8bb9ea",
+          "#e2edfa"
+        ]
+      },
+      "biru-400": {
+        "role": "primary",
+        "displayName": "Biru Terang",
+        "canonical": "#4f95dc",
+        "tonalRamp": [
+          "#071f3d",
+          "#0b2f5c",
+          "#0f3c75",
+          "#0d478e",
+          "#0b4ea2",
+          "#2777c8",
+          "#8bb9ea",
+          "#e2edfa"
+        ]
+      },
+      "biru-500": {
+        "role": "primary",
+        "displayName": "Biru Hover",
+        "canonical": "#2777c8",
+        "tonalRamp": [
+          "#071f3d",
+          "#0b2f5c",
+          "#0f3c75",
+          "#0d478e",
+          "#0b4ea2",
+          "#2777c8",
+          "#8bb9ea",
+          "#e2edfa"
+        ]
+      },
+      "biru-600": {
+        "role": "primary",
+        "displayName": "Biru Instansi",
+        "canonical": "#0b4ea2",
+        "tonalRamp": [
+          "#071f3d",
+          "#0b2f5c",
+          "#0f3c75",
+          "#0d478e",
+          "#0b4ea2",
+          "#2777c8",
+          "#8bb9ea",
+          "#e2edfa"
+        ]
+      },
+      "biru-700": {
+        "role": "primary",
+        "displayName": "Biru Tengah",
+        "canonical": "#0d478e",
+        "tonalRamp": [
+          "#071f3d",
+          "#0b2f5c",
+          "#0f3c75",
+          "#0d478e",
+          "#0b4ea2",
+          "#2777c8",
+          "#8bb9ea",
+          "#e2edfa"
+        ]
+      },
+      "biru-800": {
+        "role": "primary",
+        "displayName": "Biru Tua",
+        "canonical": "#0f3c75",
+        "tonalRamp": [
+          "#071f3d",
+          "#0b2f5c",
+          "#0f3c75",
+          "#0d478e",
+          "#0b4ea2",
+          "#2777c8",
+          "#8bb9ea",
+          "#e2edfa"
+        ]
+      },
+      "biru-900": {
+        "role": "primary",
+        "displayName": "Biru Malam",
+        "canonical": "#0b2f5c",
+        "tonalRamp": [
+          "#071f3d",
+          "#0b2f5c",
+          "#0f3c75",
+          "#0d478e",
+          "#0b4ea2",
+          "#2777c8",
+          "#8bb9ea",
+          "#e2edfa"
+        ]
+      },
+      "biru-950": {
+        "role": "primary",
+        "displayName": "Navy Topbar",
+        "canonical": "#071f3d",
+        "tonalRamp": [
+          "#071f3d",
+          "#0b2f5c",
+          "#0f3c75",
+          "#0d478e",
+          "#0b4ea2",
+          "#2777c8",
+          "#8bb9ea",
+          "#e2edfa"
+        ]
+      },
+      "langit": {
+        "role": "neutral",
+        "displayName": "Langit",
+        "canonical": "#eef4fb",
+        "tonalRamp": [
+          "#1c2536",
+          "#2d3748",
+          "#4a5568",
+          "#718096",
+          "#a0aec0",
+          "#dbe3ef",
+          "#eef4fb",
+          "#ffffff"
+        ]
+      },
+      "toska": {
+        "role": "secondary",
+        "displayName": "Toska",
+        "canonical": "#0d7f77",
+        "tonalRamp": [
+          "#04302d",
+          "#064b47",
+          "#0a6660",
+          "#0d7f77",
+          "#2f9a92",
+          "#6bbdb6",
+          "#b3ddd9",
+          "#e6f4f3"
+        ]
+      },
+      "nila": {
+        "role": "secondary",
+        "displayName": "Nila",
+        "canonical": "#2f3f9e",
+        "tonalRamp": [
+          "#141b45",
+          "#1f2a6b",
+          "#28358a",
+          "#2f3f9e",
+          "#5563b5",
+          "#8a95cf",
+          "#c3c9e8",
+          "#eceefa"
+        ]
+      },
+      "darurat": {
+        "role": "tertiary",
+        "displayName": "Merah Darurat",
+        "canonical": "#d62d20",
+        "tonalRamp": [
+          "#4a0f0b",
+          "#7a1a13",
+          "#b8241a",
+          "#d62d20",
+          "#e25a4f",
+          "#ec8f88",
+          "#f5c4c0",
+          "#fcecea"
+        ]
+      },
+      "darurat-deep": {
+        "role": "tertiary",
+        "displayName": "Merah Darurat Tekan",
+        "canonical": "#b8241a",
+        "tonalRamp": [
+          "#4a0f0b",
+          "#7a1a13",
+          "#b8241a",
+          "#d62d20",
+          "#e25a4f",
+          "#ec8f88",
+          "#f5c4c0",
+          "#fcecea"
+        ]
+      },
+      "teks": {
+        "role": "neutral",
+        "displayName": "Teks",
+        "canonical": "#1c2536",
+        "tonalRamp": [
+          "#1c2536",
+          "#2d3748",
+          "#4a5568",
+          "#718096",
+          "#a0aec0",
+          "#dbe3ef",
+          "#eef4fb",
+          "#ffffff"
+        ]
+      },
+      "teks-lembut": {
+        "role": "neutral",
+        "displayName": "Teks Lembut",
+        "canonical": "#4a5568",
+        "tonalRamp": [
+          "#1c2536",
+          "#2d3748",
+          "#4a5568",
+          "#718096",
+          "#a0aec0",
+          "#dbe3ef",
+          "#eef4fb",
+          "#ffffff"
+        ]
+      },
+      "garis": {
+        "role": "neutral",
+        "displayName": "Garis",
+        "canonical": "#dbe3ef",
+        "tonalRamp": [
+          "#1c2536",
+          "#2d3748",
+          "#4a5568",
+          "#718096",
+          "#a0aec0",
+          "#dbe3ef",
+          "#eef4fb",
+          "#ffffff"
+        ]
+      },
+      "putih": {
+        "role": "neutral",
+        "displayName": "Putih",
+        "canonical": "#ffffff",
+        "tonalRamp": [
+          "#1c2536",
+          "#2d3748",
+          "#4a5568",
+          "#718096",
+          "#a0aec0",
+          "#dbe3ef",
+          "#eef4fb",
+          "#ffffff"
         ]
       }
     },
     "typographyMeta": {
       "display": {
         "displayName": "Display",
-        "purpose": "Office name on the hero board only; 85% width."
+        "purpose": "Highlight carousel news titles only."
       },
       "headline": {
         "displayName": "Headline",
-        "purpose": "Section headings beside the section sign; 112 board heading."
+        "purpose": "Band statements, document search titles, inner page titles."
+      },
+      "section-title": {
+        "displayName": "Section Title",
+        "purpose": "Uppercase homepage and sidebar section headings."
       },
       "title": {
         "displayName": "Title",
-        "purpose": "Panel headings; 85% width."
+        "purpose": "Card headlines, clamped."
       },
-      "title-small": {
-        "displayName": "Title Small",
-        "purpose": "Card and list titles."
+      "card-label": {
+        "displayName": "Card Label",
+        "purpose": "Uppercase service and bidang titles on blue."
       },
       "body": {
         "displayName": "Body",
-        "purpose": "Running text, 46ch to 68ch measures."
+        "purpose": "Descriptions and prose."
       },
-      "label": {
-        "displayName": "Label",
-        "purpose": "Buttons, text links, tab names."
+      "nav": {
+        "displayName": "Nav",
+        "purpose": "Sticky main navigation items."
       },
-      "caption": {
-        "displayName": "Caption",
-        "purpose": "Topbar, meta rows, legal line."
+      "stat": {
+        "displayName": "Stat",
+        "purpose": "Visitor total on the toska card."
       },
-      "led-display": {
-        "displayName": "LED Display",
-        "purpose": "Display-size numerals (about 4rem and up) with the 4px dot mask."
-      },
-      "led-small": {
-        "displayName": "LED Small",
-        "purpose": "Clock, visitor counts, ticker dates, day tiles, step numbers; solid amber, no mask."
+      "meta": {
+        "displayName": "Meta",
+        "purpose": "Dates and counts."
       }
     },
     "shadows": [
       {
-        "name": "board-frame",
-        "value": "inset 0 1px 0 rgba(255,255,255,0.1), 0 32px 64px -32px rgba(13,21,38,0.65)",
-        "purpose": "Steel bezel around a display board."
+        "name": "panel-lift",
+        "value": "0 24px 48px -28px rgba(7,31,61,0.7)",
+        "purpose": "Services gradient panel at rest."
       },
       {
-        "name": "nav-drop",
-        "value": "0 10px 30px -18px rgba(13,21,38,0.7)",
-        "purpose": "Under the sticky nav."
+        "name": "card-hover",
+        "value": "0 16px 32px -20px rgba(7,31,61,0.45)",
+        "purpose": "News and document cards on hover."
       },
       {
-        "name": "menu-float",
-        "value": "0 18px 40px -16px rgba(13,21,38,0.35)",
-        "purpose": "Dropdown menus."
+        "name": "dropdown",
+        "value": "0 18px 40px -16px rgba(7,31,61,0.35)",
+        "purpose": "Nav submenus."
       },
       {
-        "name": "card-lift",
-        "value": "0 18px 36px -20px rgba(13,21,38,0.35)",
-        "purpose": "News card hover only."
+        "name": "sticky-bar",
+        "value": "0 6px 18px -14px rgba(7,31,61,0.45)",
+        "purpose": "Sticky white desktop nav."
       },
       {
-        "name": "floating-button",
-        "value": "0 12px 28px -10px rgba(13,21,38,0.6)",
+        "name": "sticky-header-mobile",
+        "value": "0 8px 24px -16px rgba(7,31,61,0.8)",
+        "purpose": "Sticky blue logo row on mobile."
+      },
+      {
+        "name": "floating",
+        "value": "0 12px 28px -10px rgba(7,31,61,0.6)",
         "purpose": "Back-to-top button."
+      },
+      {
+        "name": "focus-ring",
+        "value": "outline: 2px solid #0b4ea2; outline-offset: 2px; box-shadow: 0 0 0 2px #fff",
+        "purpose": "Global :focus-visible double ring."
       }
     ],
     "motion": [
       {
-        "name": "nyala",
-        "value": "700ms cubic-bezier(0.16, 1, 0.3, 1), 90ms stagger per module",
-        "purpose": "Board modules power on from brightness 1.8 on load."
+        "name": "ease-sorot",
+        "value": "cubic-bezier(0.16, 1, 0.3, 1)",
+        "purpose": "Highlight slide title rise (sorot-masuk, 650ms, translateY 14px)."
       },
       {
-        "name": "panggil",
-        "value": "900ms steps(1, end), 1 iteration",
-        "purpose": "Counter code blinks twice on hover or focus."
+        "name": "slide-crossfade",
+        "value": "opacity 1000ms",
+        "purpose": "Highlight background image crossfade; autoplay every 7s, paused on hover/focus, off under reduced motion."
       },
       {
-        "name": "zone-rise",
-        "value": "500ms cubic-bezier(0.16, 1, 0.3, 1)",
-        "purpose": "Zone fill rises up a counter tile."
-      },
-      {
-        "name": "teks-jalan",
-        "value": "linear infinite, 9s per news item",
-        "purpose": "News ticker; pauses on hover or focus."
-      },
-      {
-        "name": "reduced-motion",
-        "value": "prefers-reduced-motion: reduce",
-        "purpose": "All board motion off; ticker becomes a scrollable static row."
+        "name": "hover-lift",
+        "value": "transform/box-shadow 150ms",
+        "purpose": "Card lift on hover (-2px news, -4px service)."
       }
     ],
     "breakpoints": [
@@ -415,144 +418,172 @@
   },
   "components": [
     {
-      "name": "LED Primary Button",
+      "name": "Primary Button",
       "kind": "button",
-      "refersTo": "button-led",
-      "description": "Primary call to action on a navy display board.",
-      "html": "<div class=\"ds-papan\"><a class=\"ds-btn-led\" href=\"#\">Ajukan layanan <svg viewBox=\"0 0 24 24\" width=\"16\" height=\"16\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\"><path d=\"M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3\"/></svg></a> <a class=\"ds-btn-ghost\" href=\"#\">Baca berita dinas</a></div>",
-      "css": ".ds-papan{background:#0d1526;padding:24px;display:flex;gap:12px;flex-wrap:wrap}.ds-btn-led,.ds-btn-ghost{font-family:'IBM Plex Sans',ui-sans-serif,system-ui,sans-serif;display:inline-flex;align-items:center;gap:8px;border-radius:4px;padding:12px 20px;font-size:14px;font-weight:600;text-decoration:none;transition:background .15s,border-color .15s}.ds-btn-led{background:#ffb000;color:#0d1526}.ds-btn-led:hover{background:#ffc433}.ds-btn-led:active,.ds-btn-ghost:active{transform:translateY(1px)}.ds-btn-ghost{border:1px solid rgba(255,255,255,.25);color:#fff}.ds-btn-ghost:hover{border-color:rgba(255,255,255,.6);background:rgba(255,255,255,.05)}.ds-papan :focus-visible{outline:2px solid #ffb000;outline-offset:2px}"
+      "refersTo": "button-primary",
+      "description": "Institutional blue action on white surfaces.",
+      "html": "<button class=\"ds-btn-primary\">Cari dokumen</button>",
+      "css": ".ds-btn-primary{font-family:'IBM Plex Sans',ui-sans-serif,system-ui,sans-serif;background:#0b4ea2;color:#fff;border:0;border-radius:4px;padding:12px 20px;font-size:14px;font-weight:600;cursor:pointer;transition:background .15s}.ds-btn-primary:hover{background:#0d478e}.ds-btn-primary:active{transform:translateY(1px)}.ds-btn-primary:focus-visible{outline:2px solid #0b4ea2;outline-offset:2px;box-shadow:0 0 0 2px #fff;}"
     },
     {
-      "name": "Emergency Button",
+      "name": "White Button On Blue",
+      "kind": "button",
+      "refersTo": "button-on-blue",
+      "description": "Primary action inside blue and navy bands.",
+      "html": "<div class=\"ds-onblue-wrap\"><a href=\"#\" class=\"ds-btn-onblue\">Baca selengkapnya <svg viewBox=\"0 0 24 24\" width=\"16\" height=\"16\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\"><path stroke-linecap=\"round\" stroke-linejoin=\"round\" d=\"M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3\"/></svg></a></div>",
+      "css": ".ds-onblue-wrap{background:#071f3d;padding:24px}.ds-btn-onblue{font-family:'IBM Plex Sans',ui-sans-serif,system-ui,sans-serif;display:inline-flex;align-items:center;gap:8px;background:#fff;color:#0f3c75;border-radius:4px;padding:12px 20px;font-size:14px;font-weight:600;text-decoration:none;transition:background .15s}.ds-btn-onblue:hover{background:#f2f7fd}.ds-btn-onblue:active{transform:translateY(1px)}.ds-btn-onblue:focus-visible{outline:2px solid #0b4ea2;outline-offset:2px;box-shadow:0 0 0 2px #fff;}"
+    },
+    {
+      "name": "Emergency 112 Button",
       "kind": "button",
       "refersTo": "button-emergency",
-      "description": "Hubungi 112; the only use of zone red as an action.",
-      "html": "<a class=\"ds-btn-112\" href=\"tel:112\"><svg viewBox=\"0 0 24 24\" width=\"16\" height=\"16\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\"><path d=\"M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 0 0 2.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293a.75.75 0 0 1-.98.24A14.9 14.9 0 0 1 6.11 12.9a.75.75 0 0 1 .24-.98l1.293-.97c.362-.271.527-.734.417-1.173L6.954 5.352A1.125 1.125 0 0 0 5.863 4.5H4.5A2.25 2.25 0 0 0 2.25 6.75Z\"/></svg>Hubungi 112</a>",
-      "css": ".ds-btn-112{font-family:'IBM Plex Sans',ui-sans-serif,system-ui,sans-serif;display:inline-flex;align-items:center;gap:8px;background:#d62d20;color:#fff;border-radius:4px;padding:12px 20px;font-size:14px;font-weight:600;text-decoration:none;transition:background .15s}.ds-btn-112:hover{background:#b8241a}.ds-btn-112:active{transform:translateY(1px)}.ds-btn-112:focus-visible{outline:2px solid #0b4ea2;outline-offset:2px}"
+      "description": "The only red element; calls 112.",
+      "html": "<div class=\"ds-em-wrap\"><a href=\"tel:112\" class=\"ds-btn-112\"><svg viewBox=\"0 0 24 24\" width=\"16\" height=\"16\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\"><path d=\"M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 0 0 2.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293a.75.75 0 0 1-.98.24A14.9 14.9 0 0 1 6.11 12.9a.75.75 0 0 1 .24-.98l1.293-.97c.362-.271.527-.734.417-1.173L6.954 5.352A1.125 1.125 0 0 0 5.863 4.5H4.5A2.25 2.25 0 0 0 2.25 6.75Z\"/></svg> Hubungi 112</a></div>",
+      "css": ".ds-em-wrap{background:#0f3c75;padding:20px}.ds-btn-112{font-family:'IBM Plex Sans',ui-sans-serif,system-ui,sans-serif;display:inline-flex;align-items:center;gap:8px;background:#d62d20;color:#fff;border-radius:4px;padding:10px 14px;font-size:14px;font-weight:600;text-decoration:none;transition:background .15s}.ds-btn-112:hover{background:#b8241a}.ds-btn-112:focus-visible{outline:2px solid #0b4ea2;outline-offset:2px;box-shadow:0 0 0 2px #fff;}"
     },
     {
-      "name": "Category Chip",
-      "kind": "chip",
-      "refersTo": "chip-category",
-      "description": "News category tag on the wall.",
-      "html": "<a class=\"ds-chip\" href=\"#\">Info Teknologi</a>",
-      "css": ".ds-chip{font-family:'IBM Plex Sans',ui-sans-serif,system-ui,sans-serif;display:inline-block;background:#f2f7fd;color:#0d478e;border-radius:4px;padding:4px 8px;font-size:12px;font-weight:600;text-decoration:none}.ds-chip:hover{background:#e2edfa}.ds-chip:focus-visible{outline:2px solid #0b4ea2;outline-offset:2px}"
+      "name": "Arrow Square Link",
+      "kind": "custom",
+      "refersTo": "arrow-square",
+      "description": "Signature Lihat lainnya link: outlined 4px square with arrow.",
+      "html": "<a href=\"#\" class=\"ds-arrow\"><span class=\"ds-arrow-sq\"><svg viewBox=\"0 0 24 24\" width=\"16\" height=\"16\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\"><path stroke-linecap=\"round\" stroke-linejoin=\"round\" d=\"M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3\"/></svg></span>Lihat lainnya</a>",
+      "css": ".ds-arrow{font-family:'IBM Plex Sans',ui-sans-serif,system-ui,sans-serif;display:inline-flex;align-items:center;gap:10px;color:#0b4ea2;font-size:14px;font-weight:600;text-decoration:none}.ds-arrow-sq{display:flex;width:28px;height:28px;align-items:center;justify-content:center;border:1px solid #8bb9ea;border-radius:4px;transition:all .15s}.ds-arrow:hover{color:#0f3c75}.ds-arrow:hover .ds-arrow-sq{background:#0b4ea2;border-color:#0b4ea2;color:#fff}.ds-arrow:focus-visible{outline:2px solid #0b4ea2;outline-offset:2px;box-shadow:0 0 0 2px #fff;}"
+    },
+    {
+      "name": "Search Field",
+      "kind": "input",
+      "refersTo": "input-search",
+      "description": "White field with inset blue submit square, used on blue bands.",
+      "html": "<div class=\"ds-search-wrap\"><form class=\"ds-search\"><input type=\"search\" placeholder=\"Cari berita Diskominfo Kota Kendari\"><button type=\"submit\" aria-label=\"Cari\"><svg viewBox=\"0 0 24 24\" width=\"20\" height=\"20\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\"><path stroke-linecap=\"round\" d=\"m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z\"/></svg></button></form></div>",
+      "css": ".ds-search-wrap{background:#0f3c75;padding:20px}.ds-search{position:relative;max-width:520px}.ds-search input{font-family:'IBM Plex Sans',ui-sans-serif,system-ui,sans-serif;box-sizing:border-box;height:44px;width:100%;border:1px solid rgba(255,255,255,.1);border-radius:4px;background:#fff;padding:0 48px 0 16px;font-size:14px;color:#1c2536}.ds-search input::placeholder{color:#4a5568}.ds-search input:focus{outline:2px solid #8bb9ea}.ds-search button{position:absolute;top:4px;right:4px;display:flex;width:36px;height:36px;align-items:center;justify-content:center;border:0;border-radius:4px;background:#0b4ea2;color:#fff;cursor:pointer}.ds-search button:hover{background:#0d478e}"
+    },
+    {
+      "name": "Main Navigation",
+      "kind": "nav",
+      "refersTo": "nav-main",
+      "description": "Sticky white uppercase bar with 3px blue underline for active and hover.",
+      "html": "<nav class=\"ds-nav\"><a href=\"#\" class=\"is-active\">Beranda</a><a href=\"#\">Profil Dinas</a><a href=\"#\">Layanan</a><a href=\"#\">Berita</a><a href=\"#\">Galeri</a><a href=\"#\">Dokumen</a></nav>",
+      "css": ".ds-nav{font-family:'IBM Plex Sans',ui-sans-serif,system-ui,sans-serif;display:flex;height:52px;background:#fff;border-bottom:1px solid #dbe3ef;box-shadow:0 6px 18px -14px rgba(7,31,61,.45)}.ds-nav a{position:relative;display:flex;align-items:center;padding:0 16px;font-size:13px;font-weight:600;letter-spacing:.025em;text-transform:uppercase;color:#071f3d;text-decoration:none;transition:color .15s}.ds-nav a::after{content:'';position:absolute;left:16px;right:16px;bottom:0;height:3px;background:#0b4ea2;transform:scaleX(0);transition:transform .15s}.ds-nav a:hover,.ds-nav a.is-active{color:#0b4ea2}.ds-nav a:hover::after,.ds-nav a.is-active::after{transform:scaleX(1)}.ds-nav a:focus-visible{outline:2px solid #0b4ea2;outline-offset:2px;box-shadow:0 0 0 2px #fff;}"
     },
     {
       "name": "News Card",
       "kind": "card",
       "refersTo": "card-news",
-      "description": "White bordered card; navy media ground shows the category when no photo exists.",
-      "html": "<article class=\"ds-card\"><div class=\"ds-card-media\"><span>Pengumuman</span></div><div class=\"ds-card-body\"><span class=\"ds-chip2\">Pengumuman</span><h3>Judul berita dinas</h3><p>Ringkasan berita dalam tiga baris paling banyak.</p><div class=\"ds-card-meta\">14 September 2026 &middot; 70 kali dibaca</div></div></article>",
-      "css": ".ds-card{font-family:'IBM Plex Sans',ui-sans-serif,system-ui,sans-serif;max-width:360px;border:1px solid #d9dfea;border-radius:4px;background:#fff;overflow:hidden;transition:border-color .15s,box-shadow .15s}.ds-card:hover{border-color:#8bb9ea;box-shadow:0 18px 36px -20px rgba(13,21,38,.35)}.ds-card-media{aspect-ratio:16/9;background:#0d1526;display:flex;align-items:flex-end;padding:20px}.ds-card-media span{font-stretch:85%;font-size:24px;font-weight:600;line-height:1;color:rgba(255,255,255,.9)}.ds-card-body{padding:20px}.ds-chip2{display:inline-block;background:#f2f7fd;color:#0d478e;border-radius:4px;padding:4px 8px;font-size:12px;font-weight:600}.ds-card h3{margin:12px 0 8px;font-size:18px;font-weight:600;line-height:1.375;color:#0f1a2e}.ds-card:hover h3{color:#0b4ea2}.ds-card p{margin:0 0 16px;font-size:14px;color:#4a5568}.ds-card-meta{border-top:1px solid #d9dfea;padding-top:12px;font-size:12px;color:#4a5568}"
+      "description": "White bordered card with 16:10 image and biru-100 fallback.",
+      "html": "<article class=\"ds-news\"><div class=\"ds-news-img\"></div><div class=\"ds-news-body\"><h3><a href=\"#\">Rapat Pembentukan Layanan Call Center 112</a></h3><p><span>Info Teknologi</span> 3 September 2026</p></div></article>",
+      "css": ".ds-news{font-family:'IBM Plex Sans',ui-sans-serif,system-ui,sans-serif;width:280px;display:flex;flex-direction:column;overflow:hidden;background:#fff;border:1px solid #dbe3ef;border-radius:4px;transition:transform .15s,box-shadow .15s}.ds-news:hover{transform:translateY(-2px);box-shadow:0 16px 32px -20px rgba(7,31,61,.45)}.ds-news-img{aspect-ratio:16/10;background:#e2edfa}.ds-news-body{padding:16px}.ds-news h3{margin:0;font-size:16px;font-weight:600;line-height:1.375;color:#071f3d}.ds-news h3 a{color:inherit;text-decoration:none}.ds-news:hover h3{color:#0b4ea2}.ds-news p{margin:12px 0 0;font-size:12px;color:#4a5568}.ds-news p span{font-weight:600;color:#0b4ea2;margin-right:8px}.ds-news a:focus-visible{outline:2px solid #0b4ea2;outline-offset:2px;box-shadow:0 0 0 2px #fff;}"
     },
     {
-      "name": "Topbar and Nav",
-      "kind": "nav",
-      "refersTo": "nav-bar",
-      "description": "Navy topbar with live WITA clock and greeting, navy nav with amber active underline.",
-      "html": "<header class=\"ds-head\"><div class=\"ds-top\"><span class=\"ds-clock\">09.41.07</span><small>WITA</small><i></i><span>Selamat pagi</span></div><nav class=\"ds-nav\"><strong class=\"ds-logo\">Diskominfo</strong><a class=\"on\" href=\"#\">Beranda</a><a href=\"#\">Profil Dinas</a><a href=\"#\">Layanan</a><a href=\"#\">Berita</a></nav></header>",
-      "css": ".ds-head{font-family:'IBM Plex Sans',ui-sans-serif,system-ui,sans-serif;background:#0d1526}.ds-top{display:flex;align-items:baseline;gap:8px;height:36px;align-items:center;padding:0 16px;border-bottom:1px solid #25324d;font-size:12px;color:#c0d8f4}.ds-clock{color:#ffb000;font-stretch:85%;font-variant-numeric:tabular-nums;font-weight:700;font-size:18px;line-height:1}.ds-top small{color:#ffb000;font-weight:700;font-size:12px}.ds-top i{width:1px;height:12px;background:#25324d}.ds-nav{display:flex;align-items:stretch;height:68px;padding:0 16px;gap:4px}.ds-logo{color:#fff;align-self:center;margin-right:24px}.ds-nav a{position:relative;display:flex;align-items:center;padding:0 14px;font-size:15px;font-weight:500;color:#e2edfa;text-decoration:none}.ds-nav a::after{content:'';position:absolute;left:14px;right:14px;bottom:0;height:3px;background:#ffb000;transform:scaleX(0);transform-origin:left;transition:transform .15s}.ds-nav a:hover,.ds-nav a.on{color:#fff}.ds-nav a:hover::after,.ds-nav a.on::after{transform:scaleX(1)}.ds-nav a:focus-visible{outline:2px solid #ffb000;outline-offset:2px}"
+      "name": "Service Card Panel",
+      "kind": "card",
+      "refersTo": "card-service",
+      "description": "Translucent service card on the biru-900 to biru-600 gradient panel.",
+      "html": "<div class=\"ds-svc-panel\"><a href=\"#\" class=\"ds-svc\"><span class=\"ds-svc-ic\"><svg viewBox=\"0 0 24 24\" width=\"16\" height=\"16\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\"><path d=\"M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 0 0 2.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293a.75.75 0 0 1-.98.24A14.9 14.9 0 0 1 6.11 12.9a.75.75 0 0 1 .24-.98l1.293-.97c.362-.271.527-.734.417-1.173L6.954 5.352A1.125 1.125 0 0 0 5.863 4.5H4.5A2.25 2.25 0 0 0 2.25 6.75Z\"/></svg></span><h3>Telepon Darurat 112</h3><p>Panggilan darurat bebas pulsa, aktif 24 jam di Kota Kendari.</p><span class=\"ds-svc-go\"><svg viewBox=\"0 0 24 24\" width=\"16\" height=\"16\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\"><path stroke-linecap=\"round\" stroke-linejoin=\"round\" d=\"M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3\"/></svg></span></a></div>",
+      "css": ".ds-svc-panel{font-family:'IBM Plex Sans',ui-sans-serif,system-ui,sans-serif;background:linear-gradient(to bottom right,#0b2f5c,#0d478e,#0b4ea2);border-radius:4px;padding:32px;box-shadow:0 24px 48px -28px rgba(7,31,61,.7)}.ds-svc{display:flex;flex-direction:column;width:240px;padding:20px;border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.1);border-radius:4px;color:#fff;text-decoration:none;transition:all .15s}.ds-svc:hover{transform:translateY(-4px);border-color:rgba(255,255,255,.35);background:rgba(255,255,255,.15)}.ds-svc-ic{display:flex;width:48px;height:48px;align-items:center;justify-content:center;border-radius:4px;background:#d62d20}.ds-svc h3{margin:20px 0 0;font-size:14px;font-weight:700;letter-spacing:.025em;text-transform:uppercase}.ds-svc p{margin:8px 0 0;font-size:14px;line-height:1.625;color:#e2edfa}.ds-svc-go{margin-top:24px;display:flex;width:36px;height:36px;align-items:center;justify-content:center;border:1px solid rgba(255,255,255,.4);border-radius:4px}.ds-svc:hover .ds-svc-go{background:#fff;color:#0d478e}.ds-svc:focus-visible{outline:2px solid #0b4ea2;outline-offset:2px;box-shadow:0 0 0 2px #fff;}"
     },
     {
-      "name": "Loket Counter",
-      "kind": "custom",
-      "refersTo": "loket-tile",
-      "description": "Service counter tile; zone fill rises and the code blinks when called.",
-      "html": "<a class=\"ds-loket\" href=\"#\" style=\"--zona:#0a7e6e;--zona-terang:#3cc9ae\"><span class=\"ds-loket-fill\"></span><span class=\"ds-loket-kode\">B</span><span class=\"ds-loket-txt\"><b>Email Dinas</b><small>Akun resmi @kendarikota.go.id</small></span></a>",
-      "css": ".ds-loket{font-family:'IBM Plex Sans',ui-sans-serif,system-ui,sans-serif;position:relative;isolation:isolate;display:flex;flex-direction:column;justify-content:space-between;min-height:144px;width:260px;padding:24px;background:#0d1526;overflow:hidden;text-decoration:none}.ds-loket-fill{position:absolute;inset:0;z-index:-1;background:var(--zona);transform:scaleY(.045);transform-origin:top;transition:transform .5s cubic-bezier(.16,1,.3,1)}.ds-loket:hover .ds-loket-fill,.ds-loket:focus-visible .ds-loket-fill{transform:scaleY(1)}.ds-loket-kode{font-stretch:85%;font-size:60px;font-weight:700;line-height:1;color:var(--zona-terang);transition:color .15s}.ds-loket:hover .ds-loket-kode,.ds-loket:focus-visible .ds-loket-kode{color:#fff;animation:ds-panggil 900ms steps(1,end) 1}.ds-loket-txt b{display:block;color:#fff;font-weight:600;margin-top:20px}.ds-loket-txt small{display:block;font-size:14px;color:#c0d8f4}.ds-loket:focus-visible{outline:2px solid #ffb000;outline-offset:2px}@keyframes ds-panggil{0%,50%,100%{opacity:1}25%,75%{opacity:.2}}"
+      "name": "Visitor Stat Card",
+      "kind": "card",
+      "refersTo": "panel-stat",
+      "description": "Toska number card with tabular totals.",
+      "html": "<div class=\"ds-stat\"><h3>Total kunjungan situs</h3><p class=\"ds-stat-n\">1.284</p><p>5 pengunjung hari ini</p><dl><div><dt>Berita diterbitkan</dt><dd>25</dd></div><div><dt>Dokumen publik</dt><dd>40</dd></div></dl></div>",
+      "css": ".ds-stat{font-family:'IBM Plex Sans',ui-sans-serif,system-ui,sans-serif;width:280px;background:#0d7f77;color:#fff;border-radius:4px;padding:32px;font-size:14px}.ds-stat h3{margin:0;font-size:14px;font-weight:600}.ds-stat-n{margin:8px 0 0;font-size:60px;font-weight:700;line-height:1;letter-spacing:-.025em;font-variant-numeric:tabular-nums}.ds-stat dl{margin:32px 0 0;border-top:1px solid rgba(255,255,255,.2)}.ds-stat dl div{display:flex;justify-content:space-between;padding:12px 0;border-bottom:1px solid rgba(255,255,255,.2)}.ds-stat dd{margin:0;font-size:20px;font-weight:700;font-variant-numeric:tabular-nums}"
     },
     {
-      "name": "Display Board with LED Numerals",
-      "kind": "custom",
-      "description": "Bezel-framed board; dot mask on display-size numerals only, small numerals solid.",
-      "html": "<div class=\"ds-bezel\"><div class=\"ds-board\"><div class=\"ds-mod\"><span class=\"ds-led ds-led-titik ds-big\">03</span></div><div class=\"ds-mod ds-strip\">Pengunjung hari ini <strong class=\"ds-led\">2</strong></div></div></div>",
-      "css": ".ds-bezel{font-family:'IBM Plex Sans',ui-sans-serif,system-ui,sans-serif;background:#25324d;padding:8px;border-radius:4px;box-shadow:inset 0 1px 0 rgba(255,255,255,.1),0 32px 64px -32px rgba(13,21,38,.65)}.ds-board{display:grid;gap:1px;background:#050a14;overflow:hidden}.ds-mod{background:#0d1526;padding:24px}.ds-strip{padding:10px 24px;font-size:12px;color:#c0d8f4;display:flex;gap:8px;align-items:baseline}.ds-led{color:#ffb000;font-stretch:85%;font-variant-numeric:tabular-nums;font-weight:700;line-height:1}.ds-strip .ds-led{font-size:18px}.ds-big{font-size:112px;letter-spacing:-.025em}.ds-led-titik{-webkit-mask-image:radial-gradient(circle,#000 58%,transparent 64%);mask-image:radial-gradient(circle,#000 58%,transparent 64%);-webkit-mask-size:4px 4px;mask-size:4px 4px}"
-    },
-    {
-      "name": "Section Sign",
-      "kind": "custom",
-      "refersTo": "section-sign",
-      "description": "Wayfinding heading: navy square with amber arrow beside a condensed headline.",
-      "html": "<div class=\"ds-sign\"><span class=\"ds-sign-box\"><svg viewBox=\"0 0 24 24\" width=\"20\" height=\"20\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\"><path d=\"M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3\"/></svg></span><h2>Berita terbaru</h2></div>",
-      "css": ".ds-sign{font-family:'IBM Plex Sans',ui-sans-serif,system-ui,sans-serif;display:flex;align-items:flex-start;gap:16px}.ds-sign-box{display:flex;align-items:center;justify-content:center;width:44px;height:44px;flex-shrink:0;margin-top:4px;border-radius:4px;background:#0d1526;color:#ffb000}.ds-sign h2{margin:0;font-stretch:85%;font-size:40px;font-weight:600;line-height:1.25;letter-spacing:-.025em;color:#0f1a2e}"
+      "name": "Topic Chip",
+      "kind": "chip",
+      "refersTo": "chip-topic",
+      "description": "Square chip on the nila gradient topic panel.",
+      "html": "<div class=\"ds-topic\"><a href=\"#\" class=\"ds-chip\">Info Teknologi <svg viewBox=\"0 0 24 24\" width=\"16\" height=\"16\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\"><path stroke-linecap=\"round\" stroke-linejoin=\"round\" d=\"M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3\"/></svg></a><a href=\"#\" class=\"ds-chip\">Pengumuman <svg viewBox=\"0 0 24 24\" width=\"16\" height=\"16\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\"><path stroke-linecap=\"round\" stroke-linejoin=\"round\" d=\"M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3\"/></svg></a></div>",
+      "css": ".ds-topic{font-family:'IBM Plex Sans',ui-sans-serif,system-ui,sans-serif;display:flex;gap:8px;flex-wrap:wrap;background:linear-gradient(to bottom right,#2f3f9e,#0d478e);padding:24px;border-radius:4px}.ds-chip{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border:1px solid rgba(255,255,255,.25);background:rgba(255,255,255,.1);border-radius:4px;color:#fff;font-size:14px;font-weight:500;text-decoration:none;transition:all .15s}.ds-chip svg{width:14px;height:14px}.ds-chip:hover{background:#fff;color:#2f3f9e}.ds-chip:focus-visible{outline:2px solid #0b4ea2;outline-offset:2px;box-shadow:0 0 0 2px #fff;}"
     }
   ],
   "narrative": {
-    "northStar": "Aula Loket Pelayanan",
-    "overview": "The site is a public service hall. The light hall wall (aula) is the page ground; set into it are navy display boards (papan) framed by a steel bezel, lit with amber LED numerals, and four service counters (loket) each wearing its zone color. A visitor reads the hall the way they would read a real one: the board names the office, calls the counters, and runs the news ticker along its base; the wall carries the readable material (requirements, news, welcome, divisions, gallery) in white panels with thin rules.\n\nAuthority comes from precision, not ornament. The palette is restrained on the wall and saturated only where a counter or a board speaks. Blue stays the base identity: office blue is zone A, the link color, and the focus ring. Density is moderate; sections breathe at 64px on phones and 96px on desktop, and the board modules butt against each other with 1px dark seams rather than floating as separate cards.\n\nMotion is board behavior: modules power on row by row on load, counter codes blink twice when called (hover or focus), the zone color rises up a counter tile, and the ticker scrolls and pauses on hover. All of it sits behind `prefers-reduced-motion: no-preference`.",
+    "northStar": "Portal Biru Instansi",
+    "overview": "The public site reads as a sibling of komdigi.go.id: an institutional portal where government blue carries the identity from the navy topbar to the footer, and white and pale-sky bands carry the reading. The owner pinned this world (blue-dominant theme, Komdigi homepage module order) after rejecting an earlier display-board concept; nothing from that concept survives. Authority comes from order and consistency, not ornament: a strict 1280px container, bold uppercase section headings, square 4px corners on everything, and one sans family.\n\nDensity is portal-grade. The homepage stacks full-width bands in Komdigi's order: blue news highlight carousel, gradient services panel, public document search split panel, the dark Transformasi Digital profile band, gallery with a teal statistics card, a horizontal news carousel on the sky band, then a two-column zone of topics and documents with a sidebar (Kepala Dinas greeting, Kendari Siaga 112), related links, footer. Komdigi's content is never copied; every module is filled only with real Diskominfo data from the API or the organisation's own static facts.\n\nKomdigi's circles and pills are deliberately translated to 4px squares. Motion is quiet: a highlight title rising in on slide change, gentle card lifts on hover, all neutralised under reduced motion.",
     "keyCharacteristics": [
-      "Light hall wall with navy display boards set into it; boards are the only dark grounds.",
-      "Amber LED numerals for everything that counts or tells time.",
-      "Four zone colors (A blue, B teal, C magenta, 112 red) as the counter wayfinding system.",
-      "One family, IBM Plex Sans; headings and board signage at 85% width.",
-      "One corner radius, 4px, everywhere.",
-      "Seamed modules (1px gaps over a darker ground) instead of floating cards."
+      "Blue-dominant: navy and institutional blue bands alternate with white and langit (#eef4fb) reading bands.",
+      "Every corner is Tailwind `rounded` (4px); no pills, no circles.",
+      "IBM Plex Sans only, self-hosted, weights 400 to 700.",
+      "Uppercase bold labels for section headings, navigation and card titles.",
+      "Square outlined arrow buttons as the recurring \"go\" affordance.",
+      "Red appears only for the 112 emergency service."
     ],
     "rules": [
       {
-        "name": "The Blue Base Rule",
-        "body": "Blue is the identity. New surfaces start from the wall, navy, and office blue; zone teal, magenta, and red never replace blue as a page's main color.",
+        "name": "The Blue Dominance Rule",
+        "body": "The site is blue first. New surfaces take their bands from the biru scale, langit and white; toska and nila appear only as the panel accents already assigned.",
         "section": "colors"
       },
       {
-        "name": "The Zone Belongs To The Counter Rule",
-        "body": "Zone colors mark the four services and nothing else (the footer's four-color strip is the counters' own signature). Do not use teal or magenta as general accents, and use zone D red only for 112 and emergency action.",
+        "name": "The Red Is 112 Rule",
+        "body": "Merah Darurat marks the 112 emergency service and nothing else: no error decoration, no badges, no highlights.",
         "section": "colors"
       },
       {
-        "name": "The Amber Is Signal Rule",
-        "body": "Amber appears on navy, as numerals, the primary board CTA, icons, and the active marker. It never fills large wall areas and is never body text on white.",
+        "name": "The Logo On Blue Rule",
+        "body": "The official logo (`web/public/img/kominfo-logo.webp`) has a white wordmark and must sit on biru-800 or darker. That is why the logo row is blue where Komdigi's header is white.",
+        "section": "colors"
+      },
+      {
+        "name": "The Gradient Legibility Rule",
+        "body": "Body text on a gradient panel must sit over biru-600 or darker stops (services panel biru-900 to biru-600, topic panel nila to biru-700). Never end a text-bearing gradient in biru-500 or lighter.",
+        "section": "colors"
+      },
+      {
+        "name": "The Contrasting Fallback Rule",
+        "body": "An image placeholder must contrast with the band it sits on: news cards on the langit band use a biru-100 fill with a biru-300 photo icon; gallery tiles use biru-900 with a biru-400 icon; highlight strip thumbnails use biru-700.",
         "section": "colors"
       },
       {
         "name": "The One Family Rule",
-        "body": "IBM Plex Sans is the only typeface. Display and signage use `font-stretch: 85%` of the same variable family (wdth axis 85 to 100); never add a second face, including a monospace for numerals.",
+        "body": "IBM Plex Sans is the only typeface, served from `/fonts/` (latin and latin-ext woff2, preloaded, `font-display: swap`). No Google Fonts, no second family, no mono or serif.",
         "section": "typography"
       },
       {
-        "name": "The Dot Mask Threshold Rule",
-        "body": "The LED dot mask (4px radial mask) is only for display-size numerals, about 4rem and up. Small LED numerals (the clock, visitor counters, ticker dates, news day tiles, step numbers) stay solid amber; the mask breaks their legibility.",
+        "name": "The Formal Copy Rule",
+        "body": "Public copy is formal Indonesian with no em dashes and no invented claims; ranges use a hyphen (\"2025-2029\").",
         "section": "typography"
       },
       {
-        "name": "The Formal Voice Rule",
-        "body": "Public copy is formal Indonesian, sentence case, with no em dashes and no marketing language.",
-        "section": "typography"
+        "name": "The Flat Until Touched Rule",
+        "body": "Cards rest flat with a garis border; shadow appears on hover. Only the services panel, the sticky bars, dropdowns and the floating button carry shadow at rest.",
+        "section": "elevation"
       },
       {
-        "name": "The Flat Wall Rule",
-        "body": "Content on the wall is flat at rest: white panels with 1px rules. Shadow appears only on the board frame, floating chrome, and hover.",
+        "name": "The Motif Rule",
+        "body": "`motif-komdigi` (two faint white radial glows) goes only on a solid blue background (biru-800 or biru-900). Never combine it with a gradient background on the same element: both set `background-image` and the gradient disappears.",
+        "section": "elevation"
+      },
+      {
+        "name": "The Dot Grid Rule",
+        "body": "The `kisi-titik` dot grid is reserved for the Transformasi Digital band only.",
         "section": "elevation"
       },
       {
         "name": "The Four Pixel Rule",
-        "body": "Border radius is `rounded` (4px) everywhere. Never `rounded-lg`, `rounded-xl`, `rounded-full`, or anything larger, on any element.",
+        "body": "Every corner is Tailwind `rounded` (4px): cards, panels, buttons, inputs, chips, icon squares, avatars, slide selectors, social buttons, prose images. Komdigi's circular icon holders, pill chips and round arrow buttons become 4px squares. No `rounded-lg`, `rounded-xl` or `rounded-full` anywhere.",
         "section": "shapes"
       }
     ],
     "dos": [
-      "**Do** use IBM Plex Sans only, with `font-stretch: 85%` for display, headings, board signage, and LED numerals.",
-      "**Do** use the 4px radius (`rounded`) on every rounded element.",
-      "**Do** keep blue as the base identity: aula wall, papan navy, office blue.",
-      "**Do** show a live WITA (Asia/Makassar) clock with a time-of-day greeting in the topbar.",
-      "**Do** place the official logo (`web/public/img/kominfo-logo.webp`, white wordmark) only on a papan navy ground; this is why the nav and footer are navy.",
-      "**Do** set counting and time numerals in amber LED style with tabular figures, and apply the dot mask only at display size (about 4rem and up).",
-      "**Do** drive counter color from the zone key through `--zona` and `--zona-terang`: solid zone on surfaces, lit zone for text on navy.",
-      "**Do** build boards and grids as seamed modules with 1px gaps, not separate floating cards.",
-      "**Do** gate board motion (power-on, counter call, ticker) behind `prefers-reduced-motion: no-preference`.",
-      "**Do** write public copy in formal Indonesian, sentence case."
+      "Do keep the Komdigi homepage module order and fill each module only with real Diskominfo data.",
+      "Do use 4px `rounded` for every corner, translating any Komdigi circle or pill into a square.",
+      "Do place the official logo on biru-800 or darker.",
+      "Do show the topbar clock in WITA (Asia/Makassar) with a greeting, updating every second.",
+      "Do keep body text on gradients over biru-600 or darker stops.",
+      "Do give image fallbacks a fill that contrasts with their band (biru-100 on langit, biru-900 for gallery tiles).",
+      "Do use the uppercase section heading with the arrow-square \"Lihat lainnya\" link for homepage sections."
     ],
     "donts": [
-      "**Don't** use `rounded-lg`, `rounded-xl`, `rounded-full`, or any radius above 4px.",
-      "**Don't** add a second typeface, a monospace, or a system display face.",
-      "**Don't** show a date in the topbar.",
-      "**Don't** put the logo on the white wall or a light ground; the white wordmark disappears.",
-      "**Don't** apply the LED dot mask to small numerals (clock, visitor counts, ticker dates, news day tiles, step numbers).",
-      "**Don't** use zone teal or magenta as general accents, or zone red for anything but 112 and emergency action.",
-      "**Don't** use em dashes in public copy.",
-      "**Don't** return to the blue carousel hero with three floating cards.",
-      "**Don't** treat the inner pages' blue page-title band with radial motif as the system; it is the pre-hall state awaiting migration."
+      "Don't use `rounded-lg`, `rounded-xl`, `rounded-full` or any radius other than 4px.",
+      "Don't load or add any typeface besides self-hosted IBM Plex Sans.",
+      "Don't show a date in the topbar.",
+      "Don't use red for anything but the 112 emergency service.",
+      "Don't combine `motif-komdigi` with a gradient background on the same element.",
+      "Don't use the `kisi-titik` dot grid outside the Transformasi Digital band.",
+      "Don't write em dashes, marketing tone or invented claims (testimonials, achievements, SLA figures) in public copy.",
+      "Don't put the white-wordmark logo on white or langit."
     ]
   }
 }

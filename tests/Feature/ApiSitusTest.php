@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Models\Berita;
 use App\Models\Dokumen;
 use App\Models\ProfilDinas;
+use App\Models\Video;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
@@ -40,6 +41,14 @@ class ApiSitusTest extends TestCase
     $this->assertArrayHasKey('hariIni', $data['pengunjung']);
   }
 
+  public function test_sitemap_memuat_semua_berita(): void
+  {
+    $this->getJson('/api/sitemap')
+      ->assertOk()
+      ->assertJsonCount(Berita::count(), 'berita')
+      ->assertJsonStructure(['berita' => [['slug', 'diubah']]]);
+  }
+
   public function test_berita_dapat_disaring_dan_dicari(): void
   {
     $satu = Berita::with('kategori')->first();
@@ -48,13 +57,42 @@ class ApiSitusTest extends TestCase
       ->assertOk()
       ->assertJsonPath('data.0.kategori.slug', $satu->kategori->slug);
 
-    $this->getJson('/api/berita?search=' . urlencode($satu->judul))
+    // Berita terbaru dipakai karena judul lama bisa jadi awalan judul lain ("Ke-1" cocok dengan "Ke-10")
+    // dan terdorong ke halaman berikutnya.
+    $baru = Berita::latest('id')->first();
+
+    $this->getJson('/api/berita?search=' . urlencode($baru->judul))
       ->assertOk()
-      ->assertJsonPath('data.0.judul', $satu->judul);
+      ->assertJsonFragment(['judul' => $baru->judul]);
 
     $this->getJson('/api/berita?search=tidakadaberitasepertiini')
       ->assertOk()
       ->assertJsonCount(0, 'data');
+  }
+
+  public function test_halaman_berita_tidak_berulang_saat_tanggal_sama(): void
+  {
+    // Regresi: tanpa pemecah seri, berita bertanggal sama bisa muncul lagi di halaman berikutnya.
+    Berita::query()->update(['tanggal' => now()->toDateString()]);
+
+    $satu = collect($this->getJson('/api/berita?page=1')->json('data'))->pluck('slug');
+    $dua = collect($this->getJson('/api/berita?page=2')->json('data'))->pluck('slug');
+
+    $this->assertNotEmpty($dua);
+    $this->assertEmpty($satu->intersect($dua));
+  }
+
+  public function test_video_menyertakan_id_youtube_dari_berbagai_bentuk_tautan(): void
+  {
+    Video::create(['judul' => 'Pendek', 'tanggal' => '2026-09-01', 'tautan' => 'https://youtu.be/dQw4w9WgXcQ?si=abc']);
+    Video::create(['judul' => 'Tonton', 'tanggal' => '2026-09-02', 'tautan' => 'https://www.youtube.com/watch?feature=share&v=aqz-KE-bpKQ']);
+    Video::create(['judul' => 'Bukan YouTube', 'tanggal' => '2026-09-03', 'tautan' => 'https://example.com/video']);
+
+    $this->getJson('/api/video')
+      ->assertOk()
+      ->assertJsonPath('data.0.youtubeId', null)
+      ->assertJsonPath('data.1.youtubeId', 'aqz-KE-bpKQ')
+      ->assertJsonPath('data.2.youtubeId', 'dQw4w9WgXcQ');
   }
 
   public function test_membuka_berita_menambah_penghitung_dibaca(): void

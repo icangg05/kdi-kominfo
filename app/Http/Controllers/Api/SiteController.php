@@ -10,6 +10,7 @@ use App\Models\KategoriDokumen;
 use App\Models\Pegawai;
 use App\Models\ProfilDinas;
 use App\Models\ProfilPimpinan;
+use App\Models\Video;
 use App\Models\Visitor;
 use Illuminate\Http\Request;
 
@@ -34,8 +35,8 @@ class SiteController
       'sambutanKadis' => ProfilDinas::konten('sambutan-kadis'),
       'taglineSambutan' => ProfilDinas::nilai('tagline-sambutan'),
       'kadis' => ProfilPimpinan::first()?->only(['nama', 'foto', 'awal_periode', 'akhir_periode']),
-      'galeri' => Galeri::latest('tanggal')->limit(5)->get()->map($this->galeriItem(...)),
-      'berita' => Berita::with('kategori:id,nama,slug')->latest('tanggal')->limit(6)->get()->map($this->beritaItem(...)),
+      'galeri' => Galeri::latest('tanggal')->latest('id')->limit(5)->get()->map($this->galeriItem(...)),
+      'berita' => Berita::with('kategori:id,nama,slug')->latest('tanggal')->latest('id')->limit(6)->get()->map($this->beritaItem(...)),
       'pengunjung' => [
         'hariIni' => Visitor::whereDate('date', today())->count(),
         'total' => Visitor::count(),
@@ -49,7 +50,7 @@ class SiteController
       ->with('kategori:id,nama,slug')
       ->when($request->string('kategori')->toString(), fn ($q, $slug) => $q->whereRelation('kategori', 'slug', $slug))
       ->when($request->string('search')->toString(), fn ($q, $cari) => $q->where('judul', 'like', "%{$cari}%"))
-      ->latest('tanggal')
+      ->latest('tanggal')->latest('id')
       ->paginate(perPage: 6, page: $request->integer('page', 1));
 
     return $this->paginated($data, $this->beritaItem(...));
@@ -65,18 +66,39 @@ class SiteController
       'konten' => $data->konten,
       'lainnya' => Berita::with('kategori:id,nama,slug')
         ->whereKeyNot($data->id)
-        ->latest('tanggal')
+        ->latest('tanggal')->latest('id')
         ->limit(4)
         ->get()
         ->map($this->beritaItem(...)),
     ];
   }
 
+  /** Bahan sitemap.xml: cukup slug dan waktu ubah terakhir tiap berita. */
+  public function sitemap(): array
+  {
+    return [
+      'berita' => Berita::latest('tanggal')->get(['slug', 'updated_at'])
+        ->map(fn (Berita $b) => ['slug' => $b->slug, 'diubah' => $b->updated_at?->toAtomString()]),
+    ];
+  }
+
   public function galeri(Request $request): array
   {
-    $data = Galeri::latest('tanggal')->paginate(perPage: 9, page: $request->integer('page', 1));
+    $data = Galeri::latest('tanggal')->latest('id')->paginate(perPage: 9, page: $request->integer('page', 1));
 
     return $this->paginated($data, $this->galeriItem(...));
+  }
+
+  public function video(Request $request): array
+  {
+    $data = Video::latest('tanggal')->latest('id')->paginate(perPage: 9, page: $request->integer('page', 1));
+
+    return $this->paginated($data, fn (Video $v) => [
+      'judul' => $v->judul,
+      'tanggal' => $v->tanggal?->toDateString(),
+      'tautan' => $v->tautan,
+      'youtubeId' => $v->youtubeId(),
+    ]);
   }
 
   public function dokumen(Request $request): array
@@ -86,6 +108,7 @@ class SiteController
       ->when($request->string('kategori')->toString(), fn ($q, $slug) => $q->whereRelation('kategori', 'slug', $slug))
       ->when($request->string('search')->toString(), fn ($q, $cari) => $q->where('judul', 'like', "%{$cari}%"))
       ->latest()
+      ->latest('id')
       ->paginate(perPage: 6, page: $request->integer('page', 1));
 
     return $this->paginated($data, fn (Dokumen $d) => [
@@ -163,7 +186,8 @@ class SiteController
       'kategori' => $b->kategori?->only(['nama', 'slug']),
       'totalLihat' => $b->total_lihat,
       'thumbnail' => $this->url($b->thumbnail),
-      'ringkasan' => str(strip_tags((string) $b->konten))->squish()->limit(160)->value(),
+      // Entitas didekode di sini: Astro meng-escape ulang, jadi &nbsp; akan tampil mentah di meta description.
+      'ringkasan' => str(html_entity_decode(strip_tags((string) $b->konten)))->squish()->limit(160)->value(),
     ];
   }
 

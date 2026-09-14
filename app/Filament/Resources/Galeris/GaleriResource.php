@@ -24,6 +24,8 @@ class GaleriResource extends Resource
 
     protected static ?int $navigationSort = 3;
 
+    protected static ?string $navigationLabel = 'Galeri Foto';
+
     protected static ?string $modelLabel = 'Galeri';
 
     protected static ?string $pluralModelLabel = 'Galeri';

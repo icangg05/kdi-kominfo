@@ -7,20 +7,20 @@ related_targets: ["web/src/components/Header.astro","web/src/components/Footer.a
 
 # Beranda (web/src/pages/index.astro)
 
-Mode: Persuade (portal instansi). Cakupan: beranda dirombak; Header, Footer, font, dan radius berlaku global.
-Audiens: warga (seluler), pegawai OPD (desktop kantor), penilai SPBE. Tugas: menemukan dan mengajukan layanan, membaca kabar dinas.
-Batasan pemilik (2026-09-14): biru tetap dasar; hanya IBM Plex Sans; topbar tanpa tanggal, diganti jam WITA; sudut hanya `rounded` (4px); lebih banyak konten, gerak, dan warna.
+Mode: Persuade (portal instansi). Cakupan: beranda dirombak; Header, Footer, font, radius berlaku global.
+Audiens: warga (seluler), pegawai OPD (desktop kantor), penilai SPBE.
+Batasan pemilik: tema dominan biru dan tata letak mengikuti beranda komdigi.go.id (2026-09-14, menggantikan arah "Aula Loket Pelayanan"); hanya IBM Plex Sans; topbar jam WITA tanpa tanggal; sudut hanya `rounded` (4px), jadi panel dan tombol bulat Komdigi diterjemahkan ke 4px.
 
 ## Direction contract
 
-THESIS: Beranda sebagai aula pelayanan: satu papan display memanggil empat loket layanan daring. Menolak hero karusel biru dengan tiga kartu mengambang.
+THESIS: Portal Diskominfo berpola beranda Komdigi: sorotan berita biru penuh, panel layanan, pencarian publik, profil transformasi digital, lalu kolom berita dengan bilah samping. Konten Komdigi diganti fakta Diskominfo Kendari.
 
-OWN-WORLD: Dinding aula #f3f5f9; papan navy #0d1526 berbingkai bezel; digit LED amber #ffb000 bertitik; loket berwarna zona (A #0b4ea2, B #0a7e6e, C #c0266d, 112 #d62d20); judul IBM Plex Sans lebar 85%; sudut 4px.
+OWN-WORLD: Latar putih dan biru muda #eef4fb; biru instansi #0b4ea2 sampai navy #071f3d; panel gradien biru; kartu statistik toska #0d7f77; panel topik nila #2f3f9e; merah hanya 112; IBM Plex Sans; sudut 4px.
 
-STORY: Pengunjung melihat layanan dan kabar berjalan, lalu syarat-prosedur, berita, 112, sambutan, bidang, galeri.
+STORY: Warga membaca sorotan berita, OPD langsung ke empat layanan, lalu cari dokumen, kenali bidang, lihat galeri dan angka, jelajah berita per topik.
 
-FIRST VIEWPORT: Topbar jam WITA; nav navy (logo resmi berteks putih) dengan tombol merah 112; papan berbingkai: strip pengunjung, nama dinas dan CTA kiri, foto Jembatan Teluk Kendari kanan, empat loket, running text di dasar. Ponsel: loket di atas foto.
+FIRST VIEWPORT: Topbar navy jam WITA; baris logo biru dengan kolom cari dan tombol 112; nav putih huruf kapital; sorotan berita biru dengan judul besar kiri, nomor slide kanan, deret berita lain di dasar.
 
-FORM: Aula Loket Pelayanan, peringkat 1 daftar saya, seed 0cf9dfcb. Interaksi khas: loket memanggil saat hover/fokus.
+FORM: Pola beranda komdigi.go.id, disematkan pemilik (tanpa undian).
 
 FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, DESIGN.md, and every shipping raster carrying its provenance

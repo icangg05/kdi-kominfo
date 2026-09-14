@@ -15,7 +15,9 @@ Route::prefix('api')->name('api.')->group(function () {
   Route::get('/beranda', [SiteController::class, 'beranda']);
   Route::get('/berita', [SiteController::class, 'berita']);
   Route::get('/berita/{slug}', [SiteController::class, 'beritaShow']);
+  Route::get('/sitemap', [SiteController::class, 'sitemap']);
   Route::get('/galeri', [SiteController::class, 'galeri']);
+  Route::get('/video', [SiteController::class, 'video']);
   Route::get('/dokumen', [SiteController::class, 'dokumen']);
   Route::get('/pegawai', [SiteController::class, 'pegawai']);
   Route::get('/profil-pimpinan', [SiteController::class, 'profilPimpinan']);
