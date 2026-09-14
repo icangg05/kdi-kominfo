@@ -21,15 +21,7 @@ const sosial = [
 ].filter((s) => Boolean(s.url));
 ---
 
-<footer class="papan bg-papan text-biru-200">
-  <!-- Pita empat warna zona loket, penanda aula pelayanan. -->
-  <div class="grid h-1.5 grid-cols-4" aria-hidden="true">
-    <span class="bg-zona-a"></span>
-    <span class="bg-zona-b"></span>
-    <span class="bg-zona-c"></span>
-    <span class="bg-zona-d"></span>
-  </div>
-
+<footer class="motif-komdigi bg-biru-900 text-biru-100">
   <div class="wadah grid gap-10 py-14 sm:grid-cols-2 lg:grid-cols-[1.4fr_repeat(3,1fr)] lg:py-16">
     <div>
       <img src="/img/kominfo-logo.webp" alt="Diskominfo Kota Kendari" class="h-12 w-auto" width="176" height="48" />
@@ -37,19 +29,15 @@ const sosial = [
         Dinas Komunikasi dan Informatika Kota Kendari. Penyelenggara layanan informasi publik
         dan infrastruktur TIK Pemerintah Kota Kendari.
       </p>
-      <a href="tel:112" class="mt-6 inline-flex items-center gap-3 rounded border border-bezel px-4 py-2.5 transition hover:border-zona-d-terang">
-        <span class="sempit text-2xl leading-none font-bold text-zona-d-terang">112</span>
-        <span class="text-xs leading-tight">Hubungi 112<br />24 jam, bebas pulsa</span>
-      </a>
     </div>
 
     {tautanFooter.map((kolom) => (
       <nav aria-label={kolom.judul}>
-        <h2 class="sempit mb-4 text-base font-semibold text-white">{kolom.judul}</h2>
+        <h2 class="mb-4 text-sm font-bold tracking-wide text-white uppercase">{kolom.judul}</h2>
         <ul class="space-y-3 text-sm">
           {kolom.item.map((item) => (
             <li>
-              <a href={item.href} class="transition hover:text-led">{item.label}</a>
+              <a href={item.href} class="transition hover:text-white hover:underline hover:underline-offset-4">{item.label}</a>
             </li>
           ))}
         </ul>
@@ -57,33 +45,33 @@ const sosial = [
     ))}
   </div>
 
-  <div class="border-t border-bezel">
+  <div class="border-t border-white/10">
     <div class="wadah flex flex-col gap-5 py-7 text-sm lg:flex-row lg:items-center lg:justify-between">
       <p class="flex items-start gap-3">
-        <Ikon nama="gedung" class="mt-0.5 size-5 shrink-0 text-led" />
+        <Ikon nama="gedung" class="mt-0.5 size-5 shrink-0 text-biru-300" />
         <span>Jl. Drs. H. Abdullah Silondae No. 5, Kendari, Sulawesi Tenggara</span>
       </p>
 
       <div class="flex flex-wrap items-center gap-x-8 gap-y-3">
         {telp && (
-          <a href={`tel:${telp.replace(/[^+\d]/g, '')}`} class="flex items-center gap-2.5 font-semibold text-white hover:text-led">
-            <Ikon nama="telepon" class="size-5 shrink-0 text-led" />
+          <a href={`tel:${telp.replace(/[^+\d]/g, '')}`} class="flex items-center gap-2.5 font-semibold text-white hover:underline hover:underline-offset-4">
+            <Ikon nama="telepon" class="size-5 shrink-0 text-biru-300" />
             {telp}
           </a>
         )}
 
         {email && (
-          <a href={`mailto:${email}`} class="flex items-center gap-2.5 font-semibold text-white hover:text-led">
-            <Ikon nama="amplop" class="size-5 shrink-0 text-led" />
+          <a href={`mailto:${email}`} class="flex items-center gap-2.5 font-semibold text-white hover:underline hover:underline-offset-4">
+            <Ikon nama="amplop" class="size-5 shrink-0 text-biru-300" />
             {email}
           </a>
         )}
 
         {sosial.length > 0 && (
-          <div class="flex items-center gap-4">
+          <div class="flex items-center gap-2">
             {sosial.map((s) => (
-              <a href={s.url!} target="_blank" rel="noopener noreferrer" aria-label={s.label} class="transition hover:text-led">
-                <Ikon nama={s.nama} class="size-5" />
+              <a href={s.url!} target="_blank" rel="noopener noreferrer" aria-label={s.label} class="flex size-9 items-center justify-center rounded border border-white/20 transition hover:bg-white hover:text-biru-900">
+                <Ikon nama={s.nama} class="size-4" />
               </a>
             ))}
           </div>
@@ -92,20 +80,20 @@ const sosial = [
     </div>
   </div>
 
-  <div class="border-t border-bezel">
-    <p class="wadah py-5 text-xs text-biru-300">
+  <div class="bg-biru-950">
+    <p class="wadah py-5 text-xs text-biru-200">
       &copy; {new Date().getFullYear()} Dinas Komunikasi dan Informatika Kota Kendari. Seluruh hak cipta dilindungi.
     </p>
   </div>
 </footer>
 
 <!-- Tombol kembali ke atas: muncul setelah penanda 400px keluar dari layar. -->
-<span data-penanda-atas class="pointer-events-none absolute top-[400px] left-0 size-px" aria-hidden="true"></span>
+<span data-penanda-atas class="pointer-events-none absolute top-100 left-0 size-px" aria-hidden="true"></span>
 <button
   type="button"
   data-ke-atas
   hidden
-  class="fixed right-5 bottom-5 z-40 rounded bg-papan p-3 text-led shadow-[0_12px_28px_-10px_rgba(13,21,38,0.6)] transition hover:bg-biru-900"
+  class="fixed right-5 bottom-5 z-40 rounded bg-biru-600 p-3 text-white shadow-[0_12px_28px_-10px_rgba(7,31,61,0.6)] transition hover:bg-biru-700"
   aria-label="Kembali ke atas"
 >
   <Ikon nama="panah-atas" class="size-5" />

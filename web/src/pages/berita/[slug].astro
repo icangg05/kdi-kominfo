@@ -1,8 +1,9 @@
 ---
 import Ikon from '../../components/Ikon.astro';
+import JudulHalaman from '../../components/JudulHalaman.astro';
 import KartuBerita from '../../components/KartuBerita.astro';
 import Base from '../../layouts/Base.astro';
-import { api, tanggalPanjang, type Berita } from '../../lib/api';
+import { api, asalSitus, tanggalPanjang, type Berita } from '../../lib/api';
 
 type Detail = Berita & { konten: string; lainnya: Berita[] };
 
@@ -15,56 +16,97 @@ try {
 } catch {
   return new Response(null, { status: 404, statusText: 'Berita tidak ditemukan' });
 }
+
+const asal = asalSitus(Astro.url);
+const tautan = `${asal}/berita/${berita.slug}`;
+const u = encodeURIComponent(tautan);
+const j = encodeURIComponent(berita.judul);
+
+const bagikan = [
+  { nama: 'WhatsApp', ikon: 'whatsapp', href: `https://wa.me/?text=${j}%20${u}` },
+  { nama: 'Facebook', ikon: 'facebook', href: `https://www.facebook.com/sharer/sharer.php?u=${u}` },
+  { nama: 'X', ikon: 'x', href: `https://x.com/intent/post?text=${j}&url=${u}` },
+  { nama: 'Telegram', ikon: 'telegram', href: `https://t.me/share/url?url=${u}&text=${j}` },
+] as const;
+
+// `<` di-escape supaya judul berisi "</script>" tidak bisa keluar dari blok JSON-LD.
+const jsonLd = JSON.stringify({
+  '@context': 'https://schema.org',
+  '@type': 'NewsArticle',
+  headline: berita.judul,
+  description: berita.ringkasan,
+  image: [new URL(berita.thumbnail || '/img/og-default.jpg', asal + '/').href],
+  datePublished: berita.tanggal,
+  mainEntityOfPage: tautan,
+  articleSection: berita.kategori?.nama,
+  author: { '@type': 'GovernmentOrganization', name: 'Diskominfo Kota Kendari', url: asal },
+  publisher: {
+    '@type': 'GovernmentOrganization',
+    name: 'Dinas Komunikasi dan Informatika Kota Kendari',
+    logo: { '@type': 'ImageObject', url: `${asal}/img/kominfo-logo.webp` },
+  },
+}).replace(/</g, '\\u003c');
 ---
 
-<Base judul={berita.judul} deskripsi={berita.ringkasan}>
+<Base judul={berita.judul} deskripsi={berita.ringkasan} gambar={berita.thumbnail} jenis="article" terbit={berita.tanggal}>
+  <script type="application/ld+json" slot="head" set:html={jsonLd} />
   <article>
-    <!-- Kepala artikel di atas latar biru, gaya sama dengan judul halaman lain. -->
-    <header class="bg-biru-800 motif-komdigi text-white">
-      <div class="wadah py-12 lg:py-16">
-        <nav aria-label="Remah roti" class="mb-4">
-          <ol class="flex flex-wrap items-center gap-2 text-xs text-biru-200">
-            <li><a href="/" class="hover:text-white">Beranda</a></li>
-            <li aria-hidden="true">/</li>
-            <li><a href="/berita" class="hover:text-white">Berita</a></li>
-          </ol>
-        </nav>
-
+    <JudulHalaman judul={berita.judul} remah={[{ label: 'Berita', href: '/berita' }]}>
+      <div class="mt-5 flex flex-wrap items-center gap-x-5 gap-y-3 text-sm text-biru-200">
         {berita.kategori && (
-          <a href={`/berita?kategori=${berita.kategori.slug}`} class="mb-4 inline-block rounded bg-white/15 px-3 py-1 text-xs font-semibold">
+          <a href={`/berita?kategori=${berita.kategori.slug}`} class="rounded bg-white/15 px-3 py-1 text-xs font-semibold text-white hover:bg-white/25">
             {berita.kategori.nama}
           </a>
         )}
-
-        <h1 class="max-w-4xl text-3xl font-bold leading-tight tracking-tight lg:text-4xl">{berita.judul}</h1>
-
-        <div class="mt-5 flex flex-wrap items-center gap-5 text-sm text-biru-200">
-          <span class="flex items-center gap-2"><Ikon nama="kalender" class="size-4" />{tanggalPanjang(berita.tanggal)}</span>
-          <span class="flex items-center gap-2"><Ikon nama="mata" class="size-4" />{berita.totalLihat} kali dibaca</span>
-        </div>
+        <span class="flex items-center gap-2"><Ikon nama="kalender" class="size-4" />{tanggalPanjang(berita.tanggal)}</span>
+        <span class="flex items-center gap-2"><Ikon nama="mata" class="size-4" />{berita.totalLihat} kali dibaca</span>
       </div>
-    </header>
+    </JudulHalaman>
 
     <div class="wadah py-12">
       <div class="grid gap-12 lg:grid-cols-[1fr_320px]">
         <div>
           {berita.thumbnail && (
-            <img src={berita.thumbnail} alt="" class="mb-8 aspect-16/9 w-full rounded object-cover" />
+            <img src={berita.thumbnail} alt={berita.judul} fetchpriority="high" class="mb-8 aspect-16/9 w-full rounded object-cover" />
           )}
           <div class="prosa max-w-none" set:html={berita.konten} />
+
+          <div class="mt-10 flex flex-wrap items-center gap-3 border-t border-garis pt-6">
+            <p class="mr-2 text-sm font-semibold text-biru-900 dark:text-white">Bagikan berita ini</p>
+            {bagikan.map((b) => (
+              <a
+                href={b.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={`Bagikan ke ${b.nama}`}
+                title={b.nama}
+                class="grid size-10 place-items-center rounded bg-biru-50 text-biru-700 transition-colors hover:bg-biru-600 hover:text-white active:scale-[0.97] dark:bg-malam-kartu dark:text-biru-200 dark:hover:bg-biru-600 dark:hover:text-white"
+              >
+                <Ikon nama={b.ikon} class="size-4.5" />
+              </a>
+            ))}
+            <button
+              type="button"
+              data-salin={tautan}
+              class="flex h-10 items-center gap-2 rounded border border-garis px-3 text-sm font-medium text-biru-700 transition-colors hover:border-biru-600 hover:text-biru-600 active:scale-[0.97] dark:text-biru-200 dark:hover:text-white"
+            >
+              <Ikon nama="tautan" class="size-4.5" />
+              <span aria-live="polite">Salin tautan</span>
+            </button>
+          </div>
         </div>
 
         {berita.lainnya.length > 0 && (
           <aside>
-            <h2 class="mb-5 border-b border-biru-100 pb-3 font-bold text-biru-900">Berita Lainnya</h2>
+            <h2 class="mb-5 border-b border-garis pb-3 font-bold text-biru-900 dark:text-white">Berita Lainnya</h2>
             <ul class="space-y-5">
               {berita.lainnya.map((b) => (
                 <li class="flex gap-4">
-                  <a href={`/berita/${b.slug}`} class="size-20 shrink-0 overflow-hidden rounded bg-biru-50">
+                  <a href={`/berita/${b.slug}`} class="size-20 shrink-0 overflow-hidden rounded bg-biru-50 dark:bg-biru-900">
                     {b.thumbnail && <img src={b.thumbnail} alt="" loading="lazy" class="size-full object-cover" />}
                   </a>
                   <div>
-                    <a href={`/berita/${b.slug}`} class="line-clamp-2 text-sm font-semibold text-biru-900 hover:text-biru-600">
+                    <a href={`/berita/${b.slug}`} class="line-clamp-2 text-sm font-semibold text-biru-900 hover:text-biru-600 dark:text-biru-100 dark:hover:text-white">
                       {b.judul}
                     </a>
                     <p class="mt-1 text-xs text-teks-lembut">{tanggalPanjang(b.tanggal)}</p>
@@ -78,3 +120,18 @@ try {
     </div>
   </article>
 </Base>
+
+<script>
+  document.querySelectorAll<HTMLButtonElement>('[data-salin]').forEach((tombol) => {
+    const label = tombol.querySelector('span')!;
+    tombol.addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(tombol.dataset.salin!);
+        label.textContent = 'Tautan disalin';
+      } catch {
+        label.textContent = 'Gagal menyalin';
+      }
+      setTimeout(() => (label.textContent = 'Salin tautan'), 2000);
+    });
+  });
+</script>

@@ -17,112 +17,106 @@ const aktif = (href: string) => href === '/' ? jalurAktif === '/' : jalurAktif.s
 const awal = waktuWita();
 ---
 
-<header class="sticky top-0 z-50">
-  <!-- Bilah informasi: jam WITA di kiri, kontak di kanan. -->
-  <div class="border-b border-bezel bg-papan text-biru-200">
-    <div class="wadah flex h-9 items-center justify-between gap-4 text-xs">
-      <p class="flex items-center gap-2.5">
-        <Ikon nama="jam" class="size-4 text-led" />
-        <span class="led flex items-baseline gap-1.5 font-bold"><time data-jam class="text-lg leading-none">{awal.jam}</time><span class="text-xs">WITA</span></span>
-        <span class="hidden h-3 w-px bg-bezel sm:block" aria-hidden="true"></span>
-        <span class="hidden sm:inline" data-sapaan>{awal.sapaan}</span>
-      </p>
-      <div class="flex items-center gap-6">
-        {telp && (
-          <a href={`tel:${telp.replace(/[^+\d]/g, '')}`} class="hidden items-center gap-2 transition hover:text-white md:flex">
-            <Ikon nama="telepon" class="size-4" />
-            {telp}
-          </a>
-        )}
-        {email && (
-          <a href={`mailto:${email}`} class="hidden items-center gap-2 transition hover:text-white lg:flex">
-            <Ikon nama="amplop" class="size-4" />
-            {email}
-          </a>
-        )}
-      </div>
+<!-- Bilah informasi: jam WITA di kiri, kontak di kanan. -->
+<div class="bg-biru-950 text-biru-200">
+  <div class="wadah flex h-9 items-center justify-between gap-4 text-xs">
+    <p class="flex items-center gap-2.5">
+      <Ikon nama="jam" class="size-4 text-biru-300" />
+      <span class="text-sm font-semibold text-white tabular-nums"><time data-jam>{awal.jam}</time> WITA</span>
+      <span class="hidden h-3 w-px bg-white/20 sm:block" aria-hidden="true"></span>
+      <span class="hidden sm:inline" data-sapaan>{awal.sapaan}</span>
+    </p>
+    <div class="flex items-center gap-6">
+      {telp && (
+        <a href={`tel:${telp.replace(/[^+\d]/g, '')}`} class="hidden items-center gap-2 transition hover:text-white md:flex">
+          <Ikon nama="telepon" class="size-4" />
+          {telp}
+        </a>
+      )}
+      {email && (
+        <a href={`mailto:${email}`} class="hidden items-center gap-2 transition hover:text-white lg:flex">
+          <Ikon nama="amplop" class="size-4" />
+          {email}
+        </a>
+      )}
+      <button
+        type="button"
+        class="-mr-2 flex h-9 items-center gap-2 rounded px-3 transition hover:bg-white/10 hover:text-white sm:px-2"
+        data-tombol-tema
+      >
+        <Ikon nama="bulan" class="size-4 dark:hidden" />
+        <Ikon nama="matahari" class="hidden size-4 dark:block" />
+        <!-- Label menyebut aksi berikutnya; di ponsel hanya ikon, label tetap terbaca pembaca layar. -->
+        <span class="sr-only sm:not-sr-only"><span class="dark:hidden">Mode gelap</span><span class="hidden dark:inline">Mode terang</span></span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Bilah identitas: logo resmi berteks putih butuh latar biru. -->
+<header data-kepala class="sticky top-0 z-50 bg-biru-800 text-white shadow-[0_8px_24px_-16px_rgba(7,31,61,0.8)] lg:static lg:shadow-none">
+  <div class="wadah flex h-[72px] items-center gap-6 lg:h-20">
+    <a href="/" class="shrink-0">
+      <img src="/img/kominfo-logo.webp" alt="Diskominfo Kota Kendari" class="h-10 w-auto lg:h-12" width="176" height="48" />
+    </a>
+
+    <form method="get" action="/berita" role="search" class="relative ml-4 hidden max-w-xl flex-1 lg:block">
+      <label for="cari-situs" class="sr-only">Cari berita</label>
+      <input
+        id="cari-situs"
+        name="search"
+        type="search"
+        autocomplete="off"
+        placeholder="Cari berita Diskominfo Kota Kendari"
+        class="h-11 w-full rounded border border-white/10 bg-white pr-12 pl-4 text-sm text-teks placeholder:text-teks-lembut focus:outline-2 focus:outline-biru-300 dark:border-white/15 dark:bg-biru-950"
+      />
+      <button type="submit" class="absolute top-1 right-1 flex size-9 items-center justify-center rounded bg-biru-600 text-white transition hover:bg-biru-700" aria-label="Cari">
+        <Ikon nama="cari" class="size-5" />
+      </button>
+    </form>
+
+    <div class="ml-auto flex items-center gap-2">
+      <a
+        href="tel:112"
+        class="flex items-center gap-2 rounded bg-darurat px-3.5 py-2.5 text-sm font-semibold text-white transition hover:bg-[#b8241a] active:translate-y-px"
+      >
+        <Ikon nama="telepon" class="size-4" />
+        <span class="sm:hidden">112</span>
+        <span class="hidden sm:inline">Hubungi 112</span>
+      </a>
+
+      <button
+        type="button"
+        class="rounded p-2 text-white transition hover:bg-white/10 lg:hidden"
+        aria-label="Buka menu"
+        aria-expanded="false"
+        aria-controls="menu-seluler"
+        data-tombol-menu
+      >
+        <Ikon nama="menu" class="size-6" />
+      </button>
     </div>
   </div>
 
-  <!-- Bilah navigasi utama. -->
-  <div class="papan bg-papan text-white shadow-[0_10px_30px_-18px_rgba(13,21,38,0.7)]">
-    <div class="wadah flex h-[68px] items-center justify-between gap-6">
-      <a href="/" class="shrink-0">
-        <img src="/img/kominfo-logo.webp" alt="Diskominfo Kota Kendari" class="h-11 w-auto" width="162" height="44" />
-      </a>
-
-      <nav class="hidden h-full items-stretch lg:flex" aria-label="Navigasi utama">
-        {menuUtama.map((item) => (
-          <div class="group relative flex">
-            <a
-              href={item.href}
-              class:list={[
-                'relative flex items-center gap-1 px-3.5 text-[15px] font-medium transition-colors after:absolute after:inset-x-3.5 after:bottom-0 after:h-[3px] after:origin-left after:scale-x-0 after:bg-led after:transition-transform hover:text-white hover:after:scale-x-100',
-                aktif(item.href) ? 'text-white after:scale-x-100' : 'text-biru-100',
-              ]}
-              aria-current={aktif(item.href) ? 'page' : undefined}
-            >
-              {item.label}
-              {item.anak && <Ikon nama="chevron" class="size-3.5 transition group-hover:rotate-180" />}
-            </a>
-
-            {item.anak && (
-              <div class="invisible absolute left-0 top-full w-64 translate-y-1 opacity-0 transition group-hover:visible group-hover:translate-y-0 group-hover:opacity-100 group-focus-within:visible group-focus-within:translate-y-0 group-focus-within:opacity-100">
-                <ul class="overflow-hidden rounded border border-garis bg-white py-1.5 shadow-[0_18px_40px_-16px_rgba(13,21,38,0.35)]">
-                  {item.anak.map((anak) => (
-                    <li>
-                      <a
-                        href={anak.href}
-                        class:list={[
-                          'block px-4 py-2.5 text-sm transition hover:bg-aula hover:text-biru-600',
-                          jalurAktif === anak.href ? 'bg-aula font-semibold text-biru-600' : 'text-teks-lembut',
-                        ]}
-                      >
-                        {anak.label}
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
-          </div>
-        ))}
-      </nav>
-
-      <div class="flex items-center gap-2">
-        <a
-          href="tel:112"
-          class="flex items-center gap-2 rounded bg-zona-d px-3.5 py-2 text-sm font-semibold text-white transition hover:bg-[#b8241a] active:translate-y-px"
-        >
-          <Ikon nama="telepon" class="size-4" />
-          <span class="sm:hidden">112</span>
-          <span class="hidden sm:inline">Hubungi 112</span>
-        </a>
-
-        <button
-          type="button"
-          class="rounded p-2 text-white transition hover:bg-white/10 lg:hidden"
-          aria-label="Buka menu"
-          aria-expanded="false"
-          aria-controls="menu-seluler"
-          data-tombol-menu
-        >
-          <Ikon nama="menu" class="size-6" />
+  <!-- Menu seluler: pencarian di atas, lalu daftar datar dengan submenu terbuka. -->
+  <nav id="menu-seluler" hidden class="max-h-[calc(100dvh-72px)] overflow-y-auto border-t border-white/15 lg:hidden" aria-label="Navigasi seluler">
+    <div class="wadah space-y-3 py-4">
+      <form method="get" action="/berita" role="search" class="relative">
+        <label for="cari-seluler" class="sr-only">Cari berita</label>
+        <input id="cari-seluler" name="search" type="search" autocomplete="off" placeholder="Cari berita" class="h-11 w-full rounded bg-white pr-12 pl-4 text-sm text-teks placeholder:text-teks-lembut dark:bg-biru-950" />
+        <button type="submit" class="absolute top-1 right-1 flex size-9 items-center justify-center rounded bg-biru-600 text-white" aria-label="Cari">
+          <Ikon nama="cari" class="size-5" />
         </button>
-      </div>
-    </div>
-
-    <!-- Menu seluler: daftar datar, semua submenu ikut terbuka. -->
-    <nav id="menu-seluler" hidden class="max-h-[calc(100dvh-104px)] overflow-y-auto border-t border-bezel lg:hidden" aria-label="Navigasi seluler">
-      <ul class="wadah space-y-1 py-3">
+      </form>
+      <ul class="space-y-1">
         {menuUtama.map((item) => (
           <li>
-            <a href={item.href} class="block rounded px-3 py-2.5 text-[15px] font-semibold text-white hover:bg-white/10">{item.label}</a>
+            <a href={item.href} class="block rounded px-3 py-2.5 text-sm font-semibold tracking-wide uppercase hover:bg-white/10">{item.label}</a>
             {item.anak && (
-              <ul class="mb-2 ml-3 border-l border-bezel pl-3">
+              <ul class="mb-2 ml-3 border-l border-white/20 pl-3">
                 {item.anak.map((anak) => (
                   <li>
-                    <a href={anak.href} class="block rounded px-3 py-2 text-sm text-biru-200 hover:bg-white/10 hover:text-white">{anak.label}</a>
+                    <a href={anak.href} class="block rounded px-3 py-2 text-sm text-biru-100 hover:bg-white/10 hover:text-white">{anak.label}</a>
                   </li>
                 ))}
               </ul>
@@ -130,9 +124,60 @@ const awal = waktuWita();
           </li>
         ))}
       </ul>
-    </nav>
-  </div>
+    </div>
+  </nav>
 </header>
+
+<!-- Navigasi utama desktop: bilah putih yang menempel saat menggulir.
+     Saat melekat, logo varian bertulisan gelap muncul di kiri menu. -->
+<nav class="group/nav sticky top-0 z-50 hidden border-b border-garis bg-white shadow-[0_6px_18px_-14px_rgba(7,31,61,0.45)] dark:bg-malam transition-shadow duration-300 data-melekat:shadow-[0_10px_28px_-14px_rgba(7,31,61,0.5)] lg:block" aria-label="Navigasi utama" data-nav>
+  <div class="wadah flex h-[52px] items-stretch">
+    <a
+      href="/"
+      class="flex max-w-0 shrink-0 items-center overflow-hidden opacity-0 transition-all duration-300 group-data-melekat/nav:mr-6 group-data-melekat/nav:max-w-40 group-data-melekat/nav:opacity-100"
+      tabindex="-1"
+      aria-hidden="true"
+    >
+      <img src="/img/kominfo-logo-gelap.webp" alt="" class="h-9 w-auto max-w-none dark:hidden" width="132" height="36" />
+      <img src="/img/kominfo-logo.webp" alt="" class="hidden h-9 w-auto max-w-none dark:block" width="132" height="36" />
+    </a>
+    {menuUtama.map((item) => (
+      <div class="group relative flex">
+        <a
+          href={item.href}
+          class:list={[
+            'relative flex items-center gap-1 px-4 text-[13px] font-semibold tracking-wide uppercase transition-colors after:absolute after:inset-x-4 after:bottom-0 after:h-[3px] after:bg-biru-600 after:transition-transform hover:text-biru-600 dark:after:bg-biru-400 dark:hover:text-white',
+            aktif(item.href) ? 'text-biru-600 after:scale-x-100 dark:text-biru-300' : 'text-biru-950 after:scale-x-0 hover:after:scale-x-100 dark:text-biru-100',
+          ]}
+          aria-current={aktif(item.href) ? 'page' : undefined}
+        >
+          {item.label}
+          {item.anak && <Ikon nama="chevron" class="size-3.5 transition group-hover:rotate-180" />}
+        </a>
+
+        {item.anak && (
+          <div class="invisible absolute left-0 top-full w-64 translate-y-1 opacity-0 transition group-hover:visible group-hover:translate-y-0 group-hover:opacity-100 group-focus-within:visible group-focus-within:translate-y-0 group-focus-within:opacity-100">
+            <ul class="overflow-hidden rounded border border-garis bg-white py-1.5 shadow-[0_18px_40px_-16px_rgba(7,31,61,0.35)] dark:bg-malam-kartu">
+              {item.anak.map((anak) => (
+                <li>
+                  <a
+                    href={anak.href}
+                    class:list={[
+                      'block px-4 py-2.5 text-sm transition hover:bg-langit hover:text-biru-600 dark:hover:text-white',
+                      jalurAktif === anak.href ? 'bg-langit font-semibold text-biru-600 dark:text-biru-300' : 'text-teks-lembut',
+                    ]}
+                  >
+                    {anak.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+      </div>
+    ))}
+  </div>
+</nav>
 
 <script>
   import { waktuWita } from '../lib/waktu';
@@ -145,6 +190,29 @@ const awal = waktuWita();
     tombol.setAttribute('aria-expanded', String(!terbuka));
     if (menu) menu.hidden = terbuka;
   });
+
+  // Nav desktop melekat tepat saat bilah identitas sudah lewat dari layar.
+  const kepala = document.querySelector('[data-kepala]');
+  const nav = document.querySelector('[data-nav]');
+
+  if (kepala && nav) {
+    new IntersectionObserver(([e]) => nav.toggleAttribute('data-melekat', !e.isIntersecting && e.boundingClientRect.top < 0)).observe(kepala);
+  }
+
+  // Tema: bawaan terang; disimpan di kunci `theme` milik Filament supaya admin ikut. Atribut awal dipasang skrip di <head> Base.
+  const tombolTema = document.querySelector<HTMLButtonElement>('[data-tombol-tema]');
+  const akar = document.documentElement;
+
+  if (tombolTema) {
+    tombolTema.addEventListener('click', () => {
+      const gelap = akar.dataset.tema !== 'gelap';
+      if (gelap) akar.dataset.tema = 'gelap';
+      else delete akar.dataset.tema;
+      try {
+        localStorage.setItem('theme', gelap ? 'dark' : 'light');
+      } catch {}
+    });
+  }
 
   const jam = document.querySelector('[data-jam]');
   const sapaan = document.querySelector('[data-sapaan]');

@@ -1,9 +1,10 @@
 ---
 import Ikon from '../components/Ikon.astro';
 import JudulBagian from '../components/JudulBagian.astro';
+import KartuBerita from '../components/KartuBerita.astro';
 import Base from '../layouts/Base.astro';
-import { api, tanggalPanjang, type Berita } from '../lib/api';
-import { bidangDinas, loket } from '../lib/konten';
+import { api, tanggalPanjang, type Berita, type Dokumen, type Halaman, type Kategori, asalSitus } from '../lib/api';
+import { bidangDinas, layananUtama, tautanTerkait } from '../lib/konten';
 import { layanan } from '../lib/layanan';
 
 type Beranda = {
@@ -15,7 +16,13 @@ type Beranda = {
   pengunjung: { hariIni: number; total: number };
 };
 
-const data = await api<Beranda>('/beranda', Astro.request);
+const [data, global, arsip, dokumen, galeri] = await Promise.all([
+  api<Beranda>('/beranda', Astro.request),
+  api<{ kategoriBerita: Kategori[]; kategoriDokumen: Kategori[] }>('/pengaturan'),
+  api<Halaman<Berita>>('/berita?page=2'),
+  api<Halaman<Dokumen>>('/dokumen'),
+  api<Halaman<unknown>>('/galeri'),
+]);
 
 // Foto pimpinan dari admin tersimpan sebagai path relatif disk publik.
 const berkas = (v?: string | null) => (!v ? null : /^(https?:)?\//.test(v) ? v : `/storage/${v}`);
@@ -28,357 +35,215 @@ const fotoKadis = Array.isArray(data.kadis?.foto)
     )
   : null;
 
-const angka = (n: number) => n.toLocaleString('id-ID');
-const tgl = (iso: string | null, opsi: Intl.DateTimeFormatOptions) =>
-  iso ? new Date(iso).toLocaleDateString('id-ID', { timeZone: 'Asia/Makassar', ...opsi }) : '';
-
-/** Warna zona loket dipasang sebagai variabel, jadi satu kelas melayani empat warna. */
-const zona = (z: string) => `--zona: var(--color-zona-${z}); --zona-terang: var(--color-zona-${z}-terang);`;
-
-const [utama, ...lainnya] = data.berita;
 const inisial = (data.kadis?.nama ?? '').split(',')[0].split(/\s+/).filter(Boolean).slice(0, 2).map((k) => k[0]).join('');
+const kutipan = (data.sambutanKadis ?? '').match(/<p>([\s\S]*?)<\/p>/)?.[1]?.replace(/<[^>]+>/g, '').trim() ?? '';
+
+const angka = (n: number) => n.toLocaleString('id-ID');
+
+// Tiga berita terbaru jadi sorotan; tiga berikutnya berjajar di dasar sorotan.
+const sorotan = data.berita.slice(0, 3);
+const deret = data.berita.slice(3, 6);
 const darurat = layanan['telpon-darurat-112'];
 ---
 
 <Base judul="Beranda">
-  <!-- Papan display utama -->
-  <section class="pt-5 pb-16 lg:pt-8 lg:pb-24">
-    <div class="wadah">
-      <div class="papan bingkai-papan">
-        <div class="grid grid-cols-1 gap-px overflow-hidden bg-[#050a14] lg:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)]">
-          <div class="nyala flex flex-wrap items-center justify-between gap-x-6 gap-y-1.5 bg-papan px-5 py-2.5 text-xs text-biru-200 lg:col-span-2 lg:px-10" style="--i:0">
-            <p class="hidden sm:block">Kanal informasi dan layanan TIK Pemerintah Kota Kendari</p>
-            <p class="flex items-center gap-5">
-              <span class="flex items-baseline gap-2">Pengunjung hari ini <strong class="led text-lg leading-none font-bold">{angka(data.pengunjung.hariIni)}</strong></span>
-              <span class="flex items-baseline gap-2">Total pengunjung <strong class="led text-lg leading-none font-bold">{angka(data.pengunjung.total)}</strong></span>
-            </p>
+  <script
+    type="application/ld+json"
+    slot="head"
+    set:html={JSON.stringify({
+      '@context': 'https://schema.org',
+      '@type': 'GovernmentOrganization',
+      name: 'Dinas Komunikasi dan Informatika Kota Kendari',
+      alternateName: 'Diskominfo Kota Kendari',
+      url: asalSitus(Astro.url),
+      logo: `${asalSitus(Astro.url)}/img/kominfo-logo.webp`,
+    })}
+  />
+  <h1 class="sr-only">Dinas Komunikasi dan Informatika Kota Kendari</h1>
+
+  <!-- Sorotan berita -->
+  <section class="relative isolate overflow-hidden bg-biru-950 text-white" aria-roledescription="carousel" aria-label="Sorotan berita" data-sorotan>
+    <img
+      src="/img/latar-jaringan.webp"
+      alt=""
+      aria-hidden="true"
+      width="2560"
+      height="1440"
+      fetchpriority="high"
+      class="absolute inset-0 -z-20 size-full object-cover"
+    />
+    <div class="absolute inset-0 -z-10 bg-linear-to-r from-biru-950 via-biru-900/90 to-biru-800/40"></div>
+
+    <div class="wadah grid min-h-[26rem] content-center gap-8 py-12 lg:min-h-[32rem] lg:grid-cols-[minmax(0,1fr)_auto] lg:items-center lg:py-16">
+      <div>
+        {sorotan.length === 0 && (
+          <div class="max-w-3xl">
+            <p class="text-[2rem] leading-[1.12] font-bold tracking-tight text-balance sm:text-5xl">Dinas Komunikasi dan Informatika Kota Kendari</p>
+            <p class="mt-4 max-w-2xl text-biru-100 lg:text-lg">Layanan informasi publik dan infrastruktur TIK Pemerintah Kota Kendari.</p>
           </div>
+        )}
 
-          <div class="nyala order-1 flex flex-col justify-center bg-papan px-5 py-8 sm:px-8 sm:py-9 lg:order-none lg:px-10 lg:py-14" style="--i:1">
-            <h1 class="sempit max-w-[16ch] text-[2.25rem] font-semibold leading-[1.02] tracking-tight text-balance text-white sm:text-5xl xl:text-[3.75rem]">
-              Dinas Komunikasi dan Informatika Kota Kendari
-            </h1>
-            <p class="mt-5 max-w-[46ch] leading-relaxed text-biru-100 lg:text-lg">
-              Tempat pengajuan layanan subdomain, email dinas, dan tanda tangan elektronik bagi perangkat daerah, serta kanal informasi publik Kota Kendari.
+        {sorotan.map((b, i) => (
+          <article class="max-w-3xl" hidden={i !== 0} aria-roledescription="slide" aria-label={`${i + 1} dari ${sorotan.length}`} data-slide>
+            <p class="flex flex-wrap items-center gap-3 text-sm text-biru-100">
+              {b.kategori && (
+                <a href={`/berita?kategori=${b.kategori.slug}`} class="rounded bg-biru-600 px-2.5 py-1 text-xs font-semibold text-white transition hover:bg-biru-500">{b.kategori.nama}</a>
+              )}
+              <span>{tanggalPanjang(b.tanggal)}</span>
             </p>
-            <div class="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
-              <a href="#alur" class="inline-flex items-center justify-center gap-2 rounded bg-led px-5 py-3 text-sm font-semibold text-papan transition hover:bg-[#ffc433] active:translate-y-px">
-                Ajukan layanan
-                <Ikon nama="panah-kanan" class="size-4" />
-              </a>
-              <a href="/berita" class="inline-flex items-center justify-center gap-2 rounded border border-white/25 px-5 py-3 text-sm font-semibold text-white transition hover:border-white/60 hover:bg-white/5 active:translate-y-px">
-                Baca berita dinas
-              </a>
-            </div>
-          </div>
-
-          <figure class="nyala relative order-3 aspect-16/9 bg-papan lg:order-none lg:aspect-auto" style="--i:2">
-            <img
-              src="/img/jembatan-teluk-kendari.webp"
-              alt="Jembatan Teluk Kendari dilihat dari udara"
-              width="1280"
-              height="752"
-              fetchpriority="high"
-              class="absolute inset-0 size-full object-cover"
-            />
-          </figure>
-
-          <nav aria-label="Loket layanan" class="order-2 grid grid-cols-2 gap-px lg:order-none lg:col-span-2 lg:grid-cols-4">
-            {loket.map((l, i) => (
-              <a
-                href={`/layanan/${l.slug}`}
-                class="loket nyala group relative isolate flex min-h-36 flex-col justify-between overflow-hidden bg-papan p-5 lg:p-6"
-                style={`${zona(l.zona)} --i:${3 + i * 0.6}`}
-              >
-                <span
-                  class="absolute inset-0 -z-10 origin-top scale-y-[0.045] bg-(--zona) transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-y-100 group-focus-visible:scale-y-100"
-                  aria-hidden="true"
-                ></span>
-                <span class="flex items-start justify-between gap-3">
-                  <span class="loket-kode sempit text-5xl font-bold leading-none tracking-tight text-(--zona-terang) transition-colors group-hover:text-white group-focus-visible:text-white lg:text-6xl">{l.kode}</span>
-                  <Ikon nama="panah-kanan" class="mt-1 size-5 text-white/40 transition group-hover:translate-x-1 group-hover:text-white" />
-                </span>
-                <span class="mt-5 block">
-                  <span class="block font-semibold text-white">{l.judul}</span>
-                  <span class="mt-0.5 block text-sm text-biru-200 transition-colors group-hover:text-white/90">{l.untuk}</span>
-                </span>
-              </a>
-            ))}
-          </nav>
-
-          {data.berita.length > 0 && (
-            <div class="nyala teks-jalan-wadah order-4 flex items-stretch bg-papan lg:order-none lg:col-span-2" style="--i:6">
-              <p class="sempit flex shrink-0 items-center bg-led px-4 text-sm font-bold tracking-wide text-papan uppercase lg:px-6">Kabar terkini</p>
-              <div class="min-w-0 flex-1 overflow-x-auto motion-safe:overflow-hidden">
-                <div class="teks-jalan flex w-max" style={`--durasi:${data.berita.length * 9}s`}>
-                  {[0, 1].map((salinan) => (
-                    <ul class:list={['flex shrink-0 items-center', salinan === 1 && 'motion-reduce:hidden']} aria-hidden={salinan === 1 ? 'true' : undefined}>
-                      {data.berita.map((b) => (
-                        <li class="flex items-center">
-                          <a
-                            href={`/berita/${b.slug}`}
-                            tabindex={salinan === 1 ? -1 : undefined}
-                            class="flex items-center gap-3 px-6 py-3.5 text-sm whitespace-nowrap text-white transition-colors hover:text-led"
-                          >
-                            <span class="led font-semibold">{tgl(b.tanggal, { day: '2-digit', month: 'short' })}</span>
-                            {b.judul}
-                          </a>
-                          <span class="size-1.5 bg-bezel" aria-hidden="true"></span>
-                        </li>
-                      ))}
-                    </ul>
-                  ))}
-                </div>
-              </div>
-            </div>
-          )}
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Alur pengajuan per loket -->
-  <section id="alur" class="scroll-mt-28 pb-16 lg:pb-24" aria-labelledby="judul-alur">
-    <div class="wadah">
-      <JudulBagian
-        id="judul-alur"
-        judul="Cara mengajukan layanan"
-        keterangan="Pilih loket untuk melihat persyaratan dan tahapan pengajuan di Diskominfo Kota Kendari."
-      />
-
-      <div role="tablist" aria-label="Pilih loket layanan" class="grid grid-cols-2 gap-2 lg:grid-cols-4" data-tab-daftar>
-        {loket.map((l, i) => (
-          <button
-            type="button"
-            role="tab"
-            id={`tab-${l.slug}`}
-            aria-controls={`panel-${l.slug}`}
-            aria-selected={i === 0 ? 'true' : 'false'}
-            tabindex={i === 0 ? 0 : -1}
-            style={zona(l.zona)}
-            data-tab
-            class="group relative flex items-center gap-3 overflow-hidden rounded border border-garis bg-white p-2.5 text-left transition hover:border-(--zona) aria-selected:border-papan aria-selected:bg-papan sm:p-3"
-          >
-            <span class="sempit flex h-11 min-w-11 shrink-0 items-center justify-center rounded bg-(--zona) px-2 text-2xl font-bold text-white">{l.kode}</span>
-            <span class="text-sm font-semibold leading-tight text-tinta group-aria-selected:text-white sm:text-base">{l.judul}</span>
-            <span class="absolute inset-x-0 bottom-0 h-1 bg-(--zona) opacity-0 transition-opacity group-aria-selected:opacity-100" aria-hidden="true"></span>
-          </button>
+            <h2 class="mt-4 text-[2rem] leading-[1.12] font-bold tracking-tight text-balance sm:text-5xl lg:text-[3.5rem]">
+              <a href={`/berita/${b.slug}`} class="decoration-2 underline-offset-8 hover:underline">{b.judul}</a>
+            </h2>
+            <p class="mt-4 line-clamp-2 max-w-2xl text-biru-100 lg:text-lg">{b.ringkasan}</p>
+            <a href={`/berita/${b.slug}`} class="mt-7 inline-flex items-center gap-2 rounded bg-white px-5 py-3 text-sm font-semibold text-biru-800 transition hover:bg-biru-50 active:translate-y-px">
+              Baca selengkapnya
+              <Ikon nama="panah-kanan" class="size-4" />
+            </a>
+          </article>
         ))}
       </div>
 
-      {loket.map((l, i) => {
-        const isi = layanan[l.slug];
-        const daftar = isi.syarat ?? isi.bagian.poin ?? [];
-
-        return (
-          <div
-            role="tabpanel"
-            id={`panel-${l.slug}`}
-            aria-labelledby={`tab-${l.slug}`}
-            hidden={i !== 0}
-            style={zona(l.zona)}
-            data-panel
-            class="mt-2 grid gap-px overflow-hidden rounded border border-garis bg-garis lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)]"
-          >
-            <div class="bg-white p-6 lg:p-10">
-              <h3 class="sempit text-2xl font-semibold text-tinta">{isi.syarat ? 'Persyaratan' : 'Keadaan yang dapat dilaporkan'}</h3>
-              <ul class="mt-6 space-y-3.5">
-                {daftar.map((s) => (
-                  <li class="flex gap-3 leading-relaxed text-teks">
-                    <Ikon nama="centang" class="mt-0.5 size-5 shrink-0 text-(--zona)" />
-                    {s}
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            <div class="bg-white p-6 lg:p-10">
-              <h3 class="sempit text-2xl font-semibold text-tinta">Tahapan</h3>
-              <ol class="relative mt-6 space-y-5 before:absolute before:top-3 before:bottom-3 before:left-5 before:w-px before:bg-garis">
-                {isi.prosedur?.map((p, n) => (
-                  <li class="relative flex items-center gap-4">
-                    <span class="led sempit relative flex size-10 shrink-0 items-center justify-center rounded bg-papan text-lg font-bold text-(--zona-terang)">{n + 1}</span>
-                    <span class="leading-relaxed text-teks">{p}</span>
-                  </li>
-                ))}
-              </ol>
-
-              <div class="mt-8 flex flex-wrap gap-3">
-                {l.kode === '112' && (
-                  <a href="tel:112" class="inline-flex items-center gap-2 rounded bg-zona-d px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#b8241a] active:translate-y-px">
-                    <Ikon nama="telepon" class="size-4" />
-                    Hubungi 112
-                  </a>
-                )}
-                <a
-                  href={`/layanan/${l.slug}`}
-                  class:list={[
-                    'inline-flex items-center gap-2 rounded px-5 py-3 text-sm font-semibold transition active:translate-y-px',
-                    l.kode === '112' ? 'border border-garis text-tinta hover:border-tinta' : 'bg-(--zona) text-white hover:brightness-110',
-                  ]}
-                >
-                  Rincian layanan
-                  <Ikon nama="panah-kanan" class="size-4" />
-                </a>
-              </div>
-            </div>
-          </div>
-        );
-      })}
+      {sorotan.length > 1 && (
+        <div class="flex gap-2 lg:flex-col" role="group" aria-label="Pilih sorotan">
+          {sorotan.map((_, i) => (
+            <button
+              type="button"
+              aria-label={`Tampilkan sorotan ${i + 1}`}
+              aria-current={i === 0 ? 'true' : 'false'}
+              class="flex size-10 items-center justify-center rounded border border-white/35 text-sm font-semibold tabular-nums transition hover:bg-white/10 aria-[current=true]:border-white aria-[current=true]:bg-white aria-[current=true]:text-biru-800"
+              data-ke={i}
+            >
+              {i + 1}
+            </button>
+          ))}
+        </div>
+      )}
     </div>
+
+    {deret.length > 0 && (
+      <div class="border-t border-white/15 bg-biru-950/70">
+        <ul class="wadah tanpa-scrollbar flex snap-x snap-mandatory scroll-px-4 gap-5 overflow-x-auto sm:grid sm:grid-cols-2 sm:gap-x-6 lg:grid-cols-4 lg:gap-0 lg:divide-x lg:divide-white/15">
+          {deret.map((b) => (
+            <li class="group relative flex w-[78%] shrink-0 snap-start items-center gap-3 py-4 sm:w-auto lg:px-5 lg:first:pl-0">
+              <span class="relative flex size-14 shrink-0 items-center justify-center overflow-hidden rounded bg-biru-700 text-biru-300">
+                <Ikon nama="foto" class="size-5" />
+                {b.thumbnail && <img src={b.thumbnail} alt="" loading="lazy" onerror="this.remove()" class="absolute inset-0 size-full object-cover" />}
+              </span>
+              <div class="min-w-0">
+                <h3 class="line-clamp-2 text-sm leading-snug font-semibold">
+                  <a href={`/berita/${b.slug}`} class="after:absolute after:inset-0 group-hover:underline">{b.judul}</a>
+                </h3>
+                <p class="mt-1 text-xs text-biru-200">{tanggalPanjang(b.tanggal)}</p>
+              </div>
+            </li>
+          ))}
+          <li class="flex shrink-0 snap-start items-center py-4 pr-4 lg:px-5">
+            <a href="/berita" class="group inline-flex items-center gap-3 text-sm font-semibold">
+              <span class="flex size-9 items-center justify-center rounded border border-white/40 transition group-hover:bg-white group-hover:text-biru-800">
+                <Ikon nama="panah-kanan" class="size-4" />
+              </span>
+              Semua berita
+            </a>
+          </li>
+        </ul>
+      </div>
+    )}
   </section>
 
-  <!-- Berita terbaru -->
-  {utama && (
-    <section class="border-y border-garis bg-white py-16 lg:py-24" aria-labelledby="judul-berita">
-      <div class="wadah">
-        <JudulBagian id="judul-berita" judul="Berita terbaru" tautan={{ label: 'Semua berita', href: '/berita' }} />
-
-        <div class="grid gap-10 lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] lg:gap-12">
-          <article class="group relative">
-            <div class="relative aspect-16/10 overflow-hidden rounded bg-papan">
-              <div class="absolute inset-0 flex items-end p-6 lg:p-8">
-                <time datetime={utama.tanggal ?? undefined} class="led flex items-end gap-4 leading-none font-bold">
-                  <span class="led-titik text-[7rem] tracking-tight lg:text-[10rem]">{tgl(utama.tanggal, { day: '2-digit' })}</span>
-                  <span class="pb-3 text-2xl text-white/90 lg:pb-5 lg:text-4xl">{tgl(utama.tanggal, { month: 'long', year: 'numeric' })}</span>
-                </time>
-              </div>
-              {utama.thumbnail && (
-                <img src={utama.thumbnail} alt="" loading="lazy" onerror="this.remove()" class="relative size-full object-cover transition duration-700 group-hover:scale-[1.03]" />
-              )}
-            </div>
-            <div class="mt-6">
-              <p class="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-teks-lembut">
-                {utama.kategori && <span class="rounded bg-biru-50 px-2 py-0.5 font-semibold text-biru-700">{utama.kategori.nama}</span>}
-                {utama.thumbnail && <span>{tanggalPanjang(utama.tanggal)}</span>}
-                <span>{angka(utama.totalLihat)} kali dibaca</span>
-              </p>
-              <h3 class="sempit mt-3 text-3xl font-semibold leading-tight tracking-tight text-balance text-tinta lg:text-4xl">
-                <a href={`/berita/${utama.slug}`} class="transition-colors after:absolute after:inset-0 group-hover:text-biru-600">{utama.judul}</a>
-              </h3>
-              <p class="mt-3 line-clamp-3 max-w-[65ch] leading-relaxed text-teks-lembut">{utama.ringkasan}</p>
-            </div>
-          </article>
-
-          <ol class="self-start divide-y divide-garis border-y border-garis">
-            {lainnya.map((b) => (
-              <li class="group relative flex gap-4 py-4">
-                <time datetime={b.tanggal ?? undefined} class="flex w-[4.5rem] shrink-0 flex-col items-center justify-center rounded bg-papan bg-[radial-gradient(rgba(255,176,0,0.09)_1px,transparent_1.5px)] bg-size-[4px_4px] py-2.5">
-                  <span class="led text-[1.75rem] leading-none font-bold">{tgl(b.tanggal, { day: '2-digit' })}</span>
-                  <span class="mt-1 text-[11px] font-semibold text-biru-200 uppercase">{tgl(b.tanggal, { month: 'short' })}</span>
-                </time>
-                <div class="min-w-0 self-center">
-                  <h3 class="font-semibold leading-snug text-tinta">
-                    <a href={`/berita/${b.slug}`} class="transition-colors after:absolute after:inset-0 group-hover:text-biru-600">{b.judul}</a>
-                  </h3>
-                  <p class="mt-1 text-xs text-teks-lembut">
-                    {b.kategori && <span class="font-semibold text-biru-600">{b.kategori.nama}</span>}
-                    {b.kategori && ' · '}
-                    {angka(b.totalLihat)} kali dibaca
-                  </p>
-                </div>
-              </li>
-            ))}
-          </ol>
-        </div>
-      </div>
-    </section>
-  )}
-
-  <!-- Kendari Siaga 112 -->
-  <section class="py-16 lg:py-24" aria-labelledby="judul-112">
+  <!-- Layanan -->
+  <section class="py-14 lg:py-20" aria-labelledby="judul-layanan">
     <div class="wadah">
-      <div class="papan bingkai-papan">
-        <div class="grid gap-px overflow-hidden bg-[#050a14] lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)]">
-          <div class="flex items-center justify-center bg-papan px-6 py-10">
-            <p class="led-titik sempit text-[9rem] leading-[0.85] font-bold tracking-tight text-zona-d-terang sm:text-[12rem] xl:text-[14rem]" aria-hidden="true">112</p>
-          </div>
-
-          <div class="bg-papan p-6 sm:p-8 lg:p-12">
-            <h2 id="judul-112" class="sempit text-3xl font-semibold tracking-tight text-white lg:text-[2.5rem]">Kendari Siaga 112</h2>
-            <p class="mt-3 max-w-[56ch] leading-relaxed text-biru-100">{darurat.ringkas}</p>
-
-            <dl class="mt-8 grid gap-px overflow-hidden rounded bg-bezel sm:grid-cols-3">
-              {darurat.keunggulan?.map((k) => (
-                <div class="bg-[#111b30] p-4">
-                  <dt class="font-semibold text-white">{k.judul}</dt>
-                  <dd class="mt-1 text-sm leading-relaxed text-biru-200">{k.isi}</dd>
-                </div>
-              ))}
-            </dl>
-
-            <p class="mt-8 text-sm font-semibold text-white">Laporkan keadaan seperti</p>
-            <ul class="mt-3 flex flex-wrap gap-2">
-              {darurat.bagian.poin?.map((p) => (
-                <li class="rounded border border-bezel px-3 py-1.5 text-sm text-biru-100">{p.replace(/\.$/, '')}</li>
-              ))}
-            </ul>
-
-            <div class="mt-9 flex flex-wrap items-center gap-x-6 gap-y-4">
-              <a href="tel:112" class="inline-flex items-center gap-2 rounded bg-zona-d px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#b8241a] active:translate-y-px">
-                <Ikon nama="telepon" class="size-4" />
-                Hubungi 112
+      <div class="rounded bg-linear-to-br from-biru-900 via-biru-700 to-biru-600 px-5 py-8 text-white shadow-[0_24px_48px_-28px_rgba(7,31,61,0.7)] sm:px-8 lg:px-10 lg:py-10">
+        <h2 id="judul-layanan" class="text-xl font-bold text-balance lg:text-2xl">Layanan Diskominfo untuk Perangkat Daerah dan Warga</h2>
+        <ul class="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4 lg:gap-4">
+          {layananUtama.map((l) => (
+            <li class="flex">
+              <a href={`/layanan/${l.slug}`} class="group flex w-full flex-col rounded border border-white/15 bg-white/10 p-5 transition hover:-translate-y-1 hover:border-white/35 hover:bg-white/15">
+                <span class:list={['flex size-12 items-center justify-center rounded', l.slug === 'telpon-darurat-112' ? 'bg-darurat text-white' : 'bg-white text-biru-700']}>
+                  <Ikon nama={l.ikon} class="size-6" />
+                </span>
+                <h3 class="mt-5 text-sm font-bold tracking-wide uppercase">{l.judul}</h3>
+                <p class="mt-2 text-sm leading-relaxed text-biru-100">{l.ringkas}</p>
+                <span class="mt-auto pt-6">
+                  <span class="flex size-9 items-center justify-center rounded border border-white/40 transition group-hover:bg-white group-hover:text-biru-700">
+                    <Ikon nama="panah-kanan" class="size-4" />
+                  </span>
+                </span>
               </a>
-              <p class="text-xs text-biru-300">Ditetapkan melalui Surat Keputusan Wali Kota Kendari, April 2022.</p>
-            </div>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- Pencarian dokumen publik -->
+  <section class="pb-14 lg:pb-20" aria-labelledby="judul-cari-dokumen">
+    <div class="wadah">
+      <div class="grid overflow-hidden rounded border border-garis lg:grid-cols-[minmax(0,2fr)_minmax(0,3fr)]">
+        <div class="flex items-center gap-5 bg-langit p-6 sm:p-8 lg:p-10">
+          <span class="flex size-16 shrink-0 items-center justify-center rounded bg-biru-600 text-white lg:size-20">
+            <Ikon nama="berkas" class="size-8 lg:size-10" />
+          </span>
+          <div>
+            <p class="text-2xl leading-tight font-bold text-biru-900 lg:text-3xl dark:text-white">Dokumen Publik</p>
+            <p class="mt-1 text-sm text-teks-lembut">Laporan, peraturan, dan dokumen resmi yang dapat diunduh bebas.</p>
           </div>
+        </div>
+
+        <div class="bg-biru-800 p-6 text-white sm:p-8 lg:p-10">
+          <h2 id="judul-cari-dokumen" class="text-2xl font-bold">Telusuri {angka(dokumen.meta.total)} dokumen publik</h2>
+          <p class="mt-1 text-sm text-biru-200">Ketik judul dokumen yang Anda cari.</p>
+          <form method="get" action="/dokumen" role="search" class="relative mt-5">
+            <label for="cari-dokumen" class="sr-only">Cari dokumen</label>
+            <input id="cari-dokumen" name="search" type="search" autocomplete="off" placeholder="Judul dokumen" class="h-12 w-full rounded bg-white pr-14 pl-4 text-teks placeholder:text-teks-lembut focus:outline-2 focus:outline-biru-300 dark:bg-biru-950" />
+            <button type="submit" class="absolute top-1.5 right-1.5 flex size-9 items-center justify-center rounded bg-biru-600 transition hover:bg-biru-700" aria-label="Cari dokumen">
+              <Ikon nama="cari" class="size-5" />
+            </button>
+          </form>
+          {global.kategoriDokumen.length > 0 && (
+            <p class="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm">
+              <span class="text-biru-200">Kategori:</span>
+              {global.kategoriDokumen.map((k) => (
+                <a href={`/dokumen?kategori=${k.slug}`} class="font-medium underline decoration-white/30 underline-offset-4 transition hover:decoration-white">{k.nama}</a>
+              ))}
+            </p>
+          )}
         </div>
       </div>
     </div>
   </section>
 
-  <!-- Sambutan kepala dinas -->
-  {data.sambutanKadis && (
-    <section class="border-y border-garis bg-white py-16 lg:py-24" aria-labelledby="judul-sambutan">
-      <div class="wadah grid items-start gap-10 lg:grid-cols-[320px_minmax(0,1fr)] lg:gap-16">
-        <figure class="w-full max-w-[280px] overflow-hidden rounded lg:sticky lg:top-32 lg:max-w-none">
-          <div class="relative aspect-3/4 bg-papan">
-            <span class="led led-titik absolute inset-0 flex items-center justify-center text-[7rem] font-bold" aria-hidden="true">{inisial}</span>
-            {fotoKadis && (
-              <img src={fotoKadis} alt={`Foto ${data.kadis?.nama ?? 'Kepala Dinas'}`} loading="lazy" onerror="this.remove()" class="relative size-full object-cover" />
-            )}
-          </div>
-          {data.kadis && (
-            <figcaption class="bg-papan px-5 py-4">
-              <p class="font-semibold text-white">{data.kadis.nama}</p>
-              <p class="mt-1 text-sm text-biru-200">
-                Kepala Dinas, periode <span class="led font-semibold">{data.kadis.awal_periode}-{data.kadis.akhir_periode}</span>
-              </p>
-            </figcaption>
-          )}
-        </figure>
+  <!-- Profil dan bidang dinas -->
+  <section class="relative isolate overflow-hidden bg-biru-950 py-16 text-white lg:py-24" aria-labelledby="judul-profil">
+    <img src="/img/bg-earth.webp" alt="" aria-hidden="true" loading="lazy" class="absolute inset-y-0 right-0 -z-10 h-full w-full object-cover opacity-40 lg:w-3/5" />
+    <div class="absolute inset-0 -z-10 bg-linear-to-r from-biru-950 via-biru-950/85 to-biru-950/10"></div>
+    <div class="kisi-titik absolute inset-0 -z-10 opacity-60" aria-hidden="true"></div>
 
-        <div>
-          <JudulBagian id="judul-sambutan" judul="Sambutan Kepala Dinas" />
-          <div class="prosa max-w-[68ch] lg:text-lg" set:html={data.sambutanKadis} />
-
-          {data.taglineSambutan.length > 0 && (
-            <ul class="mt-10 flex flex-wrap items-center gap-x-4 gap-y-2 rounded bg-papan px-5 py-4">
-              {data.taglineSambutan.map((t, i) => (
-                <li class="flex items-center gap-4">
-                  {i > 0 && <span class="size-1.5 bg-bezel" aria-hidden="true"></span>}
-                  <span class="sempit text-lg font-semibold text-led">{t}</span>
-                </li>
-              ))}
-            </ul>
-          )}
-        </div>
-      </div>
-    </section>
-  )}
-
-  <!-- Bidang dinas -->
-  <section class="py-16 lg:py-24" aria-labelledby="judul-bidang">
     <div class="wadah">
-      <JudulBagian id="judul-bidang" judul="Bidang di Diskominfo Kota Kendari" tautan={{ label: 'Struktur organisasi', href: '/profil-dinas/struktur-organisasi' }} />
+      <div class="max-w-2xl">
+        <h2 id="judul-profil" class="text-3xl leading-tight font-bold text-balance lg:text-[2.75rem]">Transformasi Digital Pemerintah Kota Kendari</h2>
+        <p class="mt-5 max-w-[60ch] leading-relaxed text-biru-100 lg:text-lg">
+          Diskominfo Kota Kendari mengelola informasi publik, menyelenggarakan pemerintahan berbasis elektronik,
+          serta menyediakan infrastruktur TIK dan persandian bagi Pemerintah Kota Kendari.
+        </p>
+        <a href="/profil-dinas/tentang-kami" class="group mt-7 inline-flex items-center gap-3 text-sm font-semibold">
+          <span class="flex size-9 items-center justify-center rounded border border-white/40 transition group-hover:bg-white group-hover:text-biru-900">
+            <Ikon nama="panah-kanan" class="size-4" />
+          </span>
+          Baca selengkapnya
+        </a>
+      </div>
 
-      <ul class="grid gap-px overflow-hidden rounded border border-garis bg-garis sm:grid-cols-2 lg:grid-cols-4">
-        {bidangDinas.map((b, i) => (
-          <li class="flex flex-col bg-white">
-            <span class:list={['h-1.5', ['bg-biru-900', 'bg-biru-600', 'bg-biru-500', 'bg-biru-300'][i % 4]]} aria-hidden="true"></span>
-            <div class="flex flex-1 flex-col p-6 lg:p-7">
-              <h3 class="sempit text-xl leading-snug font-semibold text-tinta">{b.judul}</h3>
-              <p class="mt-3 text-sm leading-relaxed text-teks-lembut">{b.isi}</p>
+      <ul class="mt-14 grid gap-8 border-t border-white/15 pt-10 sm:grid-cols-2 lg:mt-20 lg:grid-cols-4 lg:gap-6">
+        {bidangDinas.map((b) => (
+          <li class="flex gap-4">
+            <span class="flex size-12 shrink-0 items-center justify-center rounded bg-biru-600/50 text-biru-100 ring-1 ring-white/20">
+              <Ikon nama={b.ikon} class="size-6" />
+            </span>
+            <div>
+              <h3 class="text-sm leading-snug font-bold tracking-wide uppercase">{b.judul}</h3>
+              <p class="mt-2 text-sm leading-relaxed text-biru-200">{b.isi}</p>
             </div>
           </li>
         ))}
@@ -386,56 +251,245 @@ const darurat = layanan['telpon-darurat-112'];
     </div>
   </section>
 
-  <!-- Galeri -->
-  {data.galeri.length > 0 && (
-    <section class="pb-20 lg:pb-28" aria-labelledby="judul-galeri">
-      <div class="wadah">
-        <JudulBagian id="judul-galeri" judul="Galeri kegiatan" tautan={{ label: 'Semua galeri', href: '/galeri' }} />
+  <!-- Galeri dan angka -->
+  <section class="py-14 lg:py-20" aria-labelledby="judul-galeri">
+    <div class="wadah">
+      <JudulBagian id="judul-galeri" judul="Kegiatan dan Informasi Publik" tautan={{ label: 'Lihat lainnya', href: '/galeri' }} />
 
-        <div class="grid auto-rows-[10rem] grid-cols-2 gap-2 sm:auto-rows-[13rem] lg:grid-cols-4">
-          {data.galeri.slice(0, 5).map((g, i) => (
-            <figure class:list={['group relative overflow-hidden rounded bg-papan', i === 0 && 'col-span-2 row-span-2']}>
-              <p class="led absolute top-4 left-4 flex flex-col leading-none font-bold" aria-hidden="true">
-                <span class:list={['led-titik tracking-tight', i === 0 ? 'text-[6rem] sm:text-[9rem]' : 'text-[3.5rem] sm:text-[4.5rem]']}>{tgl(g.tanggal, { day: '2-digit' })}</span>
-                <span class:list={['text-white/85', i === 0 ? 'mt-2 text-2xl' : 'mt-1 text-sm']}>{tgl(g.tanggal, { month: 'long', year: 'numeric' })}</span>
-              </p>
-              {g.gambar && (
-                <img src={g.gambar} alt={g.judul} loading="lazy" onerror="this.remove()" class="absolute inset-0 size-full object-cover transition duration-700 group-hover:scale-105" />
-              )}
-              <figcaption class="absolute inset-x-0 bottom-0 bg-linear-to-t from-papan via-papan/70 to-transparent p-4 pt-12">
-                <p class:list={['line-clamp-2 leading-snug font-semibold text-white', i === 0 ? 'lg:text-lg' : 'text-sm']}>{g.judul}</p>
-                <p class="led mt-1 hidden text-xs font-semibold group-has-[img]:block">{tanggalPanjang(g.tanggal)}</p>
-              </figcaption>
-            </figure>
+      <div class="grid gap-4 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]">
+        <ul class="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:gap-4">
+          {data.galeri.slice(0, 5).map((g) => (
+            <li>
+              <figure class="group relative aspect-4/3 overflow-hidden rounded bg-biru-900">
+                <span class="absolute inset-0 flex items-start justify-end p-3 text-biru-400" aria-hidden="true">
+                  <Ikon nama="foto" class="size-6" />
+                </span>
+                {g.gambar && (
+                  <img src={g.gambar} alt={g.judul} loading="lazy" onerror="this.remove()" class="absolute inset-0 size-full object-cover transition duration-500 group-hover:scale-105" />
+                )}
+                <figcaption class="absolute inset-x-0 bottom-0 bg-linear-to-t from-biru-950 via-biru-950/70 to-transparent p-3 pt-10 text-white">
+                  <p class="line-clamp-2 text-xs leading-snug font-semibold tracking-wide uppercase">{g.judul}</p>
+                  <p class="mt-1 text-[11px] text-biru-200">{tanggalPanjang(g.tanggal)}</p>
+                </figcaption>
+              </figure>
+            </li>
           ))}
+          <li>
+            <a href="/galeri" class="group flex aspect-4/3 flex-col justify-between rounded border border-garis bg-langit p-4 text-biru-800 transition hover:border-biru-300 hover:bg-biru-100 dark:text-biru-100 dark:hover:border-biru-700 dark:hover:bg-biru-900">
+              <Ikon nama="foto" class="size-7" />
+              <span>
+                <span class="block text-3xl font-bold tabular-nums">{angka(galeri.meta.total)}</span>
+                <span class="mt-1 flex items-center gap-2 text-sm font-semibold">
+                  Foto kegiatan
+                  <Ikon nama="panah-kanan" class="size-4 transition group-hover:translate-x-1" />
+                </span>
+              </span>
+            </a>
+          </li>
+        </ul>
+
+        <div class="flex flex-col rounded bg-toska p-6 text-white lg:p-8">
+          <h3 class="text-sm font-semibold">Total kunjungan situs</h3>
+          <p class="mt-2 text-6xl leading-none font-bold tracking-tight tabular-nums lg:text-7xl">{angka(data.pengunjung.total)}</p>
+          <p class="mt-3 text-sm">{angka(data.pengunjung.hariIni)} pengunjung hari ini</p>
+          <dl class="mt-8 divide-y divide-white/20 border-t border-white/20 text-sm lg:mt-auto">
+            <div class="flex items-baseline justify-between gap-4 py-3">
+              <dt>Berita diterbitkan</dt>
+              <dd class="text-xl font-bold tabular-nums">{angka(arsip.meta.total)}</dd>
+            </div>
+            <div class="flex items-baseline justify-between gap-4 py-3">
+              <dt>Dokumen publik</dt>
+              <dd class="text-xl font-bold tabular-nums">{angka(dokumen.meta.total)}</dd>
+            </div>
+            <div class="flex items-baseline justify-between gap-4 pt-3">
+              <dt>Foto kegiatan</dt>
+              <dd class="text-xl font-bold tabular-nums">{angka(galeri.meta.total)}</dd>
+            </div>
+          </dl>
         </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Kabar lainnya: geser mendatar -->
+  {arsip.data.length > 0 && (
+    <section class="bg-langit py-14 lg:py-20" aria-labelledby="judul-kabar" data-geser>
+      <div class="wadah">
+        <div class="mb-6 flex flex-wrap items-end justify-between gap-4 lg:mb-8">
+          <h2 id="judul-kabar" class="text-lg font-bold tracking-wide text-biru-950 uppercase lg:text-xl dark:text-white">Kabar Diskominfo Kota Kendari</h2>
+          <div class="flex items-center gap-2">
+            <a href="/berita" class="mr-3 text-sm font-semibold text-biru-600 hover:text-biru-800 dark:text-biru-300 dark:hover:text-white">Semua berita</a>
+            <button type="button" class="flex size-10 items-center justify-center rounded border border-biru-300 bg-white text-biru-700 transition hover:border-biru-600 hover:bg-biru-600 hover:text-white dark:border-biru-700 dark:bg-malam-kartu dark:text-biru-100" aria-label="Geser ke kiri" data-arah="-1">
+              <Ikon nama="panah-kiri" class="size-4" />
+            </button>
+            <button type="button" class="flex size-10 items-center justify-center rounded border border-biru-300 bg-white text-biru-700 transition hover:border-biru-600 hover:bg-biru-600 hover:text-white dark:border-biru-700 dark:bg-malam-kartu dark:text-biru-100" aria-label="Geser ke kanan" data-arah="1">
+              <Ikon nama="panah-kanan" class="size-4" />
+            </button>
+          </div>
+        </div>
+
+        <ul class="tanpa-scrollbar -mx-4 flex snap-x snap-mandatory scroll-px-4 gap-4 overflow-x-auto px-4 pb-2 lg:mx-0 lg:scroll-px-0 lg:px-0" data-jalur>
+          {arsip.data.map((b) => (
+            <li class="w-[78%] shrink-0 snap-start sm:w-[calc((100%-1rem)/2)] lg:w-[calc((100%-3rem)/4)]">
+              <KartuBerita berita={b} />
+            </li>
+          ))}
+        </ul>
       </div>
     </section>
   )}
+
+  <!-- Topik, dokumen terbaru, dan bilah samping -->
+  <section class="py-14 lg:py-20">
+    <div class="wadah grid gap-12 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]">
+      <div>
+        {global.kategoriBerita.length > 0 && (
+          <div class="rounded bg-linear-to-br from-nila to-biru-700 p-6 text-white sm:p-8">
+            <h2 class="text-lg font-bold tracking-wide uppercase">Pilih Topik Berita</h2>
+            <p class="mt-2 text-sm text-biru-100">Baca berita Diskominfo Kota Kendari sesuai topik yang Anda minati.</p>
+            <ul class="mt-5 flex flex-wrap gap-2">
+              {global.kategoriBerita.map((k) => (
+                <li>
+                  <a href={`/berita?kategori=${k.slug}`} class="group inline-flex items-center gap-1.5 rounded border border-white/25 bg-white/10 px-3 py-1.5 text-sm font-medium transition hover:bg-white hover:text-nila">
+                    {k.nama}
+                    <Ikon nama="panah-kanan" class="size-3.5 transition group-hover:translate-x-0.5" />
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+
+        {dokumen.data.length > 0 && (
+          <div class="mt-12">
+            <JudulBagian judul="Dokumen Publik Terbaru" tautan={{ label: 'Lihat lainnya', href: '/dokumen' }} />
+            <ul class="grid gap-4 max-sm:[&>li:nth-child(n+4)]:hidden sm:grid-cols-2 xl:grid-cols-3">
+              {dokumen.data.map((d) => (
+                <li class="kartu-timbul group relative flex flex-col p-5">
+                  <div class="flex items-start justify-between gap-3">
+                    <span class="flex h-12 w-10 items-center justify-center rounded bg-biru-600 text-[11px] font-bold text-white uppercase">{d.ekstensi || 'file'}</span>
+                    <span class="text-xs text-teks-lembut tabular-nums">{angka(d.totalUnduhan)} unduhan</span>
+                  </div>
+                  <h3 class="mt-4 line-clamp-2 font-semibold leading-snug text-biru-950 dark:text-white">{d.judul}</h3>
+                  {d.kategori && <p class="mt-1 text-xs font-semibold text-biru-600 dark:text-biru-300">{d.kategori.nama}</p>}
+                  <p class="mt-2 line-clamp-2 text-sm text-teks-lembut">{d.deskripsi}</p>
+                  <a href={d.unduh} class="mt-auto inline-flex items-center gap-2 pt-4 text-sm font-semibold text-biru-600 after:absolute after:inset-0 hover:text-biru-800 dark:text-biru-300 dark:hover:text-white">
+                    <Ikon nama="unduh" class="size-4" />
+                    Unduh dokumen
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+      </div>
+
+      <aside class="space-y-10">
+        {data.sambutanKadis && (
+          <section aria-labelledby="judul-sambutan">
+            <h2 id="judul-sambutan" class="text-lg font-bold tracking-wide text-biru-950 uppercase dark:text-white">Sambutan Kepala Dinas</h2>
+            <div class="mt-4 overflow-hidden rounded border border-garis bg-white dark:bg-malam-kartu">
+              <div class="flex items-center gap-4 bg-langit p-4">
+                <span class="relative flex size-16 shrink-0 items-center justify-center overflow-hidden rounded bg-biru-600 text-xl font-bold text-white">
+                  {inisial}
+                  {fotoKadis && <img src={fotoKadis} alt={`Foto ${data.kadis?.nama ?? 'Kepala Dinas'}`} loading="lazy" onerror="this.remove()" class="absolute inset-0 size-full object-cover" />}
+                </span>
+                {data.kadis && (
+                  <div>
+                    <p class="leading-snug font-semibold text-biru-950 dark:text-white">{data.kadis.nama}</p>
+                    <p class="mt-0.5 text-xs text-teks-lembut">Kepala Dinas, periode {data.kadis.awal_periode}-{data.kadis.akhir_periode}</p>
+                  </div>
+                )}
+              </div>
+              {kutipan && <p class="line-clamp-6 p-4 text-sm leading-relaxed text-teks-lembut">{kutipan}</p>}
+              <a href="/profil-dinas/profil-pimpinan" class="flex items-center justify-between border-t border-garis px-4 py-3 text-sm font-semibold text-biru-600 transition hover:bg-langit dark:text-biru-300">
+                Profil pimpinan
+                <Ikon nama="panah-kanan" class="size-4" />
+              </a>
+            </div>
+          </section>
+        )}
+
+        <section class="motif-komdigi rounded bg-biru-900 p-6 text-white" aria-labelledby="judul-darurat">
+          <div class="flex items-center gap-3">
+            <span class="flex size-11 items-center justify-center rounded bg-darurat">
+              <Ikon nama="telepon" class="size-5" />
+            </span>
+            <h2 id="judul-darurat" class="text-lg font-bold">Kendari Siaga 112</h2>
+          </div>
+          <p class="mt-3 text-sm leading-relaxed text-biru-100">{darurat.ringkas}</p>
+          <ul class="mt-5 space-y-2">
+            <li>
+              <a href="tel:112" class="flex items-center justify-between rounded bg-white px-4 py-3 text-sm font-semibold text-biru-900 transition hover:bg-biru-50">
+                Hubungi 112
+                <Ikon nama="telepon" class="size-4" />
+              </a>
+            </li>
+            <li>
+              <a href="/layanan/telpon-darurat-112" class="flex items-center justify-between rounded border border-white/25 px-4 py-3 text-sm font-semibold transition hover:bg-white/10">
+                Tentang layanan 112
+                <Ikon nama="panah-kanan" class="size-4" />
+              </a>
+            </li>
+          </ul>
+        </section>
+      </aside>
+    </div>
+  </section>
+
+  <!-- Tautan terkait -->
+  <nav class="border-t border-garis bg-white py-8 dark:bg-malam" aria-label="Tautan terkait">
+    <ul class="wadah grid grid-cols-1 gap-x-6 gap-y-3 sm:grid-cols-2 lg:flex lg:items-center lg:justify-between">
+      {tautanTerkait.map((t) => (
+        <li>
+          <a href={t.href} target="_blank" rel="noopener noreferrer" class="group inline-flex items-center gap-2 text-sm font-semibold text-biru-800 transition hover:text-biru-600 dark:text-biru-100 dark:hover:text-white">
+            {t.label}
+            <Ikon nama="panah-kanan" class="size-3.5 -rotate-45 transition group-hover:translate-x-0.5" />
+          </a>
+        </li>
+      ))}
+    </ul>
+  </nav>
 </Base>
 
 <script>
-  // Tab loket: klik, atau panah kiri/kanan saat fokus di daftar tab.
-  const tab = [...document.querySelectorAll<HTMLButtonElement>('[data-tab]')];
+  const kurangiGerak = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  const pilih = (target: HTMLButtonElement) => {
-    for (const t of tab) {
-      const aktif = t === target;
-      t.setAttribute('aria-selected', String(aktif));
-      t.tabIndex = aktif ? 0 : -1;
-      const panel = document.getElementById(t.getAttribute('aria-controls') ?? '');
-      if (panel) panel.hidden = !aktif;
-    }
-  };
+  // Sorotan: tombol nomor memilih slide; bergilir tiap 7 detik kecuali disentuh atau gerak dikurangi.
+  const sorotan = document.querySelector<HTMLElement>('[data-sorotan]');
 
-  tab.forEach((t, i) => {
-    t.addEventListener('click', () => pilih(t));
-    t.addEventListener('keydown', (e) => {
-      const arah = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0;
-      if (!arah) return;
-      const berikut = tab[(i + arah + tab.length) % tab.length];
-      pilih(berikut);
-      berikut.focus();
-    });
+  if (sorotan) {
+    const slide = [...sorotan.querySelectorAll<HTMLElement>('[data-slide]')];
+    const tombol = [...sorotan.querySelectorAll<HTMLButtonElement>('[data-ke]')];
+    let aktif = 0;
+    let giliran: ReturnType<typeof setInterval> | undefined;
+
+    const tampil = (n: number) => {
+      aktif = (n + slide.length) % slide.length;
+      slide.forEach((s, i) => (s.hidden = i !== aktif));
+      tombol.forEach((t, i) => t.setAttribute('aria-current', String(i === aktif)));
+    };
+
+    const jalan = () => {
+      clearInterval(giliran);
+      if (!kurangiGerak && slide.length > 1) giliran = setInterval(() => tampil(aktif + 1), 7000);
+    };
+
+    tombol.forEach((t, i) => t.addEventListener('click', () => { tampil(i); jalan(); }));
+    sorotan.addEventListener('mouseenter', () => clearInterval(giliran));
+    sorotan.addEventListener('mouseleave', jalan);
+    sorotan.addEventListener('focusin', () => clearInterval(giliran));
+    sorotan.addEventListener('focusout', jalan);
+    jalan();
+  }
+
+  // Carousel kabar: tombol panah menggeser sejauh satu layar jalur.
+  document.querySelectorAll<HTMLElement>('[data-geser]').forEach((wadah) => {
+    const jalur = wadah.querySelector<HTMLElement>('[data-jalur]');
+    wadah.querySelectorAll<HTMLButtonElement>('[data-arah]').forEach((b) =>
+      b.addEventListener('click', () =>
+        jalur?.scrollBy({ left: Number(b.dataset.arah) * jalur.clientWidth * 0.9, behavior: kurangiGerak ? 'auto' : 'smooth' }),
+      ),
+    );
   });
 </script>

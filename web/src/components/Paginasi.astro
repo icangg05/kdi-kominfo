@@ -26,8 +26,8 @@ const nomor = Array.from({ length: Math.min(5, halamanTerakhir) }, (_, i) => mul
     <a
       href={tautan(halaman - 1)}
       class:list={[
-        'rounded border border-biru-200 px-3 py-2 text-sm transition',
-        halaman <= 1 ? 'pointer-events-none opacity-40' : 'hover:bg-biru-50',
+        'rounded border border-biru-200 px-3 py-2 text-sm transition dark:border-biru-800',
+        halaman <= 1 ? 'pointer-events-none opacity-40' : 'hover:bg-biru-50 dark:hover:bg-white/5',
       ]}
       aria-disabled={halaman <= 1}
     >
@@ -42,7 +42,7 @@ const nomor = Array.from({ length: Math.min(5, halamanTerakhir) }, (_, i) => mul
           'min-w-10 rounded border px-3 py-2 text-center text-sm transition',
           n === halaman
             ? 'border-biru-600 bg-biru-600 font-semibold text-white'
-            : 'border-biru-200 hover:bg-biru-50',
+            : 'border-biru-200 hover:bg-biru-50 dark:border-biru-800 dark:hover:bg-white/5',
         ]}
       >
         {n}
@@ -52,8 +52,8 @@ const nomor = Array.from({ length: Math.min(5, halamanTerakhir) }, (_, i) => mul
     <a
       href={tautan(halaman + 1)}
       class:list={[
-        'rounded border border-biru-200 px-3 py-2 text-sm transition',
-        halaman >= halamanTerakhir ? 'pointer-events-none opacity-40' : 'hover:bg-biru-50',
+        'rounded border border-biru-200 px-3 py-2 text-sm transition dark:border-biru-800',
+        halaman >= halamanTerakhir ? 'pointer-events-none opacity-40' : 'hover:bg-biru-50 dark:hover:bg-white/5',
       ]}
       aria-disabled={halaman >= halamanTerakhir}
     >

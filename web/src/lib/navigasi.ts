@@ -24,7 +24,14 @@ export const menuUtama: Tautan[] = [
     ],
   },
   { label: 'Berita', href: '/berita' },
-  { label: 'Galeri', href: '/galeri' },
+  {
+    label: 'Galeri',
+    href: '/galeri',
+    anak: [
+      { label: 'Foto', href: '/galeri' },
+      { label: 'Video', href: '/galeri/video' },
+    ],
+  },
   { label: 'Dokumen', href: '/dokumen' },
 ];
 
@@ -52,7 +59,8 @@ export const tautanFooter: { judul: string; item: Tautan[] }[] = [
     judul: 'Informasi',
     item: [
       { label: 'Berita', href: '/berita' },
-      { label: 'Galeri', href: '/galeri' },
+      { label: 'Galeri Foto', href: '/galeri' },
+      { label: 'Galeri Video', href: '/galeri/video' },
       { label: 'Dokumen', href: '/dokumen' },
     ],
   },

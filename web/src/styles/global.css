@@ -1,10 +1,31 @@
-@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wdth,wght@0,85..100,300..700;1,85..100,300..700&display=swap");
 @import "tailwindcss";
 
+/* Mode gelap hanya lewat tombol (data-tema="gelap" di <html>), bukan preferensi sistem: bawaan selalu terang. */
+@custom-variant dark (&:where([data-tema="gelap"], [data-tema="gelap"] *));
+
+/* IBM Plex Sans di-host sendiri (variabel 400-700, OFL) supaya tidak menunggu Google Fonts di jaringan seluler. */
+@font-face {
+  font-family: "IBM Plex Sans";
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url("/fonts/ibm-plex-sans-latin.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: "IBM Plex Sans";
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url("/fonts/ibm-plex-sans-latin-ext.woff2") format("woff2");
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
 /*
- * Bahasa visual "aula pelayanan": dinding aula terang, papan display navy
- * dengan angka LED amber, dan tanda loket berwarna per zona layanan.
- * Semua sudut memakai `rounded` (4px) — keputusan pemilik, jangan diperbesar.
+ * Tata letak dan palet mengikuti beranda komdigi.go.id: biru instansi dominan,
+ * bidang putih dan biru muda, panel gradien biru. Semua sudut memakai `rounded`
+ * (4px), keputusan pemilik, jadi bentuk bulat Komdigi diterjemahkan ke 4px.
  */
 @theme {
   --font-sans: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
@@ -21,53 +42,53 @@
   --color-biru-900: #0b2f5c;
   --color-biru-950: #071f3d;
 
-  /* Aula dan papan display */
-  --color-aula: #f3f5f9;
-  --color-papan: #0d1526;
-  --color-bezel: #25324d;
-  --color-led: #ffb000;
+  /* Bidang biru muda untuk panel dan pita isi, seperti blok berita Komdigi. */
+  --color-langit: #eef4fb;
+  /* Kartu angka dan panel topik. */
+  --color-toska: #0d7f77;
+  --color-nila: #2f3f9e;
+  /* Hanya untuk layanan darurat 112. */
+  --color-darurat: #d62d20;
 
-  --color-tinta: #0f1a2e;
   --color-teks: #1c2536;
   --color-teks-lembut: #4a5568;
-  --color-garis: #d9dfea;
-}
+  --color-garis: #dbe3ef;
 
-/* Zona loket dipakai lewat var() dinamis di beranda, jadi variabelnya selalu dikeluarkan. */
-@theme static {
-  /* Zona loket: warna pekat untuk bidang, varian terang untuk teks di atas papan. */
-  --color-zona-a: #0b4ea2;
-  --color-zona-b: #0a7e6e;
-  --color-zona-c: #c0266d;
-  --color-zona-d: #d62d20;
-  --color-zona-a-terang: #6aa6f2;
-  --color-zona-b-terang: #3cc9ae;
-  --color-zona-c-terang: #f36aa6;
-  --color-zona-d-terang: #ff6a5c;
+  /* Mode gelap: latar halaman dan permukaan kartu. Panel biru tetap memakai skala biru. */
+  --color-malam: #05152b;
+  --color-malam-kartu: #0c2344;
 }
 
 @layer base {
   html {
     scroll-behavior: smooth;
-    scrollbar-color: #9aa8c2 var(--color-aula);
+    scrollbar-color: #8bb9ea #f2f7fd;
+  }
+
+  /* Token netral hanya dipakai di bidang terang, jadi cukup dibalik nilainya. */
+  :root[data-tema="gelap"] {
+    color-scheme: dark;
+    scrollbar-color: #2c4f7c #05152b;
+    --color-langit: #0a1d38;
+    --color-teks: #dfe8f5;
+    --color-teks-lembut: #9fb6d4;
+    --color-garis: #1d3558;
   }
 
   body {
-    @apply bg-aula font-sans text-teks antialiased;
+    @apply bg-white font-sans text-teks antialiased dark:bg-malam;
   }
 
   ::selection {
-    background: var(--color-led);
-    color: var(--color-papan);
+    background: var(--color-biru-600);
+    color: #fff;
   }
 
+  /* Cincin ganda: garis putih di dalam, biru di luar, terlihat di bidang terang maupun biru tua. */
   :focus-visible {
-    outline: 2px solid var(--color-zona-a);
+    outline: 2px solid var(--color-biru-600);
     outline-offset: 2px;
-  }
-
-  .papan :focus-visible {
-    outline-color: var(--color-led);
+    box-shadow: 0 0 0 2px #fff;
   }
 
   /* Isi dari RichEditor admin dirender apa adanya, jadi elemennya digayakan di sini. */
@@ -76,7 +97,7 @@
   }
 
   .prosa :where(h2, h3, h4) {
-    @apply mt-8 mb-3 font-semibold text-tinta;
+    @apply mt-8 mb-3 font-semibold text-biru-900 dark:text-white;
   }
 
   .prosa :where(h2) { @apply text-2xl; }
@@ -85,83 +106,57 @@
 
   .prosa :where(ul) { @apply mb-4 list-disc space-y-2 pl-5 text-teks-lembut; }
   .prosa :where(ol) { @apply mb-4 list-decimal space-y-2 pl-5 text-teks-lembut; }
-  .prosa :where(a) { @apply text-biru-600 underline decoration-biru-300 underline-offset-3 hover:text-biru-800; }
+  .prosa :where(a) { @apply text-biru-600 underline decoration-biru-300 underline-offset-3 hover:text-biru-800 dark:text-biru-300 dark:decoration-biru-700 dark:hover:text-white; }
   .prosa :where(strong) { @apply font-semibold text-teks; }
   .prosa :where(img) { @apply my-6 rounded; }
-  .prosa :where(blockquote) { @apply my-6 border-l-2 border-biru-300 pl-4 italic text-teks-lembut; }
+  .prosa :where(blockquote) { @apply my-6 border-l-2 border-biru-300 pl-4 italic text-teks-lembut dark:border-biru-700; }
   .prosa :where(table) { @apply my-6 w-full text-left text-sm; }
-  .prosa :where(th, td) { @apply border border-biru-100 px-3 py-2; }
+  .prosa :where(th, td) { @apply border border-garis px-3 py-2; }
 }
 
 @utility wadah {
   @apply mx-auto w-full max-w-[1280px] px-4 lg:px-8;
 }
 
-/* Lebar 85% dari IBM Plex Sans untuk judul dan papan penanda. */
-@utility sempit {
-  font-stretch: 85%;
-}
-
-/* Angka papan display: amber, lebar tetap. Tekstur titik (`led-titik`) hanya untuk angka berukuran display, sekitar 4rem ke atas. */
-@utility led {
-  color: var(--color-led);
-  font-stretch: 85%;
-  font-variant-numeric: tabular-nums;
-}
-
-@utility led-titik {
-  -webkit-mask-image: radial-gradient(circle, #000 58%, transparent 64%);
-  mask-image: radial-gradient(circle, #000 58%, transparent 64%);
-  -webkit-mask-size: 4px 4px;
-  mask-size: 4px 4px;
-}
-
-/* Bingkai logam papan display; sambungan antarmodul lebih gelap dari bingkainya. */
-@utility bingkai-papan {
-  @apply rounded bg-bezel p-1.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.1),0_32px_64px_-32px_rgba(13,21,38,0.65)] sm:p-2;
-}
-
-/* Motif lama untuk bidang gelap halaman dalam. */
+/* Pola lengkung halus untuk bidang biru tua, dipakai juga di halaman dalam. */
 @utility motif-komdigi {
   background-image:
     radial-gradient(circle at 88% 18%, rgba(255, 255, 255, 0.07) 0, transparent 38%),
     radial-gradient(circle at 12% 88%, rgba(255, 255, 255, 0.05) 0, transparent 42%);
 }
 
-@keyframes teks-jalan {
-  to { transform: translateX(-50%); }
+/* Kisi titik tipis seperti peta Komdigi di latar bagian transformasi digital. */
+@utility kisi-titik {
+  background-image: radial-gradient(rgba(139, 185, 234, 0.22) 1px, transparent 1.6px);
+  background-size: 14px 14px;
 }
 
-/* Kode loket berkedip dua kali seperti papan antrean memanggil. */
-@keyframes panggil {
-  0%, 50%, 100% { opacity: 1; }
-  25%, 75% { opacity: 0.2; }
+/* Kartu daftar (berita, galeri, dokumen, video): putih bertepi tipis dengan bayangan, supaya tidak menyatu dengan latar. */
+@utility kartu-timbul {
+  @apply rounded border border-garis bg-white shadow-[0_1px_2px_rgba(7,31,61,0.06),0_10px_24px_-12px_rgba(7,31,61,0.28)] transition dark:bg-malam-kartu dark:shadow-[0_1px_2px_rgba(0,0,0,0.4),0_10px_24px_-12px_rgba(0,0,0,0.75)];
+
+  &:hover {
+    @apply border-biru-200 shadow-[0_2px_4px_rgba(7,31,61,0.08),0_20px_40px_-18px_rgba(7,31,61,0.42)] dark:border-biru-700 dark:shadow-[0_2px_4px_rgba(0,0,0,0.45),0_20px_40px_-18px_rgba(0,0,0,0.85)];
+  }
 }
 
-/* Papan menyala baris demi baris saat halaman dibuka. */
-@keyframes nyala {
-  from { opacity: 0; filter: brightness(1.8); }
-  to { opacity: 1; filter: none; }
+@utility tanpa-scrollbar {
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+@keyframes sorot-masuk {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: none; }
 }
 
 @media (prefers-reduced-motion: no-preference) {
-  .nyala {
-    animation: nyala 700ms cubic-bezier(0.16, 1, 0.3, 1) both;
-    animation-delay: calc(var(--i, 0) * 90ms);
-  }
-
-  .teks-jalan {
-    animation: teks-jalan var(--durasi, 60s) linear infinite;
-  }
-
-  .teks-jalan-wadah:hover .teks-jalan,
-  .teks-jalan-wadah:focus-within .teks-jalan {
-    animation-play-state: paused;
-  }
-
-  .loket:hover .loket-kode,
-  .loket:focus-visible .loket-kode {
-    animation: panggil 900ms steps(1, end) 1;
+  /* Judul sorotan naik pelan setiap kali slide berganti. */
+  [data-slide]:not([hidden]) {
+    animation: sorot-masuk 650ms cubic-bezier(0.16, 1, 0.3, 1) both;
   }
 }
 

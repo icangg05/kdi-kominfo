@@ -1,0 +1,74 @@
+---
+import Ikon from '../../components/Ikon.astro';
+import JudulHalaman from '../../components/JudulHalaman.astro';
+import KosongAda from '../../components/KosongAda.astro';
+import Paginasi from '../../components/Paginasi.astro';
+import TabGaleri from '../../components/TabGaleri.astro';
+import Base from '../../layouts/Base.astro';
+import { api, query, tanggalPanjang, type Halaman } from '../../lib/api';
+
+type Video = { judul: string; tanggal: string | null; tautan: string; youtubeId: string | null };
+
+const page = Number(Astro.url.searchParams.get('page') ?? 1) || 1;
+const daftar = await api<Halaman<Video>>(`/video${query({ page })}`, Astro.request);
+---
+
+<Base judul="Galeri Video" deskripsi="Dokumentasi video kegiatan Diskominfo Kota Kendari.">
+  <JudulHalaman
+    judul="Galeri Video"
+    keterangan="Rekaman kegiatan dan informasi layanan Diskominfo Kota Kendari."
+    remah={[{ label: 'Galeri', href: '/galeri' }, { label: 'Video' }]}
+  />
+
+  <div class="wadah py-12">
+    <TabGaleri aktif="video" />
+
+    {daftar.data.length > 0 ? (
+      <>
+        <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {daftar.data.map((v) => (
+            <article class="kartu-timbul group overflow-hidden">
+              <div class="relative aspect-video overflow-hidden bg-biru-900" data-video-wadah>
+                <!-- Tanpa JavaScript tautan membuka YouTube; dengan JavaScript pemutar disematkan di tempat. -->
+                <a href={v.tautan} target="_blank" rel="noopener noreferrer" class="absolute inset-0 block" data-video={v.youtubeId ?? undefined} data-judul={v.judul}>
+                  {v.youtubeId && (
+                    <img src={`https://i.ytimg.com/vi/${v.youtubeId}/hqdefault.jpg`} alt="" loading="lazy" class="size-full object-cover transition duration-500 group-hover:scale-105" />
+                  )}
+                  <span class="absolute inset-0 flex items-center justify-center bg-biru-950/35 transition group-hover:bg-biru-950/15">
+                    <span class="flex size-14 items-center justify-center rounded bg-white text-biru-700 shadow-[0_10px_24px_-8px_rgba(7,31,61,0.6)] transition group-hover:scale-105">
+                      <Ikon nama="putar" class="size-6" />
+                    </span>
+                  </span>
+                  <span class="sr-only">Putar video {v.judul}</span>
+                </a>
+              </div>
+              <div class="p-4">
+                <h2 class="font-semibold leading-snug text-biru-950 dark:text-white">{v.judul}</h2>
+                <p class="mt-1 text-xs text-teks-lembut">{tanggalPanjang(v.tanggal)}</p>
+              </div>
+            </article>
+          ))}
+        </div>
+        <Paginasi halaman={daftar.meta.page} halamanTerakhir={daftar.meta.lastPage} />
+      </>
+    ) : (
+      <KosongAda pesan="Belum ada video di galeri." />
+    )}
+  </div>
+</Base>
+
+<script>
+  // Pemutar YouTube baru dimuat saat diklik, supaya halaman tetap ringan di seluler.
+  document.querySelectorAll<HTMLAnchorElement>('[data-video]').forEach((tautan) => {
+    tautan.addEventListener('click', (e) => {
+      e.preventDefault();
+      const iframe = document.createElement('iframe');
+      iframe.src = `https://www.youtube-nocookie.com/embed/${tautan.dataset.video}?autoplay=1&rel=0`;
+      iframe.title = tautan.dataset.judul ?? 'Video';
+      iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
+      iframe.allowFullscreen = true;
+      iframe.className = 'absolute inset-0 size-full';
+      tautan.replaceWith(iframe);
+    });
+  });
+</script>

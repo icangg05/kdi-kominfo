@@ -26,11 +26,11 @@ const [utama, ...lainnya] = data.foto;
   <div class="wadah py-12">
     <div class="grid gap-12 lg:grid-cols-[360px_1fr]">
       <aside>
-        <div class="overflow-hidden rounded bg-biru-50">
+        <div class="overflow-hidden rounded bg-biru-50 dark:bg-biru-900">
           {utama ? (
             <img src={utama} alt={`Foto ${data.nama ?? ''}`} class="aspect-3/4 w-full object-cover" />
           ) : (
-            <div class="flex aspect-3/4 items-center justify-center text-biru-300">
+            <div class="flex aspect-3/4 items-center justify-center text-biru-300 dark:text-biru-700">
               <Ikon nama="orang" class="size-16" />
             </div>
           )}

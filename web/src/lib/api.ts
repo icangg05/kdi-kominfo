@@ -12,6 +12,16 @@ export type Berita = {
   ringkasan: string;
 };
 
+export type Dokumen = {
+  id: number;
+  judul: string;
+  deskripsi: string;
+  kategori: Kategori | null;
+  totalUnduhan: number;
+  ekstensi: string;
+  unduh: string;
+};
+
 export type Halaman<T> = { data: T[]; meta: { page: number; lastPage: number; total: number } };
 
 /**
@@ -56,4 +66,12 @@ export function query(params: Record<string, string | number | undefined | null>
   const s = q.toString();
 
   return s ? `?${s}` : '';
+}
+
+/**
+ * Origin publik untuk URL absolut (canonical, og:image, sitemap). Di balik proxy, Astro.url bisa
+ * masih http, jadi SITE_URL (diisi dari APP_URL di compose) diutamakan.
+ */
+export function asalSitus(url: URL): string {
+  return (import.meta.env.SITE_URL || process.env.SITE_URL || url.origin).replace(/\/$/, '');
 }

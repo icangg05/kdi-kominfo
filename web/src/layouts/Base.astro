@@ -1,15 +1,28 @@
 ---
 import Footer from '../components/Footer.astro';
 import Header from '../components/Header.astro';
-import { api } from '../lib/api';
+import { api, asalSitus } from '../lib/api';
 import '../styles/global.css';
 
 interface Props {
   judul: string;
   deskripsi?: string;
+  /** Gambar pratinjau saat tautan dibagikan; path relatif dijadikan absolut. */
+  gambar?: string | null;
+  jenis?: 'website' | 'article';
+  /** Tanggal terbit (ISO), hanya untuk jenis article. */
+  terbit?: string | null;
+  noindex?: boolean;
 }
 
-const { judul, deskripsi = 'Situs resmi Dinas Komunikasi dan Informatika Kota Kendari.' } = Astro.props;
+const {
+  judul,
+  deskripsi = 'Situs resmi Dinas Komunikasi dan Informatika Kota Kendari.',
+  gambar,
+  jenis = 'website',
+  terbit,
+  noindex = false,
+} = Astro.props;
 
 type Global = {
   pengaturan: Record<string, string | null>;
@@ -28,6 +41,9 @@ try {
 
 const { telp, email, fb, ig, tt, yt } = global.pengaturan;
 const judulPenuh = `${judul} | Diskominfo Kota Kendari`;
+const asal = asalSitus(Astro.url);
+const kanonis = asal + Astro.url.pathname;
+const gambarPenuh = new URL(gambar || '/img/og-default.jpg', asal + '/').href;
 ---
 
 <html lang="id">
@@ -37,10 +53,44 @@ const judulPenuh = `${judul} | Diskominfo Kota Kendari`;
     <link rel="icon" href="/favicon.ico" />
     <title>{judulPenuh}</title>
     <meta name="description" content={deskripsi} />
-    <meta property="og:title" content={judulPenuh} />
+    <link rel="canonical" href={kanonis} />
+    {noindex && <meta name="robots" content="noindex" />}
+    <meta name="theme-color" content="#0b2f5c" />
+
+    <meta property="og:site_name" content="Diskominfo Kota Kendari" />
+    <meta property="og:locale" content="id_ID" />
+    <meta property="og:type" content={jenis} />
+    <meta property="og:url" content={kanonis} />
+    <meta property="og:title" content={judul} />
     <meta property="og:description" content={deskripsi} />
-    <meta property="og:type" content="website" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <meta property="og:image" content={gambarPenuh} />
+    <meta property="og:image:alt" content={judul} />
+    {!gambar && <meta property="og:image:width" content="1200" />}
+    {!gambar && <meta property="og:image:height" content="630" />}
+    {jenis === 'article' && terbit && <meta property="article:published_time" content={terbit} />}
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={judul} />
+    <meta name="twitter:description" content={deskripsi} />
+    <meta name="twitter:image" content={gambarPenuh} />
+    <slot name="head" />
+    <link rel="preload" href="/fonts/ibm-plex-sans-latin.woff2" as="font" type="font/woff2" crossorigin />
+    <!--
+      Dipasang sebelum halaman dilukis supaya tidak berkedip. Kunci `theme` sama dengan panel Filament
+      (satu origin), jadi pilihan di situs dan di admin saling mengikuti. Tanpa pilihan: terang.
+    -->
+    <script is:inline>
+      const terapkanTema = () => {
+        try {
+          const t = localStorage.getItem('theme');
+          const gelap = t === 'dark' || (t === 'system' && matchMedia('(prefers-color-scheme: dark)').matches);
+          if (gelap) document.documentElement.dataset.tema = 'gelap';
+          else delete document.documentElement.dataset.tema;
+        } catch {}
+      };
+      terapkanTema();
+      // Kembali dari admin lewat tombol Back memulihkan halaman dari cache; tema bisa sudah diganti di sana.
+      addEventListener('pageshow', (e) => e.persisted && terapkanTema());
+    </script>
   </head>
   <body class="flex min-h-screen flex-col">
     <a href="#konten" class="sr-only focus:not-sr-only focus:absolute focus:z-50 focus:m-3 focus:rounded focus:bg-white focus:px-4 focus:py-2 focus:text-biru-700">

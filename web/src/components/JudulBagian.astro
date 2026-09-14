@@ -1,32 +1,30 @@
 ---
 import Ikon from './Ikon.astro';
 
-/** Judul bagian bergaya papan penunjuk arah aula: kotak panah, judul, tautan opsional di kanan. */
+/** Judul bagian gaya Komdigi: huruf kapital tebal, tautan "Lihat lainnya" di kanan. */
 interface Props {
   judul: string;
   keterangan?: string;
   tautan?: { label: string; href: string };
   id?: string;
+  terang?: boolean;
 }
 
-const { judul, keterangan, tautan, id } = Astro.props;
+const { judul, keterangan, tautan, id, terang = false } = Astro.props;
 ---
 
-<div class="mb-8 flex flex-wrap items-end justify-between gap-x-8 gap-y-4 lg:mb-10">
-  <div class="flex items-start gap-4">
-    <span class="mt-1 flex size-10 shrink-0 items-center justify-center rounded bg-papan text-led lg:size-11" aria-hidden="true">
-      <Ikon nama="panah-kanan" class="size-5" />
-    </span>
-    <div>
-      <h2 id={id} class="sempit text-3xl font-semibold leading-tight tracking-tight text-balance text-tinta lg:text-[2.5rem]">{judul}</h2>
-      {keterangan && <p class="mt-2 max-w-[62ch] text-teks-lembut">{keterangan}</p>}
-    </div>
+<div class="mb-6 flex flex-wrap items-end justify-between gap-x-8 gap-y-3 lg:mb-8">
+  <div>
+    <h2 id={id} class:list={['text-lg font-bold tracking-wide text-balance uppercase lg:text-xl', terang ? 'text-white' : 'text-biru-950 dark:text-white']}>{judul}</h2>
+    {keterangan && <p class:list={['mt-2 max-w-[62ch] text-sm', terang ? 'text-biru-100' : 'text-teks-lembut']}>{keterangan}</p>}
   </div>
 
   {tautan && (
-    <a href={tautan.href} class="group inline-flex items-center gap-2 text-sm font-semibold text-biru-600 hover:text-biru-800">
+    <a href={tautan.href} class:list={['group inline-flex items-center gap-2.5 text-sm font-semibold', terang ? 'text-white' : 'text-biru-600 hover:text-biru-800 dark:text-biru-300 dark:hover:text-white']}>
+      <span class:list={['flex size-7 items-center justify-center rounded border transition', terang ? 'border-white/40 group-hover:bg-white group-hover:text-biru-800' : 'border-biru-300 dark:border-biru-700 group-hover:border-biru-600 group-hover:bg-biru-600 group-hover:text-white']}>
+        <Ikon nama="panah-kanan" class="size-3.5" />
+      </span>
       {tautan.label}
-      <Ikon nama="panah-kanan" class="size-4 transition-transform group-hover:translate-x-1" />
     </a>
   )}
 </div>

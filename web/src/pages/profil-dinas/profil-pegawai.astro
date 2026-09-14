@@ -36,12 +36,13 @@ const dasar = search ? { search } : {};
       <input
         id="cari-pegawai"
         type="search"
+          autocomplete="off"
         name="search"
         value={search}
         placeholder="Cari nama pegawai…"
-        class="w-full rounded border border-biru-200 py-2.5 pl-4 pr-11 text-sm outline-none transition focus:border-biru-500 focus:ring-2 focus:ring-biru-200"
+        class="w-full rounded border border-biru-200 py-2.5 pl-4 pr-11 text-sm outline-none transition focus:border-biru-500 focus:ring-2 focus:ring-biru-200 dark:border-biru-800 dark:bg-malam-kartu dark:focus:ring-biru-800"
       />
-      <button type="submit" class="absolute right-1 top-1/2 -translate-y-1/2 rounded p-2 text-biru-600 hover:bg-biru-50" aria-label="Cari">
+      <button type="submit" class="absolute right-1 top-1/2 -translate-y-1/2 rounded p-2 text-biru-600 hover:bg-biru-50 dark:text-biru-300 dark:hover:bg-white/5" aria-label="Cari">
         <Ikon nama="cari" class="size-4" />
       </button>
     </form>
@@ -50,20 +51,20 @@ const dasar = search ? { search } : {};
       <>
         <ul class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {daftar.data.map((g) => (
-            <li class="flex gap-4 rounded border border-biru-100 p-5">
-              <div class="size-16 shrink-0 overflow-hidden rounded bg-biru-50">
+            <li class="flex gap-4 rounded border border-biru-100 p-5 dark:border-garis">
+              <div class="size-16 shrink-0 overflow-hidden rounded bg-biru-50 dark:bg-biru-900">
                 {g.foto ? (
                   <img src={g.foto} alt="" loading="lazy" class="size-full object-cover" />
                 ) : (
-                  <span class="flex size-full items-center justify-center text-biru-300">
+                  <span class="flex size-full items-center justify-center text-biru-300 dark:text-biru-700">
                     <Ikon nama="orang" class="size-7" />
                   </span>
                 )}
               </div>
 
               <div class="min-w-0">
-                <p class="font-semibold leading-snug text-biru-900">{g.nama}</p>
-                {g.jabatan && <p class="mt-1 text-sm text-biru-600">{g.jabatan}</p>}
+                <p class="font-semibold leading-snug text-biru-900 dark:text-white">{g.nama}</p>
+                {g.jabatan && <p class="mt-1 text-sm text-biru-600 dark:text-biru-300">{g.jabatan}</p>}
                 {g.nip && <p class="mt-1 text-xs text-teks-lembut">NIP {g.nip}</p>}
               </div>
             </li>

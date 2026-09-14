@@ -48,8 +48,8 @@ const data = await api<Data>('/profil-dinas/tentang-kami', Astro.request);
       )}
 
       {data.misi.length > 0 && (
-        <section class="rounded border border-biru-100 p-8">
-          <h2 class="mb-5 text-xl font-bold text-biru-900">Misi</h2>
+        <section class="rounded border border-biru-100 p-8 dark:border-garis">
+          <h2 class="mb-5 text-xl font-bold text-biru-900 dark:text-white">Misi</h2>
           <ol class="space-y-4">
             {data.misi.map((m, i) => (
               <li class="flex gap-4">
