@@ -3,14 +3,14 @@ import Ikon from '../components/Ikon.astro';
 import JudulBagian from '../components/JudulBagian.astro';
 import KartuBerita from '../components/KartuBerita.astro';
 import Base from '../layouts/Base.astro';
-import { api, tanggalPanjang, type Berita, type Dokumen, type Halaman, type Kategori, asalSitus } from '../lib/api';
+import { api, cadanganGambar, GAMBAR_DEFAULT, tanggalPanjang, type Berita, type Dokumen, type Halaman, type Kategori, asalSitus } from '../lib/api';
 import { bidangDinas, layananUtama, tautanTerkait } from '../lib/konten';
 import { layanan } from '../lib/layanan';
 
 type Beranda = {
   sambutanKadis: string | null;
   taglineSambutan: string[];
-  kadis: { nama: string; foto: unknown; awal_periode: number; akhir_periode: number } | null;
+  kadis: { nama: string; foto: string | null; awal_periode: number; akhir_periode: number } | null;
   galeri: { judul: string; tanggal: string | null; gambar: string | null }[];
   berita: Berita[];
   pengunjung: { hariIni: number; total: number };
@@ -24,16 +24,7 @@ const [data, global, arsip, dokumen, galeri] = await Promise.all([
   api<Halaman<unknown>>('/galeri'),
 ]);
 
-// Foto pimpinan dari admin tersimpan sebagai path relatif disk publik.
-const berkas = (v?: string | null) => (!v ? null : /^(https?:)?\//.test(v) ? v : `/storage/${v}`);
-
-const fotoKadis = Array.isArray(data.kadis?.foto)
-  ? berkas(
-      (data.kadis!.foto as { value?: string }[] | string[])
-        .map((f) => (typeof f === 'string' ? f : f.value))
-        .filter(Boolean)[0],
-    )
-  : null;
+const fotoKadis = data.kadis?.foto ?? null;
 
 const inisial = (data.kadis?.nama ?? '').split(',')[0].split(/\s+/).filter(Boolean).slice(0, 2).map((k) => k[0]).join('');
 const kutipan = (data.sambutanKadis ?? '').match(/<p>([\s\S]*?)<\/p>/)?.[1]?.replace(/<[^>]+>/g, '').trim() ?? '';
@@ -91,7 +82,7 @@ const darurat = layanan['telpon-darurat-112'];
               )}
               <span>{tanggalPanjang(b.tanggal)}</span>
             </p>
-            <h2 class="mt-4 text-[2rem] leading-[1.12] font-bold tracking-tight text-balance sm:text-5xl lg:text-[3.5rem]">
+            <h2 class="mt-4 line-clamp-3 text-[2rem] leading-[1.12] font-bold tracking-tight text-balance sm:text-5xl lg:text-[3.5rem]">
               <a href={`/berita/${b.slug}`} class="decoration-2 underline-offset-8 hover:underline">{b.judul}</a>
             </h2>
             <p class="mt-4 line-clamp-2 max-w-2xl text-biru-100 lg:text-lg">{b.ringkasan}</p>
@@ -125,9 +116,8 @@ const darurat = layanan['telpon-darurat-112'];
         <ul class="wadah tanpa-scrollbar flex snap-x snap-mandatory scroll-px-4 gap-5 overflow-x-auto sm:grid sm:grid-cols-2 sm:gap-x-6 lg:grid-cols-4 lg:gap-0 lg:divide-x lg:divide-white/15">
           {deret.map((b) => (
             <li class="group relative flex w-[78%] shrink-0 snap-start items-center gap-3 py-4 sm:w-auto lg:px-5 lg:first:pl-0">
-              <span class="relative flex size-14 shrink-0 items-center justify-center overflow-hidden rounded bg-biru-700 text-biru-300">
-                <Ikon nama="foto" class="size-5" />
-                {b.thumbnail && <img src={b.thumbnail} alt="" loading="lazy" onerror="this.remove()" class="absolute inset-0 size-full object-cover" />}
+              <span class="size-14 shrink-0 overflow-hidden rounded bg-biru-700">
+                <img src={b.thumbnail ?? GAMBAR_DEFAULT} alt="" loading="lazy" onerror={cadanganGambar} class="size-full object-cover" />
               </span>
               <div class="min-w-0">
                 <h3 class="line-clamp-2 text-sm leading-snug font-semibold">
@@ -261,12 +251,7 @@ const darurat = layanan['telpon-darurat-112'];
           {data.galeri.slice(0, 5).map((g) => (
             <li>
               <figure class="group relative aspect-4/3 overflow-hidden rounded bg-biru-900">
-                <span class="absolute inset-0 flex items-start justify-end p-3 text-biru-400" aria-hidden="true">
-                  <Ikon nama="foto" class="size-6" />
-                </span>
-                {g.gambar && (
-                  <img src={g.gambar} alt={g.judul} loading="lazy" onerror="this.remove()" class="absolute inset-0 size-full object-cover transition duration-500 group-hover:scale-105" />
-                )}
+                <img src={g.gambar ?? GAMBAR_DEFAULT} alt={g.judul} loading="lazy" onerror={cadanganGambar} class="absolute inset-0 size-full object-cover transition duration-500 group-hover:scale-105" />
                 <figcaption class="absolute inset-x-0 bottom-0 bg-linear-to-t from-biru-950 via-biru-950/70 to-transparent p-3 pt-10 text-white">
                   <p class="line-clamp-2 text-xs leading-snug font-semibold tracking-wide uppercase">{g.judul}</p>
                   <p class="mt-1 text-[11px] text-biru-200">{tanggalPanjang(g.tanggal)}</p>

@@ -6,10 +6,12 @@ import { waktuWita } from '../lib/waktu';
 interface Props {
   telp?: string;
   email?: string;
+  /** Tautan survei kepuasan; null bila dimatikan di config/app.php. */
+  survei?: string | null;
   jalurAktif: string;
 }
 
-const { telp, email, jalurAktif } = Astro.props;
+const { telp, email, survei, jalurAktif } = Astro.props;
 
 const aktif = (href: string) => href === '/' ? jalurAktif === '/' : jalurAktif.startsWith(href.split('/').slice(0, 2).join('/'));
 
@@ -76,6 +78,16 @@ const awal = waktuWita();
     </form>
 
     <div class="ml-auto flex items-center gap-2">
+      {survei && (
+        <button
+          type="button"
+          class="hidden items-center gap-2 rounded border border-white/25 px-3.5 py-2.5 text-sm font-semibold text-white transition hover:bg-white/10 active:translate-y-px sm:flex"
+          data-buka-survei
+        >
+          <Ikon nama="obrolan" class="size-4" />
+          Survei Kepuasan
+        </button>
+      )}
       <a
         href="tel:112"
         class="flex items-center gap-2 rounded bg-darurat px-3.5 py-2.5 text-sm font-semibold text-white transition hover:bg-[#b8241a] active:translate-y-px"
@@ -87,43 +99,53 @@ const awal = waktuWita();
 
       <button
         type="button"
-        class="rounded p-2 text-white transition hover:bg-white/10 lg:hidden"
+        class="group relative rounded p-2 text-white transition hover:bg-white/10 lg:hidden"
         aria-label="Buka menu"
         aria-expanded="false"
         aria-controls="menu-seluler"
         data-tombol-menu
       >
-        <Ikon nama="menu" class="size-6" />
+        <Ikon nama="menu" class="size-6 transition duration-300 group-aria-expanded:rotate-90 group-aria-expanded:opacity-0" />
+        <Ikon nama="silang" class="absolute inset-2 size-6 -rotate-90 opacity-0 transition duration-300 group-aria-expanded:rotate-0 group-aria-expanded:opacity-100" />
       </button>
     </div>
   </div>
 
-  <!-- Menu seluler: pencarian di atas, lalu daftar datar dengan submenu terbuka. -->
-  <nav id="menu-seluler" hidden class="max-h-[calc(100dvh-72px)] overflow-y-auto border-t border-white/15 lg:hidden" aria-label="Navigasi seluler">
-    <div class="wadah space-y-3 py-4">
-      <form method="get" action="/berita" role="search" class="relative">
-        <label for="cari-seluler" class="sr-only">Cari berita</label>
-        <input id="cari-seluler" name="search" type="search" autocomplete="off" placeholder="Cari berita" class="h-11 w-full rounded bg-white pr-12 pl-4 text-sm text-teks placeholder:text-teks-lembut dark:bg-biru-950" />
-        <button type="submit" class="absolute top-1 right-1 flex size-9 items-center justify-center rounded bg-biru-600 text-white" aria-label="Cari">
-          <Ikon nama="cari" class="size-5" />
-        </button>
-      </form>
-      <ul class="space-y-1">
-        {menuUtama.map((item) => (
-          <li>
-            <a href={item.href} class="block rounded px-3 py-2.5 text-sm font-semibold tracking-wide uppercase hover:bg-white/10">{item.label}</a>
-            {item.anak && (
-              <ul class="mb-2 ml-3 border-l border-white/20 pl-3">
-                {item.anak.map((anak) => (
-                  <li>
-                    <a href={anak.href} class="block rounded px-3 py-2 text-sm text-biru-100 hover:bg-white/10 hover:text-white">{anak.label}</a>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </li>
-        ))}
-      </ul>
+  <!-- Menu seluler: pencarian di atas, lalu daftar datar dengan submenu terbuka.
+       Tinggi dianimasikan lewat grid-rows 0fr→1fr; `invisible` menjaga tautan tak terjangkau Tab saat tertutup. -->
+  <nav id="menu-seluler" class="invisible grid max-h-[calc(100dvh-72px)] grid-rows-[0fr] border-white/15 opacity-0 transition-all duration-300 ease-out data-terbuka:visible data-terbuka:grid-rows-[1fr] data-terbuka:border-t data-terbuka:opacity-100 lg:hidden" aria-label="Navigasi seluler">
+    <div class="min-h-0 overflow-y-auto">
+      <div class="wadah space-y-3 py-4">
+        <form method="get" action="/berita" role="search" class="relative">
+          <label for="cari-seluler" class="sr-only">Cari berita</label>
+          <input id="cari-seluler" name="search" type="search" autocomplete="off" placeholder="Cari berita" class="h-11 w-full rounded bg-white pr-12 pl-4 text-sm text-teks placeholder:text-teks-lembut dark:bg-biru-950" />
+          <button type="submit" class="absolute top-1 right-1 flex size-9 items-center justify-center rounded bg-biru-600 text-white" aria-label="Cari">
+            <Ikon nama="cari" class="size-5" />
+          </button>
+        </form>
+        {survei && (
+          <button type="button" class="flex w-full items-center gap-2 rounded border border-white/25 px-3 py-2.5 text-sm font-semibold hover:bg-white/10" data-buka-survei>
+            <Ikon nama="obrolan" class="size-4" />
+            Survei Kepuasan
+          </button>
+        )}
+        <ul class="space-y-1">
+          {menuUtama.map((item) => (
+            <li>
+              <a href={item.href} class="block rounded px-3 py-2.5 text-sm font-semibold tracking-wide uppercase hover:bg-white/10">{item.label}</a>
+              {item.anak && (
+                <ul class="mb-2 ml-3 border-l border-white/20 pl-3">
+                  {item.anak.map((anak) => (
+                    <li>
+                      <a href={anak.href} class="block rounded px-3 py-2 text-sm text-biru-100 hover:bg-white/10 hover:text-white">{anak.label}</a>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </li>
+          ))}
+        </ul>
+      </div>
     </div>
   </nav>
 </header>
@@ -164,7 +186,7 @@ const awal = waktuWita();
                     href={anak.href}
                     class:list={[
                       'block px-4 py-2.5 text-sm transition hover:bg-langit hover:text-biru-600 dark:hover:text-white',
-                      jalurAktif === anak.href ? 'bg-langit font-semibold text-biru-600 dark:text-biru-300' : 'text-teks-lembut',
+                      jalurAktif === anak.href ? 'bg-langit font-semibold text-biru-600 dark:text-biru-300' : 'font-medium text-teks',
                     ]}
                   >
                     {anak.label}
@@ -179,8 +201,50 @@ const awal = waktuWita();
   </div>
 </nav>
 
+<!-- m-auto wajib: preflight Tailwind menghapus margin bawaan yang memusatkan <dialog>. -->
+{survei && (
+  <dialog
+    id="dialog-survei"
+    aria-labelledby="judul-survei"
+    class="m-auto h-[min(52rem,calc(100dvh-2rem))] max-h-none w-[min(56rem,calc(100%-2rem))] max-w-none rounded bg-white p-0 text-teks shadow-[0_24px_48px_-28px_rgba(7,31,61,0.7)] dark:bg-malam-kartu"
+  >
+    <div class="flex h-full flex-col">
+      <div class="flex items-center gap-3 border-b border-garis py-2 pr-2 pl-4">
+        <h2 id="judul-survei" class="text-sm font-bold tracking-wide text-biru-950 uppercase dark:text-white">Survei Kepuasan Masyarakat</h2>
+        <a href={survei} target="_blank" rel="noopener" class="ml-auto hidden items-center gap-1.5 text-sm font-semibold text-biru-600 hover:underline sm:flex dark:text-biru-300">
+          <Ikon nama="tautan" class="size-4" />
+          Buka di tab baru
+        </a>
+        <form method="dialog" class="ml-auto sm:ml-0">
+          <button class="flex size-10 items-center justify-center rounded transition hover:bg-langit" aria-label="Tutup survei">
+            <Ikon nama="silang" class="size-5" />
+          </button>
+        </form>
+      </div>
+      <iframe data-src={survei} title="Survei Kepuasan Masyarakat" class="min-h-0 w-full flex-1 bg-white"></iframe>
+    </div>
+  </dialog>
+)}
+
 <script>
   import { waktuWita } from '../lib/waktu';
+
+  // Survei dari situs luar baru dimuat saat dibuka, bukan pada setiap kunjungan halaman.
+  const dialogSurvei = document.querySelector<HTMLDialogElement>('#dialog-survei');
+
+  if (dialogSurvei) {
+    const bingkai = dialogSurvei.querySelector('iframe')!;
+
+    document.querySelectorAll('[data-buka-survei]').forEach((b) =>
+      b.addEventListener('click', () => {
+        if (!bingkai.src) bingkai.src = bingkai.dataset.src!;
+        dialogSurvei.showModal();
+      }),
+    );
+
+    // Isi dialog memenuhi kotaknya, jadi klik yang jatuh ke dialog itu sendiri pasti di latar gelap.
+    dialogSurvei.addEventListener('click', (e) => e.target === dialogSurvei && dialogSurvei.close());
+  }
 
   const tombol = document.querySelector<HTMLButtonElement>('[data-tombol-menu]');
   const menu = document.getElementById('menu-seluler');
@@ -188,7 +252,7 @@ const awal = waktuWita();
   tombol?.addEventListener('click', () => {
     const terbuka = tombol.getAttribute('aria-expanded') === 'true';
     tombol.setAttribute('aria-expanded', String(!terbuka));
-    if (menu) menu.hidden = terbuka;
+    menu?.toggleAttribute('data-terbuka', !terbuka);
   });
 
   // Nav desktop melekat tepat saat bilah identitas sudah lewat dari layar.
@@ -204,13 +268,30 @@ const awal = waktuWita();
   const akar = document.documentElement;
 
   if (tombolTema) {
-    tombolTema.addEventListener('click', () => {
+    const gantiTema = () => {
       const gelap = akar.dataset.tema !== 'gelap';
       if (gelap) akar.dataset.tema = 'gelap';
       else delete akar.dataset.tema;
       try {
         localStorage.setItem('theme', gelap ? 'dark' : 'light');
       } catch {}
+    };
+
+    // Tema baru menyebar melingkar dari tombol; tanpa View Transition API atau saat gerak dikurangi, langsung berganti.
+    tombolTema.addEventListener('click', () => {
+      if (!document.startViewTransition || matchMedia('(prefers-reduced-motion: reduce)').matches) return gantiTema();
+
+      const r = tombolTema.getBoundingClientRect();
+      const x = r.left + r.width / 2;
+      const y = r.top + r.height / 2;
+      const jari = Math.hypot(Math.max(x, innerWidth - x), Math.max(y, innerHeight - y));
+
+      document.startViewTransition(gantiTema).ready.then(() => {
+        akar.animate(
+          { clipPath: [`circle(0 at ${x}px ${y}px)`, `circle(${jari}px at ${x}px ${y}px)`] },
+          { duration: 550, easing: 'cubic-bezier(0.4, 0, 0.2, 1)', pseudoElement: '::view-transition-new(root)' },
+        );
+      });
     });
   }
 
@@ -229,3 +310,57 @@ const awal = waktuWita();
     setInterval(tik, 1000);
   }, 1000 - (Date.now() % 1000));
 </script>
+
+<style>
+  /* Dialog memudar dan naik sedikit saat dibuka, kebalikannya saat ditutup. display dan overlay ikut
+     ditransisikan (allow-discrete) supaya dialog tetap tampil sampai animasi tutup selesai. */
+  #dialog-survei,
+  #dialog-survei::backdrop {
+    transition:
+      opacity 300ms cubic-bezier(0.16, 1, 0.3, 1),
+      translate 300ms cubic-bezier(0.16, 1, 0.3, 1),
+      scale 300ms cubic-bezier(0.16, 1, 0.3, 1),
+      background-color 300ms ease,
+      overlay 300ms allow-discrete,
+      display 300ms allow-discrete;
+  }
+
+  #dialog-survei {
+    opacity: 0;
+    translate: 0 1rem;
+    scale: 0.97;
+  }
+
+  #dialog-survei[open] {
+    opacity: 1;
+    translate: 0 0;
+    scale: 1;
+  }
+
+  #dialog-survei::backdrop {
+    background-color: rgb(7 31 61 / 0);
+  }
+
+  #dialog-survei[open]::backdrop {
+    background-color: rgb(7 31 61 / 0.7);
+  }
+
+  @starting-style {
+    #dialog-survei[open] {
+      opacity: 0;
+      translate: 0 1rem;
+      scale: 0.97;
+    }
+
+    #dialog-survei[open]::backdrop {
+      background-color: rgb(7 31 61 / 0);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    #dialog-survei,
+    #dialog-survei::backdrop {
+      transition: none;
+    }
+  }
+</style>

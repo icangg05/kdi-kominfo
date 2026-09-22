@@ -160,6 +160,13 @@
   }
 }
 
+/* Ganti tema: tampilan baru dibuka lewat clip-path dari skrip Header, bukan crossfade bawaan. */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   ::before,

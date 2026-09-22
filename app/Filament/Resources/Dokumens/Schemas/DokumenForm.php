@@ -35,8 +35,8 @@ class DokumenForm
                         'application/vnd.ms-excel',
                         'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
                     ])
-                    ->maxSize(20480)
-                    ->helperText('PDF, Word, atau Excel. Maksimal 20 MB.'),
+                    ->maxSize(config('app.upload.file_maks_kb'))
+                    ->helperText('PDF, Word, atau Excel. Maksimal ' . (config('app.upload.file_maks_kb') / 1024) . ' MB.'),
                 Textarea::make('deskripsi')
                     ->required()
                     ->rows(4)

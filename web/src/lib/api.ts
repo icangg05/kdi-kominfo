@@ -45,6 +45,10 @@ export async function api<T>(path: string, request?: Request): Promise<T> {
   return res.json() as Promise<T>;
 }
 
+/** Sampul pengganti untuk data tanpa gambar, juga dipakai bila gambarnya gagal dimuat. */
+export const GAMBAR_DEFAULT = '/img/gambar-default.webp';
+export const cadanganGambar = `this.onerror=null;this.src='${GAMBAR_DEFAULT}'`;
+
 export function tanggalPanjang(iso: string | null | undefined): string {
   if (!iso) return '';
 

@@ -36,7 +36,7 @@
     }
 
     /*
-     * Scrollbar tipis tanpa panah: batang 4px di jalur transparan, biru saat disentuh kursor.
+     * Scrollbar tipis tanpa panah: batang 4px di jalur transparan, sedikit menggelap saat disentuh kursor.
      * Chrome/Safari memakai ::-webkit-scrollbar. Firefox tidak mengenalnya, jadi memakai properti standar;
      * keduanya tidak digabung karena Chrome mengabaikan ::-webkit-scrollbar bila scrollbar-color diisi.
      */
@@ -58,7 +58,7 @@
 
     ::-webkit-scrollbar-thumb:hover {
         border-width: 2px;
-        background-color: var(--primary-500);
+        background-color: var(--gray-400);
     }
 
     html.dark ::-webkit-scrollbar-thumb {
@@ -66,7 +66,7 @@
     }
 
     html.dark ::-webkit-scrollbar-thumb:hover {
-        background-color: var(--primary-400);
+        background-color: var(--gray-600);
     }
 
     ::-webkit-scrollbar-button {
@@ -375,6 +375,36 @@
     .fi-wi-stats-overview-stat .fi-wi-stats-overview-stat-value {
         font-size: 2.25rem;
         font-weight: 700;
+    }
+
+    /* ---------- Modal Backup Database ---------- */
+    .kdi-info-backup {
+        display: grid;
+        gap: 0.5rem;
+        font-size: 0.875rem;
+    }
+
+    .kdi-info-backup div {
+        display: flex;
+        justify-content: space-between;
+        gap: 1rem;
+        padding: 0.625rem 0.75rem;
+        border: 1px solid var(--gray-200);
+        border-radius: 0.25rem;
+    }
+
+    html.dark .kdi-info-backup div {
+        border-color: var(--gray-800);
+    }
+
+    .kdi-info-backup dt {
+        color: var(--gray-500);
+    }
+
+    .kdi-info-backup dd {
+        font-weight: 600;
+        text-align: right;
+        overflow-wrap: anywhere;
     }
 
     /* ---------- Pita sambutan dasbor ---------- */

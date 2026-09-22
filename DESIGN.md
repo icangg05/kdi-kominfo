@@ -169,9 +169,9 @@ A single blue family from pale biru-50 to navy biru-950 does nearly all the work
 ### Primary
 - **Biru Instansi** (biru-600): the institutional action blue. Primary buttons, search submit squares, active nav underline, link text, category labels, document file badges, selection highlight, focus ring.
 - **Biru Tua** (biru-800): the logo row background, inner page title bands, the document search right panel, text on white buttons.
-- **Biru Malam** (biru-900): footer, Kendari Siaga 112 panel, gallery tile fallback, gradient starts.
+- **Biru Malam** (biru-900): footer, Kendari Siaga 112 panel, gradient starts.
 - **Navy Topbar** (biru-950): topbar, highlight and Transformasi Digital band bases, footer copyright strip, heading text on white.
-- **Biru Terang to Pucat** (biru-500, biru-400, biru-300, biru-200, biru-100, biru-50): hover lifts on blue, icon tints on navy (300), secondary text on navy (200), body text on blue (100), news card image fallback (100), light hover fill (50).
+- **Biru Terang to Pucat** (biru-500, biru-400, biru-300, biru-200, biru-100, biru-50): hover lifts on blue, icon tints on navy (300), secondary text on navy (200), body text on blue (100), light hover fill (50).
 
 ### Secondary
 - **Toska** (toska): the visitor statistics card only, Komdigi's number card translated. White text.
@@ -196,7 +196,7 @@ A single blue family from pale biru-50 to navy biru-950 does nearly all the work
 
 **The Gradient Legibility Rule.** Body text on a gradient panel must sit over biru-600 or darker stops (services panel biru-900 to biru-600, topic panel nila to biru-700). Never end a text-bearing gradient in biru-500 or lighter.
 
-**The Contrasting Fallback Rule.** An image placeholder must contrast with the band it sits on: news cards on the langit band use a biru-100 fill with a biru-300 photo icon; gallery tiles use biru-900 with a biru-400 icon; highlight strip thumbnails use biru-700.
+**The Default Cover Rule.** A record without an image (news without a cover, a gallery photo whose file is missing) shows `gambar-default.webp`: the official logo on the navy network and signal-ring motif, composed to survive 16:10, 4:3 and square crops. It is also the `onerror` fallback (`GAMBAR_DEFAULT` and `cadanganGambar` in `web/src/lib/api.ts`) and the admin news table's `defaultImageUrl`. Never fall back to an empty fill with an icon.
 
 **The Light By Default Rule.** Both the public site and the Filament admin open in light mode regardless of the OS preference.
 - **One shared choice.** Both read Filament's own localStorage key `theme` (`light`, `dark` or `system`). They share one origin behind Caddy, so a choice made in one follows into the other.
@@ -208,7 +208,7 @@ A single blue family from pale biru-50 to navy biru-950 does nearly all the work
 - The page background is malam `#05152b` and card surfaces are malam-kartu `#0c2344`.
 - Headings on formerly white surfaces become white, biru-600 links become biru-300, and biru-50/100 fills become biru-900.
 - Blue panels, the hero, the footer and white buttons sitting on blue do not change.
-- The organisation chart keeps its white box so the diagram stays legible.
+- The organisation chart (HTML, `struktur-organisasi.astro`) sits on malam-kartu; its biru-900 and biru-700 unit boxes stay, sub-unit boxes turn biru-900 with biru-100 text, connectors biru-700. The fallback image keeps its white box.
 - The sticky nav swaps the navy-wordmark logo for the original white one.
 
 ## Typography
@@ -286,11 +286,11 @@ Solid, square, confident.
 
 ### Cards / Containers
 - **Corner Style:** 4px.
-- **News card:** white, garis border, 16:10 image (biru-100 fallback), 16px padding, clamped biru-950 title turning biru-600 on hover, meta row with category in biru-600 and calendar date.
+- **News card:** white, garis border, 16:10 image (`gambar-default.webp` when missing), 16px padding, clamped biru-950 title turning biru-600 on hover, meta row with category in biru-600 and calendar date.
 - **Service card:** on the gradient panel, white/10 fill, white/15 border, 20px padding, icon square (white with biru-700 icon, or darurat for 112), uppercase label, arrow square at the base; hover lifts 4px and brightens.
 - **Document card:** white, garis border, biru-600 extension badge, download count, title, category, clamped description, "Unduh dokumen" link; hover biru-300 border and card shadow.
 - **Stat card:** toska fill, white, large tabular total with a divided list of counts.
-- **Gallery tile:** 4:3, biru-900 fallback, navy bottom scrim with uppercase caption; a langit count tile closes the grid.
+- **Gallery tile:** 4:3, `gambar-default.webp` when missing, navy bottom scrim with uppercase caption; a langit count tile closes the grid.
 
 ### Inputs / Fields
 - **Style:** white field, 44px to 48px tall, 4px corners, teks text, teks-lembut placeholder, with a 36px biru-600 submit square set inside the right edge.
@@ -334,7 +334,7 @@ The admin follows this system too, without a Vite theme build.
 - **Do** place the official logo on biru-800 or darker.
 - **Do** show the topbar clock in WITA (Asia/Makassar) with a greeting, updating every second.
 - **Do** keep body text on gradients over biru-600 or darker stops.
-- **Do** give image fallbacks a fill that contrasts with their band (biru-100 on langit, biru-900 for gallery tiles).
+- **Do** show `gambar-default.webp` for any record without an image, never an empty fill with an icon.
 - **Do** set `autocomplete="off"` on every search input.
 - **Do** use abstract technology imagery, not literal photos, for dark image bands: `latar-jaringan.webp` for the homepage highlight, `latar-sirkuit.webp` for inner page title bands. Both are generated procedurally in the site palette (2560px) with provenance sidecars.
 - **Do** use the uppercase section heading with the arrow-square "Lihat lainnya" link for homepage sections.

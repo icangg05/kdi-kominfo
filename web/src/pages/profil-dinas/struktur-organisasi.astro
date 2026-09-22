@@ -1,10 +1,15 @@
 ---
+import BaganOrganisasi, { type Simpul } from '../../components/BaganOrganisasi.astro';
+import Ikon from '../../components/Ikon.astro';
 import JudulHalaman from '../../components/JudulHalaman.astro';
 import KosongAda from '../../components/KosongAda.astro';
 import Base from '../../layouts/Base.astro';
 import { api } from '../../lib/api';
 
-const data = await api<{ gambar: string | null }>('/profil-dinas/struktur-organisasi', Astro.request);
+const data = await api<{ bagan: Simpul | null; gambar: string | null }>('/profil-dinas/struktur-organisasi', Astro.request);
+
+const bagan = data.bagan ?? {};
+const adaBagan = Boolean(bagan.nama || bagan.pejabat || bagan.anak?.length);
 ---
 
 <Base judul="Struktur Organisasi" deskripsi="Bagan struktur organisasi Diskominfo Kota Kendari.">
@@ -15,13 +20,27 @@ const data = await api<{ gambar: string | null }>('/profil-dinas/struktur-organi
   />
 
   <div class="wadah py-12">
-    <!-- Bagan lebar: digulir di dalam wadahnya sendiri, halaman tidak ikut melebar. -->
-    {data.gambar ? (
+    {adaBagan ? (
+      <>
+        <!-- Bagan dengan banyak unit digulir di dalam wadahnya sendiri, halaman tidak ikut melebar. -->
+        <!-- Bayangan tanpa geseran: menyebar rata dari tengah, seperti cahaya di belakang kartu. -->
+        <div class="overflow-x-auto rounded border border-garis bg-white p-4 shadow-[0_0_40px_-8px_rgba(7,31,61,0.3)] sm:p-8 dark:bg-malam-kartu dark:shadow-[0_0_40px_-8px_rgba(0,0,0,0.7)]">
+          <BaganOrganisasi bagan={bagan} />
+        </div>
+
+        {data.gambar && (
+          <a href={data.gambar} target="_blank" rel="noopener" class="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-biru-600 hover:underline dark:text-biru-300">
+            <Ikon nama="foto" class="size-4" />
+            Lihat bagan resmi (gambar)
+          </a>
+        )}
+      </>
+    ) : data.gambar ? (
       <div class="overflow-x-auto rounded border border-biru-100 bg-white p-4 dark:border-garis">
         <img src={data.gambar} alt="Bagan struktur organisasi Diskominfo Kota Kendari" class="mx-auto min-w-3xl" />
       </div>
     ) : (
-      <KosongAda pesan="Bagan struktur organisasi belum diunggah." />
+      <KosongAda pesan="Bagan struktur organisasi belum diisi." />
     )}
   </div>
 </Base>

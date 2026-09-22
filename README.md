@@ -66,13 +66,7 @@ Belum ada pembagian role — setiap akun yang bisa masuk punya akses penuh yang 
 jadi menambah akun kedua tidak membatasi apa pun. **Ganti `ADMIN_PASSWORD` sebelum
 naik ke server sungguhan.**
 
-### Pengembangan
-
-Menambahkan bind mount kode dan menjalankan Astro dengan HMR:
-
-```bash
-docker compose -f compose.yml -f compose.dev.yml up -d --build
-```
+Kode di-bind mount dan Astro berjalan dengan HMR, jadi perubahan langsung terlihat.
 
 ### Pengujian
 
@@ -114,3 +108,17 @@ Semua lewat `/admin`:
   struktur organisasi, foto kantor), Profil Pimpinan, Pegawai, Jabatan
 - **Pengaturan** — nomor telepon, email, dan tautan media sosial yang tampil
   di bilah atas dan footer situs publik
+
+### Berita dari portal kota
+
+Selain diinput manual, berita yang menyebut Kominfo diambil dari WordPress
+[berita.kendarikota.go.id](https://berita.kendarikota.go.id) ke kategori
+"Berita Pemkot": otomatis setiap 6 jam oleh layanan `scheduler` di
+`compose.yml`, atau lewat tombol **Ambil berita sekarang** di halaman Berita.
+Kata kunci, kategori, dan batas per sinkron diatur di `config/app.php`
+(`berita_wp`). Sinkron hanya maju ke berita yang lebih baru, jadi berita hasil
+sinkron yang dihapus di admin tidak muncul lagi. Dari terminal:
+
+```bash
+docker compose exec app php artisan berita:sinkron
+```

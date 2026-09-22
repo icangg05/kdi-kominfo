@@ -145,6 +145,29 @@ class ProfilDinasSeeder extends Seeder
       ],
 
       [
+        'jenis'  => 'bagan-organisasi',
+        'konten' => json_encode([
+          'nama' => 'Kepala Dinas',
+          'anak' => [
+            ['nama' => 'Sekretariat', 'posisi' => 'staf', 'anak' => [
+              ['nama' => 'Sub Bagian Umum'],
+              ['nama' => 'Sub Bagian Kepegawaian & Keuangan'],
+              ['nama' => 'Sub Bagian Perencanaan, Evaluasi & Pelaporan'],
+            ]],
+            ['nama' => 'Bidang Pengelolaan Informasi & Komunikasi Publik', 'posisi' => 'lini'],
+            ['nama' => 'Bidang Teknologi Informasi & e-Government', 'posisi' => 'lini', 'anak' => [
+              ['nama' => 'Seksi Infrastruktur Jaringan'],
+            ]],
+            ['nama' => 'Bidang Layanan Informasi, Komunikasi & Persandian', 'posisi' => 'lini'],
+            ['nama' => 'Bidang Pengelolaan Data, Statistik & Integrasi Sistem Informasi', 'posisi' => 'lini', 'anak' => [
+              ['nama' => 'Seksi Pengelolaan Data & Statistik'],
+              ['nama' => 'Seksi Integrasi Sistem Informasi'],
+            ]],
+          ],
+        ]),
+      ],
+
+      [
         'jenis'  => 'struktur-organisasi',
         'konten' => 'struktur-organisasi/struktur-organisasi.webp'
       ],

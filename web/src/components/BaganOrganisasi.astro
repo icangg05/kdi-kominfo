@@ -1,0 +1,328 @@
+---
+/** Satu kotak bagan dari API beserta unit di bawahnya. */
+export type Simpul = { nama?: string | null; pejabat?: string | null; posisi?: string | null; anak?: Simpul[] | null };
+
+interface Props {
+  /** Akar bagan (pimpinan). */
+  bagan?: Simpul;
+  /** Untuk pemanggilan rekursif: sub unit yang digambar sebagai rel menurun. */
+  rel?: Simpul[];
+}
+
+const { bagan, rel } = Astro.props;
+
+// Unit langsung di bawah pimpinan: staf di samping batang, lini berjajar, bawah di ujung batang.
+const anak = (bagan?.anak ?? []).map((x) => ({ ...x, letak: x.posisi === 'staf' || x.posisi === 'bawah' ? x.posisi : 'lini' }));
+const di = (letak: string) => anak.filter((x) => x.letak === letak);
+const lini = di('lini');
+const susunan = [...di('staf'), ...lini, ...di('bawah')];
+---
+
+{rel ? (
+  <ul class="anak">
+    {rel.map((x) => (
+      <li>
+        <p class="kotak kecil">{x.nama}{x.pejabat && <span class="pejabat">{x.pejabat}</span>}</p>
+        {x.anak?.length ? <Astro.self rel={x.anak} /> : null}
+      </li>
+    ))}
+  </ul>
+) : (
+  <div class="bagan" style={`--kolom: ${Math.max(lini.length, 1)}`}>
+    <p class="kotak utama">{bagan?.nama || 'Kepala Dinas'}{bagan?.pejabat && <span class="pejabat">{bagan.pejabat}</span>}</p>
+    {susunan.length > 0 && (
+      <ul class:list={['cabang', susunan.at(-1)?.letak === 'bawah' && 'ada-bawah']}>
+        {susunan.map((x) => (
+          <li class:list={[x.letak, x === lini[0] && 'awal', x === lini.at(-1) && 'akhir']}>
+            <p class="kotak tengah">{x.nama}{x.pejabat && <span class="pejabat">{x.pejabat}</span>}</p>
+            {x.anak?.length ? <Astro.self rel={x.anak} /> : null}
+          </li>
+        ))}
+      </ul>
+    )}
+  </div>
+)}
+
+<style>
+  /* Garis penghubung digambar dengan pseudo-elemen, jadi bagan tetap berupa daftar bertingkat biasa untuk pembaca layar. */
+  .bagan {
+    --garis-bagan: var(--color-biru-300);
+    --jorok: 1.25rem;
+    --atas: 0.5rem;
+    font-size: 0.8125rem;
+  }
+
+  :global([data-tema='gelap']) .bagan {
+    --garis-bagan: var(--color-biru-700);
+  }
+
+  .kotak {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 3rem;
+    padding: 0.625rem 1rem;
+    border-radius: 0.25rem;
+    font-weight: 700;
+    line-height: 1.35;
+    letter-spacing: 0.025em;
+    text-transform: uppercase;
+    text-wrap: balance;
+  }
+
+  /* Nama pejabat di bawah jabatan: huruf biasa supaya tidak bersaing dengan nama jabatan. */
+  .pejabat {
+    margin-top: 0.25rem;
+    font-weight: 500;
+    letter-spacing: 0;
+    text-transform: none;
+    opacity: 0.85;
+  }
+
+  .utama {
+    background: var(--color-biru-900);
+    color: #fff;
+    font-size: 0.9375rem;
+  }
+
+  .tengah {
+    background: var(--color-biru-700);
+    color: #fff;
+  }
+
+  .kecil {
+    border: 1px solid var(--color-biru-200);
+    background: var(--color-biru-50);
+    color: var(--color-biru-950);
+    font-weight: 600;
+  }
+
+  :global([data-tema='gelap']) .kecil {
+    border-color: var(--color-biru-700);
+    background: var(--color-biru-900);
+    color: var(--color-biru-100);
+  }
+
+  .cabang > li,
+  .anak > li {
+    position: relative;
+  }
+
+  .cabang > li::before,
+  .anak > li::before,
+  li > .kotak::before {
+    content: '';
+    position: absolute;
+  }
+
+  /* Siku diukur dari tepi dalam border 1px kotak kecil; digeser 1px supaya menyambung dengan rel. */
+  li > .kecil::before {
+    margin: -1px 1px 0 0;
+  }
+
+  /*
+   * Sorot saat hover (atau ketuk di layar sentuh): unit yang ditunjuk beserta semua turunannya tetap tajam, sisanya buram.
+   * Filter dipasang per kotak dan per garis, bukan per <li>: buram di <li> induk ikut memburamkan
+   * turunannya dan tidak bisa dibatalkan dari dalam. Aturan "tetap tajam" ditulis sesudah aturan
+   * buram dengan spesifisitas yang sama atau lebih tinggi, jadi selalu menang.
+   */
+  .kotak,
+  .cabang::before,
+  .cabang > li::before,
+  .anak > li::before {
+    transition: filter 250ms ease, opacity 250ms ease, box-shadow 250ms ease;
+  }
+
+  .bagan:has(li > .kotak:hover) .kotak,
+  .bagan:has(li > .kotak:hover) li::before,
+  .bagan:has(li > .kotak:hover) .cabang::before {
+    filter: blur(2px);
+    opacity: 0.35;
+  }
+
+  .bagan li:has(> .kotak:hover) .kotak,
+  .bagan li:has(> .kotak:hover) li::before {
+    filter: none;
+    opacity: 1;
+  }
+
+  .bagan li > .kotak:hover {
+    box-shadow: 0 0 0 3px rgb(79 149 220 / 0.45);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .kotak,
+    .cabang::before,
+    .cabang > li::before,
+    .anak > li::before {
+      transition: none;
+    }
+  }
+
+  /* Seluler: pohon menurun. Tiap simpul menggantung pada rel di sisi kiri induknya. */
+  @media (width < 64rem) {
+    .cabang,
+    .anak {
+      margin-left: var(--jorok);
+    }
+
+    .cabang > li,
+    .anak > li {
+      padding: var(--atas) 0 0 var(--jorok);
+    }
+
+    /* Rel lanjut ke saudara berikutnya. */
+    .cabang > li:not(:last-child)::before,
+    .anak > li:not(:last-child)::before {
+      inset: 0 auto 0 0;
+      border-left: 2px solid var(--garis-bagan);
+    }
+
+    /* Siku dari rel ke tengah kotak. */
+    li > .kotak::before {
+      top: calc(-1 * var(--atas));
+      bottom: 50%;
+      right: 100%;
+      width: var(--jorok);
+      border-left: 2px solid var(--garis-bagan);
+      border-bottom: 2px solid var(--garis-bagan);
+    }
+  }
+
+  /* Layar lebar: batang tengah dari pimpinan, unit staf di kanan batang, unit lini berjajar, unit bawah di ujung batang. */
+  @media (width >= 64rem) {
+    .bagan {
+      min-width: calc(var(--kolom) * 12rem);
+      --atas: 2rem;
+      --cabang-kanan: 3rem;
+    }
+
+    .kotak {
+      text-align: center;
+    }
+
+    .utama {
+      width: 20rem;
+      min-height: 3.5rem;
+      margin-inline: auto;
+    }
+
+    .cabang {
+      position: relative;
+      display: grid;
+      grid-template-columns: repeat(var(--kolom), minmax(0, 1fr));
+      padding-top: var(--atas);
+    }
+
+    /* Batang dari pimpinan ke baris pertama; bila ada unit bawah, terus sampai unit bawah terakhir di balik kotaknya. */
+    .cabang::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: calc(50% - 1px);
+      height: var(--atas);
+      border-left: 2px solid var(--garis-bagan);
+    }
+
+    .cabang.ada-bawah::before {
+      height: 100%;
+    }
+
+    .staf {
+      grid-column: 1 / -1;
+      padding: 0 0 var(--atas) calc(50% - 1px + var(--cabang-kanan));
+    }
+
+    .staf > * {
+      max-width: 20rem;
+    }
+
+    .staf:not(:last-child)::before {
+      inset: 0 auto 0 calc(50% - 1px);
+      border-left: 2px solid var(--garis-bagan);
+    }
+
+    .staf > .kotak::before {
+      top: 0;
+      bottom: 50%;
+      right: 100%;
+      width: var(--cabang-kanan);
+      border-left: 2px solid var(--garis-bagan);
+      border-bottom: 2px solid var(--garis-bagan);
+    }
+
+    .lini {
+      padding: var(--atas) 0.5rem 0;
+    }
+
+    .lini > .kotak {
+      min-height: 4.75rem;
+    }
+
+    /* Palang mendatar di atas deretan lini, dari tengah unit pertama ke tengah unit terakhir. */
+    .lini::before {
+      top: 0;
+      left: 0;
+      right: 0;
+      border-top: 2px solid var(--garis-bagan);
+    }
+
+    .lini.awal::before {
+      left: calc(50% - 1px);
+    }
+
+    .lini.akhir::before {
+      right: calc(50% - 1px);
+    }
+
+    .lini > .kotak::before {
+      top: calc(-1 * var(--atas));
+      left: calc(50% - 1px);
+      height: var(--atas);
+      border-left: 2px solid var(--garis-bagan);
+    }
+
+    .bawah {
+      grid-column: 1 / -1;
+      justify-self: center;
+      width: 20rem;
+      padding-top: var(--atas);
+    }
+
+    /* Rel di bawah unit bawah terakhir menutupi batang pimpinan, jadi batang berhenti di kotaknya. */
+    .bawah:last-child > .anak {
+      position: relative;
+      z-index: 1;
+      background: #fff;
+    }
+
+    :global([data-tema='gelap']) .bawah:last-child > .anak {
+      background: var(--color-malam-kartu);
+    }
+
+    /* Sub unit di semua tingkat tetap memakai rel kiri seperti di seluler. */
+    .anak {
+      margin-left: var(--jorok);
+    }
+
+    .anak > li {
+      padding: 0.5rem 0 0 var(--jorok);
+    }
+
+    .anak > li:not(:last-child)::before {
+      inset: 0 auto 0 0;
+      border-left: 2px solid var(--garis-bagan);
+    }
+
+    .anak > li > .kotak::before {
+      top: -0.5rem;
+      bottom: 50%;
+      right: 100%;
+      width: var(--jorok);
+      border-left: 2px solid var(--garis-bagan);
+      border-bottom: 2px solid var(--garis-bagan);
+    }
+  }
+</style>

@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\ProfilPimpinans\Schemas;
 
+use App\Support\KompresGambar;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\TextInput;
@@ -35,7 +36,8 @@ class ProfilPimpinanForm
                     ->reorderable()
                     ->disk('public')
                     ->directory('foto-kadis')
-                    ->maxSize(4096)
+                    ->maxSize(config('app.upload.gambar_maks_kb'))
+                    ->saveUploadedFileUsing(KompresGambar::simpan(...))
                     ->columnSpanFull()
                     ->helperText('Foto pertama dipakai sebagai foto utama di beranda.'),
                 RichEditor::make('konten')

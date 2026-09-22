@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\Berita;
 use App\Models\Dokumen;
+use App\Models\Pegawai;
 use App\Models\ProfilDinas;
 use App\Models\Video;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -29,6 +30,55 @@ class ApiSitusTest extends TestCase
     $this->getJson('/api/pengaturan')
       ->assertOk()
       ->assertJsonStructure(['pengaturan' => ['telp', 'email'], 'kategoriBerita', 'kategoriDokumen']);
+  }
+
+  public function test_tautan_survei_mengikuti_saklar_config(): void
+  {
+    $this->getJson('/api/pengaturan')->assertJsonPath('survei', config('app.survei.url'));
+
+    config(['app.survei.aktif' => false]);
+    $this->getJson('/api/pengaturan')->assertJsonPath('survei', null);
+  }
+
+  public function test_struktur_organisasi_menyajikan_bagan_sebagai_pohon(): void
+  {
+    $this->getJson('/api/profil-dinas/struktur-organisasi')
+      ->assertOk()
+      ->assertJsonPath('bagan.nama', 'Kepala Dinas')
+      ->assertJsonStructure(['bagan' => ['nama', 'pejabat', 'anak' => [['nama', 'pejabat', 'posisi', 'anak' => [['nama', 'pejabat']]]]], 'gambar']);
+  }
+
+  public function test_pejabat_bagan_diambil_dari_data_pegawai(): void
+  {
+    $pegawai = Pegawai::first();
+    $bagan = ProfilDinas::konten('bagan-organisasi');
+    $bagan['pegawai_id'] = $pegawai->id;
+    $bagan['anak'][0]['anak'][0]['anak'] = [['nama' => 'Staf', 'pegawai_id' => $pegawai->id]];
+    $bagan['anak'][0]['anak'][1]['pegawai_id'] = 999999;
+    ProfilDinas::where('jenis', 'bagan-organisasi')->first()->update(['konten' => $bagan]);
+
+    $this->getJson('/api/profil-dinas/struktur-organisasi')
+      ->assertJsonPath('bagan.pejabat', $pegawai->nama)
+      ->assertJsonPath('bagan.anak.0.anak.0.anak.0.pejabat', $pegawai->nama)
+      ->assertJsonPath('bagan.anak.0.anak.1.pejabat', null)
+      ->assertJsonMissingPath('bagan.pegawai_id');
+
+    $pegawai->update(['nama' => 'Nama Baru']);
+    $this->getJson('/api/profil-dinas/struktur-organisasi')->assertJsonPath('bagan.pejabat', 'Nama Baru');
+  }
+
+  public function test_gambar_yang_berkasnya_hilang_dikirim_null(): void
+  {
+    Storage::fake('public');
+    Storage::disk('public')->put('berita/ada.webp', 'isi');
+    $ada = Berita::latest('tanggal')->latest('id')->first();
+    $ada->update(['thumbnail' => 'berita/ada.webp']);
+    Berita::whereKeyNot($ada->id)->update(['thumbnail' => 'berita/hilang.webp']);
+
+    $data = $this->getJson('/api/berita')->assertOk()->json('data');
+
+    $this->assertSame('/storage/berita/ada.webp', $data[0]['thumbnail']);
+    $this->assertNull($data[1]['thumbnail']);
   }
 
   public function test_beranda_memuat_berita_bukan_galeri(): void

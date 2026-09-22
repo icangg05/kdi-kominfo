@@ -10,10 +10,10 @@ class ProfilDinas extends Model
   protected $guarded = [];
 
   /**
-   * `konten` menyimpan dua bentuk: HTML biasa, atau daftar JSON [{id, value}, ...].
-   * Hanya jenis di bawah ini yang berbentuk daftar.
+   * `konten` menyimpan dua bentuk: HTML biasa, atau JSON (umumnya daftar [{id, value}, ...]).
+   * Hanya jenis di bawah ini yang berbentuk JSON.
    */
-  public const JENIS_DAFTAR = ['tagline-sambutan', 'misi', 'foto-diskominfo', 'fungsi', 'pengaturan'];
+  public const JENIS_DAFTAR = ['tagline-sambutan', 'misi', 'foto-diskominfo', 'fungsi', 'pengaturan', 'bagan-organisasi', 'sinkron-berita'];
 
   public function getKontenAttribute(?string $value): mixed
   {

@@ -3,9 +3,9 @@ import Ikon from '../../components/Ikon.astro';
 import JudulHalaman from '../../components/JudulHalaman.astro';
 import KartuBerita from '../../components/KartuBerita.astro';
 import Base from '../../layouts/Base.astro';
-import { api, asalSitus, tanggalPanjang, type Berita } from '../../lib/api';
+import { api, asalSitus, cadanganGambar, GAMBAR_DEFAULT, tanggalPanjang, type Berita } from '../../lib/api';
 
-type Detail = Berita & { konten: string; lainnya: Berita[] };
+type Detail = Berita & { konten: string; sumber: string | null; lainnya: Berita[] };
 
 const { slug } = Astro.params;
 
@@ -61,15 +61,28 @@ const jsonLd = JSON.stringify({
         <span class="flex items-center gap-2"><Ikon nama="kalender" class="size-4" />{tanggalPanjang(berita.tanggal)}</span>
         <span class="flex items-center gap-2"><Ikon nama="mata" class="size-4" />{berita.totalLihat} kali dibaca</span>
       </div>
+      <!-- Ruang untuk sampul yang menumpang ke pita judul. -->
+      {berita.thumbnail && <div class="h-10 lg:h-14" aria-hidden="true"></div>}
     </JudulHalaman>
 
     <div class="wadah py-12">
       <div class="grid gap-12 lg:grid-cols-[1fr_320px]">
         <div>
+          <!-- Sampul menumpang ke pita judul dengan bingkai, supaya tidak terbaca sebagai foto isi berita.
+               Gambar utuh (contain) di depan salinannya yang diburamkan: foto potret tidak terpotong. -->
           {berita.thumbnail && (
-            <img src={berita.thumbnail} alt={berita.judul} fetchpriority="high" class="mb-8 aspect-16/9 w-full rounded object-cover" />
+            <figure class="relative z-10 -mt-[5.5rem] mb-10 aspect-16/9 overflow-hidden rounded bg-biru-950 shadow-[0_24px_48px_-28px_rgba(7,31,61,0.7)] ring-4 ring-white lg:-mt-[6.5rem] dark:ring-malam">
+              <img src={berita.thumbnail} alt="" aria-hidden="true" class="absolute inset-0 size-full scale-110 object-cover opacity-60 blur-2xl" />
+              <img src={berita.thumbnail} alt={berita.judul} fetchpriority="high" class="relative size-full object-contain" />
+            </figure>
           )}
           <div class="prosa max-w-none" set:html={berita.konten} />
+          {berita.sumber && (
+            <p class="mt-6 text-sm text-teks-lembut">
+              Sumber:{' '}
+              <a href={berita.sumber} target="_blank" rel="noopener" class="font-semibold text-biru-600 hover:underline dark:text-biru-300">Portal Berita Kota Kendari</a>
+            </p>
+          )}
 
           <div class="mt-10 flex flex-wrap items-center gap-3 border-t border-garis pt-6">
             <p class="mr-2 text-sm font-semibold text-biru-900 dark:text-white">Bagikan berita ini</p>
@@ -96,14 +109,15 @@ const jsonLd = JSON.stringify({
           </div>
         </div>
 
+        <!-- Menempel tepat di bawah nav desktop (52px) selagi isi berita digulir. -->
         {berita.lainnya.length > 0 && (
-          <aside>
+          <aside class="lg:sticky lg:top-[76px] lg:self-start">
             <h2 class="mb-5 border-b border-garis pb-3 font-bold text-biru-900 dark:text-white">Berita Lainnya</h2>
             <ul class="space-y-5">
               {berita.lainnya.map((b) => (
                 <li class="flex gap-4">
                   <a href={`/berita/${b.slug}`} class="size-20 shrink-0 overflow-hidden rounded bg-biru-50 dark:bg-biru-900">
-                    {b.thumbnail && <img src={b.thumbnail} alt="" loading="lazy" class="size-full object-cover" />}
+                    <img src={b.thumbnail ?? GAMBAR_DEFAULT} alt="" loading="lazy" onerror={cadanganGambar} class="size-full object-cover" />
                   </a>
                   <div>
                     <a href={`/berita/${b.slug}`} class="line-clamp-2 text-sm font-semibold text-biru-900 hover:text-biru-600 dark:text-biru-100 dark:hover:text-white">

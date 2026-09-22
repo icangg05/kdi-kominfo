@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Beritas\Schemas;
 
+use App\Support\KompresGambar;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\RichEditor;
@@ -41,7 +42,8 @@ class BeritaForm
                     ->disk('public')
                     ->directory('berita')
                     ->imageEditor()
-                    ->maxSize(4096),
+                    ->maxSize(config('app.upload.gambar_maks_kb'))
+                    ->saveUploadedFileUsing(KompresGambar::simpan(...)),
                 RichEditor::make('konten')
                     ->required()
                     ->columnSpanFull(),

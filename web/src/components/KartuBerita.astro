@@ -1,6 +1,6 @@
 ---
 import Ikon from './Ikon.astro';
-import { tanggalPanjang, type Berita } from '../lib/api';
+import { cadanganGambar, GAMBAR_DEFAULT, tanggalPanjang, type Berita } from '../lib/api';
 
 interface Props {
   berita: Berita;
@@ -11,19 +11,13 @@ const { berita } = Astro.props;
 
 <article class="kartu-timbul group relative flex h-full flex-col overflow-hidden hover:-translate-y-0.5">
   <div class="relative aspect-16/10 overflow-hidden bg-biru-100 dark:bg-biru-900">
-    <!-- Tanpa foto: bidang biru muda dengan ikon; foto asli menutupinya bila ada. -->
-    <span class="absolute inset-0 flex items-center justify-center text-biru-300 dark:text-biru-700" aria-hidden="true">
-      <Ikon nama="foto" class="size-10" />
-    </span>
-    {berita.thumbnail && (
-      <img
-        src={berita.thumbnail}
-        alt=""
-        loading="lazy"
-        onerror="this.remove()"
-        class="relative size-full object-cover transition duration-500 group-hover:scale-[1.04]"
-      />
-    )}
+    <img
+      src={berita.thumbnail ?? GAMBAR_DEFAULT}
+      alt=""
+      loading="lazy"
+      onerror={cadanganGambar}
+      class="size-full object-cover transition duration-500 group-hover:scale-[1.04]"
+    />
   </div>
 
   <div class="flex flex-1 flex-col p-4">

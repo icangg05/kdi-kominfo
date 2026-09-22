@@ -18,6 +18,13 @@ class AppServiceProvider extends ServiceProvider
   {
     Carbon::setLocale(config('app.locale'));
 
+    // Bawaan Livewire menolak upload sementara di atas 12 MB dan membatalkan
+    // upload yang lebih lama dari 5 menit — terlalu ketat untuk dokumen 100 MB.
+    config([
+      'livewire.temporary_file_upload.rules' => ['required', 'file', 'max:' . config('app.upload.file_maks_kb')],
+      'livewire.temporary_file_upload.max_upload_time' => 30,
+    ]);
+
     // Sapu sisa upload PHP tiap ada aktivitas Livewire/Filament (buka form,
     // klik, upload). Digantung di RequestHandled, bukan langsung di boot(),
     // karena di bawah Octane boot() cuma jalan sekali per worker — request()

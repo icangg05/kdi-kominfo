@@ -26,6 +26,21 @@ services:
       db:
         condition: service_healthy
 
+  # Menjalankan jadwal Laravel (routes/console.php), misalnya sinkron berita tiap 6 jam; tidak butuh cron di server.
+  scheduler:
+    build:
+      context: .
+      dockerfile: docker/php/Dockerfile
+    container_name: kdi-scheduler
+    restart: unless-stopped
+    command: php artisan schedule:work
+    env_file: .env
+    volumes:
+      - app-storage:/app/storage/app
+    depends_on:
+      db:
+        condition: service_healthy
+
   web:
     build:
       context: ./web

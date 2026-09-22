@@ -34,6 +34,7 @@ class PanelAdminTest extends TestCase
       'profil pimpinan' => ['/admin/profil-pimpinans'],
       'isi halaman' => ['/admin/halaman-profil'],
       'pengaturan' => ['/admin/pengaturan'],
+      'profil' => ['/admin/profil'],
     ];
   }
 

@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Galeris\Schemas;
 
+use App\Support\KompresGambar;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\TextInput;
@@ -25,7 +26,8 @@ class GaleriForm
                     ->disk('public')
                     ->directory('galeri')
                     ->imageEditor()
-                    ->maxSize(4096)
+                    ->maxSize(config('app.upload.gambar_maks_kb'))
+                    ->saveUploadedFileUsing(KompresGambar::simpan(...))
                     ->columnSpanFull(),
             ]);
     }

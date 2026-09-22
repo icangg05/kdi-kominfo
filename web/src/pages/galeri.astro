@@ -1,11 +1,10 @@
 ---
-import Ikon from '../components/Ikon.astro';
 import JudulHalaman from '../components/JudulHalaman.astro';
 import KosongAda from '../components/KosongAda.astro';
 import Paginasi from '../components/Paginasi.astro';
 import TabGaleri from '../components/TabGaleri.astro';
 import Base from '../layouts/Base.astro';
-import { api, query, tanggalPanjang, type Halaman } from '../lib/api';
+import { api, cadanganGambar, GAMBAR_DEFAULT, query, tanggalPanjang, type Halaman } from '../lib/api';
 
 type Foto = { judul: string; tanggal: string | null; gambar: string | null };
 
@@ -29,12 +28,7 @@ const daftar = await api<Halaman<Foto>>(`/galeri${query({ page })}`, Astro.reque
           {daftar.data.map((f) => (
             <figure class="kartu-timbul group overflow-hidden">
               <div class="relative aspect-4/3 overflow-hidden bg-biru-100 dark:bg-biru-900">
-                <span class="absolute inset-0 flex items-center justify-center text-biru-300 dark:text-biru-700" aria-hidden="true">
-                  <Ikon nama="foto" class="size-10" />
-                </span>
-                {f.gambar && (
-                  <img src={f.gambar} alt={f.judul} loading="lazy" onerror="this.remove()" class="relative size-full object-cover transition duration-500 group-hover:scale-105" />
-                )}
+                <img src={f.gambar ?? GAMBAR_DEFAULT} alt={f.judul} loading="lazy" onerror={cadanganGambar} class="size-full object-cover transition duration-500 group-hover:scale-105" />
               </div>
               <figcaption class="p-4">
                 <p class="font-semibold leading-snug text-biru-950 dark:text-white">{f.judul}</p>

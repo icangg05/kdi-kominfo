@@ -13,6 +13,8 @@ use App\Models\ProfilPimpinan;
 use App\Models\Video;
 use App\Models\Visitor;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Storage;
 
 /**
  * Satu-satunya sumber data untuk frontend Astro.
@@ -24,6 +26,7 @@ class SiteController
   {
     return [
       'pengaturan' => ProfilDinas::pengaturan(),
+      'survei' => config('app.survei.aktif') ? config('app.survei.url') : null,
       'kategoriBerita' => KategoriBerita::orderBy('nama')->get(['nama', 'slug']),
       'kategoriDokumen' => KategoriDokumen::orderBy('nama')->get(['nama', 'slug']),
     ];
@@ -34,7 +37,10 @@ class SiteController
     return [
       'sambutanKadis' => ProfilDinas::konten('sambutan-kadis'),
       'taglineSambutan' => ProfilDinas::nilai('tagline-sambutan'),
-      'kadis' => ProfilPimpinan::first()?->only(['nama', 'foto', 'awal_periode', 'akhir_periode']),
+      'kadis' => ($kadis = ProfilPimpinan::first()) ? [
+        ...$kadis->only(['nama', 'awal_periode', 'akhir_periode']),
+        'foto' => $this->fotoPimpinan($kadis)->first(),
+      ] : null,
       'galeri' => Galeri::latest('tanggal')->latest('id')->limit(5)->get()->map($this->galeriItem(...)),
       'berita' => Berita::with('kategori:id,nama,slug')->latest('tanggal')->latest('id')->limit(6)->get()->map($this->beritaItem(...)),
       'pengunjung' => [
@@ -64,6 +70,7 @@ class SiteController
     return [
       ...$this->beritaItem($data),
       'konten' => $data->konten,
+      'sumber' => $data->wp_url,
       'lainnya' => Berita::with('kategori:id,nama,slug')
         ->whereKeyNot($data->id)
         ->latest('tanggal')->latest('id')
@@ -149,9 +156,7 @@ class SiteController
       'awalPeriode' => $data?->awal_periode,
       'akhirPeriode' => $data?->akhir_periode,
       'konten' => $data?->konten,
-      'foto' => collect((array) $data?->foto)
-        ->map(fn ($f) => $this->url(is_array($f) ? ($f['value'] ?? null) : $f))
-        ->filter()->values(),
+      'foto' => $this->fotoPimpinan($data),
     ];
   }
 
@@ -163,7 +168,7 @@ class SiteController
         'sejarah' => ProfilDinas::konten('sejarah'),
         'visi' => ProfilDinas::konten('visi'),
         'misi' => ProfilDinas::nilai('misi'),
-        'fotoDiskominfo' => collect(ProfilDinas::nilai('foto-diskominfo'))->map($this->url(...)),
+        'fotoDiskominfo' => collect(ProfilDinas::nilai('foto-diskominfo'))->map($this->url(...))->filter()->values(),
         'awalPeriode' => ProfilPimpinan::first()?->awal_periode,
       ],
       'tupoksi' => [
@@ -171,10 +176,28 @@ class SiteController
         'fungsi' => ProfilDinas::nilai('fungsi'),
       ],
       'struktur-organisasi' => [
+        'bagan' => $this->pejabat(ProfilDinas::konten('bagan-organisasi'), Pegawai::pluck('nama', 'id')->all()),
         'gambar' => $this->url(ProfilDinas::konten('struktur-organisasi')),
       ],
       default => abort(404),
     };
+  }
+
+  /** Tiap kotak bagan ({nama, pegawai_id}) dikirim dengan nama pejabatnya; pegawai yang sudah dihapus jadi null. */
+  private function pejabat(mixed $simpul, array $namaPegawai): mixed
+  {
+    if (! is_array($simpul)) {
+      return $simpul;
+    }
+
+    $simpul = array_map(fn ($anak) => $this->pejabat($anak, $namaPegawai), $simpul);
+
+    if (array_key_exists('nama', $simpul)) {
+      $simpul['pejabat'] = $namaPegawai[$simpul['pegawai_id'] ?? ''] ?? null;
+      unset($simpul['pegawai_id']);
+    }
+
+    return $simpul;
   }
 
   private function beritaItem(Berita $b): array
@@ -203,10 +226,22 @@ class SiteController
   /**
    * Path relatif (/storage/...), bukan URL absolut: Caddy meneruskan /storage ke
    * Laravel, jadi berkas tetap ketemu dari domain mana pun situs disajikan.
+   * Null bila berkasnya tidak ada di disk, supaya situs memakai gambar default.
    */
   private function url(?string $path): ?string
   {
-    return $path ? '/storage/' . ltrim($path, '/') : null;
+    $path = ltrim((string) $path, '/');
+
+    return $path !== '' && Storage::disk('public')->exists($path) ? "/storage/{$path}" : null;
+  }
+
+  /** Foto pimpinan tersimpan sebagai daftar [{value}] atau path biasa; hanya yang berkasnya ada. */
+  private function fotoPimpinan(?ProfilPimpinan $pimpinan): Collection
+  {
+    return collect((array) $pimpinan?->foto)
+      ->map(fn ($f) => $this->url(is_array($f) ? ($f['value'] ?? null) : $f))
+      ->filter()
+      ->values();
   }
 
   private function paginated(\Illuminate\Contracts\Pagination\LengthAwarePaginator $page, callable $map): array

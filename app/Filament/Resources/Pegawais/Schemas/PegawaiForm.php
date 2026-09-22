@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Pegawais\Schemas;
 
+use App\Support\KompresGambar;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Select;
@@ -37,7 +38,8 @@ class PegawaiForm
                     ->disk('public')
                     ->directory('pegawai')
                     ->imageEditor()
-                    ->maxSize(2048),
+                    ->maxSize(config('app.upload.gambar_maks_kb'))
+                    ->saveUploadedFileUsing(KompresGambar::simpan(...)),
                 Textarea::make('alamat')
                     ->rows(3)
                     ->columnSpanFull(),

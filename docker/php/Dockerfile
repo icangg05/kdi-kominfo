@@ -4,6 +4,7 @@ RUN install-php-extensions \
     pdo_mysql pdo_sqlite intl gd zip bcmath exif pcntl sockets opcache redis
 
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
+COPY docker/php/upload.ini $PHP_INI_DIR/conf.d/upload.ini
 
 WORKDIR /app
 
