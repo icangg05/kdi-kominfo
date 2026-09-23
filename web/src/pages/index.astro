@@ -105,7 +105,7 @@ const darurat = layanan['telpon-darurat-112'];
               type="button"
               aria-label={`Tampilkan sorotan ${i + 1}`}
               aria-current={i === 0 ? 'true' : 'false'}
-              class="flex size-10 items-center justify-center rounded border border-white/35 text-sm font-semibold tabular-nums transition hover:bg-white/10 aria-[current=true]:border-white aria-[current=true]:bg-white aria-[current=true]:text-biru-800"
+              class="relative flex size-10 overflow-hidden items-center justify-center rounded border border-white/35 text-sm font-semibold tabular-nums transition hover:bg-white/10 aria-[current=true]:border-white aria-[current=true]:bg-white aria-[current=true]:text-biru-800"
               data-ke={i}
             >
               {i + 1}
@@ -602,7 +602,7 @@ const darurat = layanan['telpon-darurat-112'];
   // "Stop Animasi" di panel aksesibilitas bisa dinyalakan kapan saja, jadi diperiksa setiap kali dipakai.
   const diam = () => kurangiGerak || document.documentElement.hasAttribute('data-henti-animasi');
 
-  // Sorotan: tombol nomor memilih slide; bergilir tiap 7 detik (tetap jalan saat kursor di atasnya) kecuali fokus keyboard atau gerak dikurangi.
+  // Sorotan: tombol nomor memilih slide; bergilir tiap 7 detik (durasi garis sorot-hitung di global.css ikut angka ini) (tetap jalan saat kursor di atasnya) kecuali fokus keyboard atau gerak dikurangi.
   const sorotan = document.querySelector<HTMLElement>('[data-sorotan]');
 
   if (sorotan) {
