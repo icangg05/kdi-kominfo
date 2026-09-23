@@ -13,7 +13,7 @@ class ProfilDinas extends Model
    * `konten` menyimpan dua bentuk: HTML biasa, atau JSON (umumnya daftar [{id, value}, ...]).
    * Hanya jenis di bawah ini yang berbentuk JSON.
    */
-  public const JENIS_DAFTAR = ['tagline-sambutan', 'misi', 'foto-diskominfo', 'fungsi', 'pengaturan', 'bagan-organisasi', 'sinkron-berita'];
+  public const JENIS_DAFTAR = ['tagline-sambutan', 'misi', 'foto-diskominfo', 'fungsi', 'pengaturan', 'bagan-organisasi', 'sinkron-berita', 'sinkron-berita-atur'];
 
   public function getKontenAttribute(?string $value): mixed
   {

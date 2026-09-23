@@ -19,6 +19,7 @@ COPY . .
 RUN touch .env && \
     composer dump-autoload --optimize && \
     mkdir -p storage/framework/{cache,sessions,views} storage/logs bootstrap/cache && \
+    ln -sfn ../storage/app/public public/storage && \
     chmod -R 777 storage bootstrap/cache
 
 ENV OCTANE_SERVER=frankenphp

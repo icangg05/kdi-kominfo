@@ -112,13 +112,37 @@ Semua lewat `/admin`:
 ### Berita dari portal kota
 
 Selain diinput manual, berita yang menyebut Kominfo diambil dari WordPress
-[berita.kendarikota.go.id](https://berita.kendarikota.go.id) ke kategori
-"Berita Pemkot": otomatis setiap 6 jam oleh layanan `scheduler` di
+[berita.kendarikota.go.id](https://berita.kendarikota.go.id): otomatis tiap 6 jam
+pada **03.00, 09.00, 15.00, dan 21.00 WITA** oleh layanan `scheduler` di
 `compose.yml`, atau lewat tombol **Ambil berita sekarang** di halaman Berita.
-Kata kunci, kategori, dan batas per sinkron diatur di `config/app.php`
-(`berita_wp`). Sinkron hanya maju ke berita yang lebih baru, jadi berita hasil
-sinkron yang dihapus di admin tidak muncul lagi. Dari terminal:
+
+Jamnya sengaja tetap (`SinkronBerita::JAM`), bukan `everySixHours()`, supaya
+halaman admin bisa menampilkan waktu sinkron berikutnya tanpa membaca daftar
+`Schedule` — `routes/console.php` hanya dimuat di konteks CLI, tidak saat request
+web. Tombol **Ambil berita sekarang** dihitung sebagai sinkron manual dan tidak
+menggeser catatan "sinkron otomatis terakhir".
+
+Kata kunci pencarian, batas per sinkron, dan saklar aktif/nonaktif diatur admin
+lewat tombol **Pengaturan sinkron** di halaman yang sama; nilai di
+`config/app.php` (`berita_wp`) cuma dipakai sebelum admin pernah menyimpan.
+Alamat portalnya sengaja tetap di config karena dipakai membatasi host saat
+mengunduh gambar sampul.
+
+Kategori tiap berita mengikuti kategorinya di portal dan dibuat otomatis di
+lokal kalau belum ada — karena itu `kategori_berita` tidak di-seed. Berita yang
+di sana tidak berkategori masuk ke `kategori_cadangan`.
+
+Pencarian dibatasi ke judul (`search_columns=post_title`) supaya hasilnya sama
+persis dengan halaman `/?s=kata` di portal; tanpa itu REST API ikut mencari ke
+isi berita dan menarik berita yang judulnya tidak menyebut kata kuncinya.
+
+Tiap sinkron mengambil sejumlah berita terbaru lalu melewati yang `wp_id`-nya
+sudah tersimpan. Jadi berita yang dihapus di admin akan muncul lagi saat ditarik
+ulang, dan berita yang sudah ada tidak pernah terambil dua kali. Dari terminal:
 
 ```bash
 docker compose exec app php artisan berita:sinkron
+
+# Hapus semua berita + kategori (beserta file thumbnail-nya) lalu tarik dari nol
+docker compose exec app php artisan berita:sinkron --reset
 ```

@@ -4,22 +4,23 @@ namespace Database\Seeders;
 
 use App\Models\Berita;
 use App\Models\KategoriBerita;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class BeritaSeeder extends Seeder
 {
   /**
-   * Run the database seeds.
+   * Isi contoh untuk pengembangan. Kategori dibuat sendiri di sini, bukan lewat seeder
+   * terpisah: daftar kategori sebenarnya terbentuk otomatis dari kategori di portal
+   * berita kota saat `php artisan berita:sinkron`.
    */
   public function run(): void
   {
-    $kategoriIds = KategoriBerita::pluck('id')->toArray();
+    $kategori = KategoriBerita::firstOrCreate(['slug' => 'berita'], ['nama' => 'Berita']);
 
     for ($i = 1; $i <= 25; $i++) {
       $judul = "Judul Berita Ke-$i";
       Berita::create([
-        'kategori_berita_id' => $kategoriIds[array_rand($kategoriIds)],
+        'kategori_berita_id' => $kategori->id,
         'judul'              => $judul,
         'tanggal'            => now(),
         'slug'               => str()->slug($judul),

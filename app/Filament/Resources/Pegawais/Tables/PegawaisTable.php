@@ -17,6 +17,7 @@ class PegawaisTable
     {
         return $table
             ->columns([
+                TextColumn::make('no')->label('No')->rowIndex(),
                 ImageColumn::make('foto')->disk('public')->circular()->label('Foto'),
                 TextColumn::make('nama')->searchable()->sortable(),
                 TextColumn::make('nip')->label('NIP')->searchable()->color('gray'),

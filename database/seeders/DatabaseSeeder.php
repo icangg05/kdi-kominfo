@@ -22,9 +22,10 @@ class DatabaseSeeder extends Seeder
     ]);
 
 
+    // Tidak ada KategoriBeritaSeeder: daftar kategori berita terbentuk otomatis
+    // mengikuti kategori di portal berita kota saat `php artisan berita:sinkron`.
     $this->call([
       JabatanSeeder::class,
-      KategoriBeritaSeeder::class,
       KategoriDokumenSeeder::class,
       ProfilDinasSeeder::class,
       ProfilPimpinanSeeder::class,

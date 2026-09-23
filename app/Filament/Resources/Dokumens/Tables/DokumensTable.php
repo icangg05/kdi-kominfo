@@ -16,6 +16,7 @@ class DokumensTable
     {
         return $table
             ->columns([
+                TextColumn::make('no')->label('No')->rowIndex(),
                 TextColumn::make('judul')->searchable()->limit(60)->wrap(),
                 TextColumn::make('kategori.nama')->badge()->sortable(),
                 TextColumn::make('total_unduhan')->label('Diunduh')->numeric()->sortable(),

@@ -6,7 +6,6 @@ use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
-use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Filters\TernaryFilter;
@@ -18,9 +17,9 @@ class BeritasTable
     {
         return $table
             ->columns([
-                ImageColumn::make('thumbnail')->disk('public')->label('Gambar')->defaultImageUrl('/img/gambar-default.webp'),
-                TextColumn::make('judul')->searchable()->limit(60)->wrap(),
-                TextColumn::make('kategori.nama')->badge()->sortable(),
+                TextColumn::make('no')->label('No')->rowIndex(),
+                TextColumn::make('judul')->searchable()->limit(70)->tooltip(fn ($record): string => $record->judul),
+                TextColumn::make('kategori.nama')->label('Kategori')->badge()->sortable(),
                 TextColumn::make('wp_id')
                     ->label('Sumber')
                     ->formatStateUsing(fn (): string => 'Portal kota')

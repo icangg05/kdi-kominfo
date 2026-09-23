@@ -1,5 +1,12 @@
 {
 	admin off
+
+	# Di server, nginx (TLS) berdiri di depan Caddy. Tanpa ini Caddy menimpa
+	# X-Forwarded-Proto jadi "http", Laravel mengira request-nya HTTP, dan
+	# URL aset serta signed URL upload Livewire rusak.
+	servers {
+		trusted_proxies static private_ranges
+	}
 }
 
 :80 {

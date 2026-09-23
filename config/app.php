@@ -156,19 +156,28 @@ return [
     | Berita dari Portal Berita Kota Kendari
     |--------------------------------------------------------------------------
     |
-    | Berita WordPress di `url` yang memuat salah satu `kata_kunci` diambil ke
-    | kategori `kategori`: otomatis tiap 6 jam (layanan `scheduler` di
-    | compose.yml) dan lewat tombol "Ambil berita sekarang" di admin. Sinkron
-    | pertama mengambil `maks_per_sinkron` berita terbaru, berikutnya hanya
-    | yang terbit sesudahnya. `aktif` false mematikan jadwal dan tombolnya.
+    | Berita WordPress di `url` yang memuat salah satu `kata_kunci` diambil
+    | otomatis tiap 6 jam pada 03.00, 09.00, 15.00, dan 21.00 WITA (layanan
+    | `scheduler` di compose.yml) dan lewat tombol
+    | "Ambil berita sekarang" di admin. Kategorinya mengikuti kategori berita
+    | itu di WordPress dan dibuat di lokal bila belum ada; `kategori_cadangan`
+    | hanya dipakai untuk berita yang di sana tidak berkategori. Tiap sinkron
+    | mengambil `maks_per_sinkron` berita terbaru lalu melewati yang `wp_id`-nya
+    | sudah ada, jadi berita yang dihapus admin akan kembali saat ditarik ulang.
+    | `aktif` false mematikan jadwal dan tombolnya.
+    |
+    | `aktif`, `kata_kunci`, dan `maks_per_sinkron` di sini cuma nilai awal:
+    | yang berlaku adalah tombol "Pengaturan sinkron" di halaman Berita. `url`
+    | sengaja tidak bisa diubah admin, dipakai sebagai batas host saat mengunduh
+    | gambar sampul.
     |
     */
 
     'berita_wp' => [
         'aktif' => true,
         'url' => 'https://berita.kendarikota.go.id',
-        'kata_kunci' => ['kominfo', 'komunikasi dan informatika'],
-        'kategori' => 'Berita Pemkot',
+        'kata_kunci' => ['kominfo'],
+        'kategori_cadangan' => 'Berita Pemkot',
         'maks_per_sinkron' => 20,
     ],
 

@@ -16,6 +16,7 @@ class GalerisTable
     {
         return $table
             ->columns([
+                TextColumn::make('no')->label('No')->rowIndex(),
                 ImageColumn::make('gambar')->disk('public')->label('Gambar'),
                 TextColumn::make('judul')->searchable()->wrap(),
                 TextColumn::make('tanggal')->date('d M Y')->sortable(),
