@@ -46,7 +46,7 @@ class ProfilDinas extends Model
       ->all();
   }
 
-  /** Pengaturan global (telp, email, sosial media) sebagai map id => value. */
+  /** Pengaturan global (telp, email, alamat, sosial media) sebagai map id => value. */
   public static function pengaturan(): array
   {
     return collect((array) static::konten('pengaturan'))->pluck('value', 'id')->all();

@@ -27,9 +27,13 @@ export type Halaman<T> = { data: T[]; meta: { page: number; lastPage: number; to
 /**
  * Semua data situs berasal dari Laravel. Dipanggil saat SSR lewat jaringan Docker,
  * jadi header X-Forwarded-For diteruskan supaya penghitung pengunjung melihat IP asli.
+ * `cookie` diteruskan bila Laravel perlu membaca sesi pengunjung (status login admin).
  */
-export async function api<T>(path: string, request?: Request): Promise<T> {
+export async function api<T>(path: string, request?: Request, cookie?: string | null): Promise<T> {
   const teruskan: Record<string, string> = {};
+
+  // X-Requested-With: request ini tidak dicatat sebagai "URL sebelumnya" di sesi admin.
+  if (cookie) Object.assign(teruskan, { Cookie: cookie, 'X-Requested-With': 'XMLHttpRequest' });
 
   if (request) {
     const ip = request.headers.get('x-forwarded-for');

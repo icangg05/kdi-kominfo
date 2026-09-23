@@ -67,7 +67,7 @@ const jsonLd = JSON.stringify({
 
     <div class="wadah py-12">
       <div class="grid gap-12 lg:grid-cols-[1fr_320px]">
-        <div>
+        <div data-perbesar>
           <!-- Sampul menumpang ke pita judul dengan bingkai, supaya tidak terbaca sebagai foto isi berita.
                Gambar utuh (contain) di depan salinannya yang diburamkan: foto potret tidak terpotong. -->
           {berita.thumbnail && (
@@ -133,9 +133,59 @@ const jsonLd = JSON.stringify({
       </div>
     </div>
   </article>
+
+  <!-- Satu dialog untuk semua gambar sampul dan isi berita; klik di luar gambar untuk menutup. -->
+  <dialog id="dialog-gambar" aria-label="Gambar diperbesar" class="dialog-halus m-auto max-h-none max-w-none overflow-visible bg-transparent p-0 [--pekat:0.92]">
+    <img alt="" class="max-h-[calc(100dvh-2rem)] max-w-[calc(100vw-2rem)] rounded object-contain" />
+    <form method="dialog">
+      <button class="absolute top-2 right-2 flex size-10 items-center justify-center rounded bg-biru-950/70 text-white transition hover:bg-biru-950" aria-label="Tutup gambar">
+        <Ikon nama="silang" class="size-5" />
+      </button>
+    </form>
+  </dialog>
 </Base>
 
 <script>
+  // Gambar sampul dan isi berita bisa diklik (atau Enter/Spasi) untuk dilihat besar.
+  // Gambar yang dibungkus tautan tetap membuka tautannya.
+  const dialogGambar = document.querySelector<HTMLDialogElement>('#dialog-gambar')!;
+  const besar = dialogGambar.querySelector('img')!;
+  let dibuka: HTMLImageElement | null = null;
+
+  document.querySelectorAll<HTMLImageElement>('[data-perbesar] img:not([aria-hidden])').forEach((img) => {
+    if (img.closest('a')) return;
+
+    const buka = () => {
+      dibuka = img;
+      // Salinan di artikel sudah ada di cache, jadi langsung menggantikan gambar sebelumnya tanpa kedip.
+      besar.removeAttribute('srcset');
+      besar.src = img.currentSrc || img.src;
+      besar.alt = img.alt;
+      dialogGambar.showModal();
+
+      // Versi terbesar yang pas di layar dimuat di belakang, baru dipasang setelah siap.
+      if (!img.srcset) return;
+      const muat = new Image();
+      muat.sizes = besar.sizes = '100vw';
+      muat.srcset = img.srcset;
+      muat.onload = () => {
+        if (dibuka === img) besar.srcset = img.srcset;
+      };
+    };
+
+    img.tabIndex = 0;
+    img.classList.add('cursor-zoom-in');
+    img.addEventListener('click', buka);
+    img.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        buka();
+      }
+    });
+  });
+
+  dialogGambar.addEventListener('click', (e) => e.target !== besar && dialogGambar.close());
+
   document.querySelectorAll<HTMLButtonElement>('[data-salin]').forEach((tombol) => {
     const label = tombol.querySelector('span')!;
     tombol.addEventListener('click', async () => {

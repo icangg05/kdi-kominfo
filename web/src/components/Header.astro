@@ -6,12 +6,14 @@ import { waktuWita } from '../lib/waktu';
 interface Props {
   telp?: string;
   email?: string;
-  /** Tautan survei kepuasan; null bila dimatikan di config/app.php. */
+  /** Tautan survei kepuasan; null bila dimatikan di Pengaturan Situs admin. */
   survei?: string | null;
+  /** Pengunjung sedang login di panel admin: tampilkan pintasan ke /admin. */
+  admin?: boolean;
   jalurAktif: string;
 }
 
-const { telp, email, survei, jalurAktif } = Astro.props;
+const { telp, email, survei, admin, jalurAktif } = Astro.props;
 
 const aktif = (href: string) => href === '/' ? jalurAktif === '/' : jalurAktif.startsWith(href.split('/').slice(0, 2).join('/'));
 
@@ -113,7 +115,7 @@ const awal = waktuWita();
 
   <!-- Menu seluler: pencarian di atas, lalu daftar datar dengan submenu terbuka.
        Tinggi dianimasikan lewat grid-rows 0fr→1fr; `invisible` menjaga tautan tak terjangkau Tab saat tertutup. -->
-  <nav id="menu-seluler" class="invisible grid max-h-[calc(100dvh-72px)] grid-rows-[0fr] border-white/15 opacity-0 transition-all duration-300 ease-out data-terbuka:visible data-terbuka:grid-rows-[1fr] data-terbuka:border-t data-terbuka:opacity-100 lg:hidden" aria-label="Navigasi seluler">
+  <nav id="menu-seluler" class="invisible grid grid-rows-[0fr] border-white/15 opacity-0 transition-all duration-300 ease-out data-terbuka:visible data-terbuka:grid-rows-[1fr] data-terbuka:border-t data-terbuka:opacity-100 lg:hidden" aria-label="Navigasi seluler">
     <div class="min-h-0 overflow-y-auto">
       <div class="wadah space-y-3 py-4">
         <form method="get" action="/berita" role="search" class="relative">
@@ -145,6 +147,12 @@ const awal = waktuWita();
             </li>
           ))}
         </ul>
+        {admin && (
+          <a href="/admin" class="flex items-center gap-2 rounded border border-white/25 px-3 py-2.5 text-sm font-semibold hover:bg-white/10">
+            <Ikon nama="orang" class="size-4" />
+            Halaman Admin
+          </a>
+        )}
       </div>
     </div>
   </nav>
@@ -198,6 +206,12 @@ const awal = waktuWita();
         )}
       </div>
     ))}
+    {admin && (
+      <a href="/admin" class="ml-auto flex items-center gap-2 pl-4 text-[13px] font-semibold tracking-wide text-biru-600 uppercase transition-colors hover:text-biru-800 dark:text-biru-300 dark:hover:text-white">
+        <Ikon nama="orang" class="size-4" />
+        Halaman Admin
+      </a>
+    )}
   </div>
 </nav>
 
@@ -206,7 +220,7 @@ const awal = waktuWita();
   <dialog
     id="dialog-survei"
     aria-labelledby="judul-survei"
-    class="m-auto h-[min(52rem,calc(100dvh-2rem))] max-h-none w-[min(56rem,calc(100%-2rem))] max-w-none rounded bg-white p-0 text-teks shadow-[0_24px_48px_-28px_rgba(7,31,61,0.7)] dark:bg-malam-kartu"
+    class="dialog-halus m-auto h-[min(52rem,calc(100dvh-2rem))] max-h-none w-[min(56rem,calc(100%-2rem))] max-w-none rounded bg-white p-0 text-teks shadow-[0_24px_48px_-28px_rgba(7,31,61,0.7)] dark:bg-malam-kartu"
   >
     <div class="flex h-full flex-col">
       <div class="flex items-center gap-3 border-b border-garis py-2 pr-2 pl-4">
@@ -251,6 +265,8 @@ const awal = waktuWita();
 
   tombol?.addEventListener('click', () => {
     const terbuka = tombol.getAttribute('aria-expanded') === 'true';
+    // Halaman dikunci selama menu terbuka, jadi menu harus muat dari posisinya sekarang sampai dasar layar.
+    if (!terbuka && menu) menu.style.maxHeight = `${innerHeight - menu.getBoundingClientRect().top}px`;
     tombol.setAttribute('aria-expanded', String(!terbuka));
     menu?.toggleAttribute('data-terbuka', !terbuka);
   });
@@ -280,13 +296,18 @@ const awal = waktuWita();
     // Tema baru menyebar melingkar dari tombol; tanpa View Transition API atau saat gerak dikurangi, langsung berganti.
     tombolTema.addEventListener('click', () => {
       if (!document.startViewTransition || matchMedia('(prefers-reduced-motion: reduce)').matches) return gantiTema();
+      // Klik lewat keyboard saat animasi berjalan diabaikan; mouse dan sentuh sudah diblok CSS data-ganti-tema.
+      if ('gantiTema' in akar.dataset) return;
 
       const r = tombolTema.getBoundingClientRect();
       const x = r.left + r.width / 2;
       const y = r.top + r.height / 2;
       const jari = Math.hypot(Math.max(x, innerWidth - x), Math.max(y, innerHeight - y));
 
-      document.startViewTransition(gantiTema).ready.then(() => {
+      akar.dataset.gantiTema = '';
+      const transisi = document.startViewTransition(gantiTema);
+      transisi.finished.finally(() => delete akar.dataset.gantiTema);
+      transisi.ready.then(() => {
         akar.animate(
           { clipPath: [`circle(0 at ${x}px ${y}px)`, `circle(${jari}px at ${x}px ${y}px)`] },
           { duration: 550, easing: 'cubic-bezier(0.4, 0, 0.2, 1)', pseudoElement: '::view-transition-new(root)' },
@@ -310,57 +331,3 @@ const awal = waktuWita();
     setInterval(tik, 1000);
   }, 1000 - (Date.now() % 1000));
 </script>
-
-<style>
-  /* Dialog memudar dan naik sedikit saat dibuka, kebalikannya saat ditutup. display dan overlay ikut
-     ditransisikan (allow-discrete) supaya dialog tetap tampil sampai animasi tutup selesai. */
-  #dialog-survei,
-  #dialog-survei::backdrop {
-    transition:
-      opacity 300ms cubic-bezier(0.16, 1, 0.3, 1),
-      translate 300ms cubic-bezier(0.16, 1, 0.3, 1),
-      scale 300ms cubic-bezier(0.16, 1, 0.3, 1),
-      background-color 300ms ease,
-      overlay 300ms allow-discrete,
-      display 300ms allow-discrete;
-  }
-
-  #dialog-survei {
-    opacity: 0;
-    translate: 0 1rem;
-    scale: 0.97;
-  }
-
-  #dialog-survei[open] {
-    opacity: 1;
-    translate: 0 0;
-    scale: 1;
-  }
-
-  #dialog-survei::backdrop {
-    background-color: rgb(7 31 61 / 0);
-  }
-
-  #dialog-survei[open]::backdrop {
-    background-color: rgb(7 31 61 / 0.7);
-  }
-
-  @starting-style {
-    #dialog-survei[open] {
-      opacity: 0;
-      translate: 0 1rem;
-      scale: 0.97;
-    }
-
-    #dialog-survei[open]::backdrop {
-      background-color: rgb(7 31 61 / 0);
-    }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    #dialog-survei,
-    #dialog-survei::backdrop {
-      transition: none;
-    }
-  }
-</style>

@@ -54,15 +54,20 @@ const darurat = layanan['telpon-darurat-112'];
 
   <!-- Sorotan berita -->
   <section class="relative isolate overflow-hidden bg-biru-950 text-white" aria-roledescription="carousel" aria-label="Sorotan berita" data-sorotan>
-    <img
-      src="/img/latar-jaringan.webp"
-      alt=""
-      aria-hidden="true"
-      width="2560"
-      height="1440"
-      fetchpriority="high"
-      class="absolute inset-0 -z-20 size-full object-cover"
-    />
+    {sorotan.length === 0 && (
+      <img src="/img/latar-jaringan.webp" alt="" aria-hidden="true" width="2560" height="1440" fetchpriority="high" class="absolute inset-0 -z-20 size-full object-cover" />
+    )}
+    {sorotan.map((b, i) => (
+      <img
+        src={b.thumbnail ?? GAMBAR_DEFAULT}
+        alt=""
+        aria-hidden="true"
+        fetchpriority={i === 0 ? 'high' : 'low'}
+        onerror={cadanganGambar}
+        class:list={['absolute inset-0 -z-20 size-full object-cover transition-opacity duration-700', i !== 0 && 'opacity-0']}
+        data-latar
+      />
+    ))}
     <div class="absolute inset-0 -z-10 bg-linear-to-r from-biru-950 via-biru-900/90 to-biru-800/40"></div>
 
     <div class="wadah grid min-h-[26rem] content-center gap-8 py-12 lg:min-h-[32rem] lg:grid-cols-[minmax(0,1fr)_auto] lg:items-center lg:py-16">
@@ -82,8 +87,8 @@ const darurat = layanan['telpon-darurat-112'];
               )}
               <span>{tanggalPanjang(b.tanggal)}</span>
             </p>
-            <h2 class="mt-4 line-clamp-3 text-[2rem] leading-[1.12] font-bold tracking-tight text-balance sm:text-5xl lg:text-[3.5rem]">
-              <a href={`/berita/${b.slug}`} class="decoration-2 underline-offset-8 hover:underline">{b.judul}</a>
+            <h2 class="mt-4 line-clamp-3 text-2xl leading-tight font-bold tracking-tight text-balance sm:text-3xl lg:text-4xl">
+              <a href={`/berita/${b.slug}`} class="decoration-2 underline-offset-4 hover:underline">{b.judul}</a>
             </h2>
             <p class="mt-4 line-clamp-2 max-w-2xl text-biru-100 lg:text-lg">{b.ringkasan}</p>
             <a href={`/berita/${b.slug}`} class="mt-7 inline-flex items-center gap-2 rounded bg-white px-5 py-3 text-sm font-semibold text-biru-800 transition hover:bg-biru-50 active:translate-y-px">
@@ -446,12 +451,14 @@ const darurat = layanan['telpon-darurat-112'];
   if (sorotan) {
     const slide = [...sorotan.querySelectorAll<HTMLElement>('[data-slide]')];
     const tombol = [...sorotan.querySelectorAll<HTMLButtonElement>('[data-ke]')];
+    const latar = [...sorotan.querySelectorAll<HTMLElement>('[data-latar]')];
     let aktif = 0;
     let giliran: ReturnType<typeof setInterval> | undefined;
 
     const tampil = (n: number) => {
       aktif = (n + slide.length) % slide.length;
       slide.forEach((s, i) => (s.hidden = i !== aktif));
+      latar.forEach((l, i) => l.classList.toggle('opacity-0', i !== aktif));
       tombol.forEach((t, i) => t.setAttribute('aria-current', String(i === aktif)));
     };
 

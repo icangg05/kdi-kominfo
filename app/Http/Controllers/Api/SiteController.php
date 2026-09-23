@@ -24,9 +24,13 @@ class SiteController
 {
   public function pengaturan(): array
   {
+    $atur = ProfilDinas::pengaturan();
+
     return [
-      'pengaturan' => ProfilDinas::pengaturan(),
-      'survei' => config('app.survei.aktif') ? config('app.survei.url') : null,
+      'pengaturan' => $atur,
+      'survei' => ($atur['survei_aktif'] ?? false) ? ($atur['survei_url'] ?? null) : null,
+      // Astro meneruskan cookie pengunjung ke sini, jadi sesi admin Filament ikut terbaca.
+      'admin' => auth()->check(),
       'kategoriBerita' => KategoriBerita::orderBy('nama')->get(['nama', 'slug']),
       'kategoriDokumen' => KategoriDokumen::orderBy('nama')->get(['nama', 'slug']),
     ];

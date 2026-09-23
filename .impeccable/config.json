@@ -1,0 +1,17 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "broken-image",
+        "value": "*",
+        "files": [
+          "web/src/pages/berita/[slug].astro"
+        ],
+        "createdAt": "2026-09-23T07:56:23.368Z",
+        "reason": "Claude: img lightbox di #dialog-gambar sengaja tanpa src, diisi JS sebelum showModal()"
+      }
+    ]
+  }
+}

@@ -14,29 +14,30 @@ services:
       - web
 
   app:
+    image: kdi-kominfo-app
     build:
       context: .
       dockerfile: docker/php/Dockerfile
     container_name: kdi-app
     restart: unless-stopped
     env_file: .env
+    # Berkas unggahan (storage/app) langsung di folder project, bukan volume Docker.
     volumes:
-      - app-storage:/app/storage/app
+      - ./storage/app:/app/storage/app
     depends_on:
       db:
         condition: service_healthy
 
   # Menjalankan jadwal Laravel (routes/console.php), misalnya sinkron berita tiap 6 jam; tidak butuh cron di server.
+  # Memakai image yang sama dengan app, jadi cukup dibangun sekali.
   scheduler:
-    build:
-      context: .
-      dockerfile: docker/php/Dockerfile
+    image: kdi-kominfo-app
     container_name: kdi-scheduler
     restart: unless-stopped
     command: php artisan schedule:work
     env_file: .env
     volumes:
-      - app-storage:/app/storage/app
+      - ./storage/app:/app/storage/app
     depends_on:
       db:
         condition: service_healthy
@@ -74,4 +75,3 @@ volumes:
   db-data:
   caddy-data:
   caddy-config:
-  app-storage:

@@ -10,6 +10,8 @@ storage/framework/sessions/*
 storage/framework/views/*
 storage/framework/testing
 storage/logs/*
+storage/app/public/*
+storage/app/private/*
 .env
 .env.*
 !.env.example

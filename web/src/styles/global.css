@@ -167,6 +167,81 @@
   mix-blend-mode: normal;
 }
 
+/* Dialog memudar dan naik sedikit saat dibuka, kebalikannya saat ditutup. display dan overlay ikut
+   ditransisikan (allow-discrete) supaya dialog tetap tampil sampai animasi tutup selesai. */
+.dialog-halus,
+.dialog-halus::backdrop {
+  transition:
+    opacity 300ms cubic-bezier(0.16, 1, 0.3, 1),
+    translate 300ms cubic-bezier(0.16, 1, 0.3, 1),
+    scale 300ms cubic-bezier(0.16, 1, 0.3, 1),
+    background-color 300ms ease,
+    overlay 300ms allow-discrete,
+    display 300ms allow-discrete;
+}
+
+.dialog-halus {
+  opacity: 0;
+  translate: 0 1rem;
+  scale: 0.97;
+}
+
+.dialog-halus[open] {
+  opacity: 1;
+  translate: 0 0;
+  scale: 1;
+}
+
+.dialog-halus::backdrop {
+  background-color: rgb(7 31 61 / 0);
+}
+
+.dialog-halus[open]::backdrop {
+  background-color: rgb(7 31 61 / var(--pekat, 0.7));
+}
+
+@starting-style {
+  .dialog-halus[open] {
+    opacity: 0;
+    translate: 0 1rem;
+    scale: 0.97;
+  }
+
+  .dialog-halus[open]::backdrop {
+    background-color: rgb(7 31 61 / 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dialog-halus,
+  .dialog-halus::backdrop {
+    transition: none;
+  }
+}
+
+/* Gutter selalu dipesan supaya tata letak tidak melompat saat gulir dikunci di bawah ini. */
+html {
+  scrollbar-gutter: stable;
+}
+
+/* Dialog terbuka (survei, gambar berita): halaman di belakangnya tidak ikut tergulir. */
+html:has(.dialog-halus[open]) {
+  overflow: hidden;
+}
+
+/* Menu seluler terbuka (hanya tampil di bawah lg): halaman di belakangnya tidak ikut tergulir. */
+html:has(#menu-seluler[data-terbuka]) {
+  @variant max-lg {
+    overflow: hidden;
+  }
+}
+
+/* Selama tema menyebar, tangkapan layar lama diam di atas halaman asli; gulir dan klik dikunci sampai selesai. */
+html[data-ganti-tema] {
+  overflow: hidden;
+  pointer-events: none;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   ::before,

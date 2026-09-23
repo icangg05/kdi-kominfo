@@ -27,20 +27,21 @@ const {
 type Global = {
   pengaturan: Record<string, string | null>;
   survei: string | null;
+  admin: boolean;
   kategoriBerita: { nama: string; slug: string }[];
   kategoriDokumen: { nama: string; slug: string }[];
 };
 
 // Kontak dan media sosial dikelola dari panel admin, jadi diambil di setiap render.
-let global: Global = { pengaturan: {}, survei: null, kategoriBerita: [], kategoriDokumen: [] };
+let global: Global = { pengaturan: {}, survei: null, admin: false, kategoriBerita: [], kategoriDokumen: [] };
 
 try {
-  global = await api<Global>('/pengaturan');
+  global = await api<Global>('/pengaturan', undefined, Astro.request.headers.get('cookie'));
 } catch {
   // Situs tetap tampil walau API sedang tidak bisa dihubungi.
 }
 
-const { telp, email, fb, ig, tt, yt } = global.pengaturan;
+const { telp, email, alamat, fb, ig, tt, yt } = global.pengaturan;
 const judulPenuh = `${judul} | Diskominfo Kota Kendari`;
 const asal = asalSitus(Astro.url);
 const kanonis = asal + Astro.url.pathname;
@@ -98,12 +99,12 @@ const gambarPenuh = new URL(gambar || '/img/og-default.jpg', asal + '/').href;
       Lewati ke konten utama
     </a>
 
-    <Header telp={telp ?? undefined} email={email ?? undefined} survei={global.survei} jalurAktif={Astro.url.pathname} />
+    <Header telp={telp ?? undefined} email={email ?? undefined} survei={global.survei} admin={global.admin} jalurAktif={Astro.url.pathname} />
 
     <main id="konten" class="flex-1">
       <slot />
     </main>
 
-    <Footer telp={telp ?? undefined} email={email ?? undefined} fb={fb} ig={ig} tt={tt} yt={yt} />
+    <Footer telp={telp ?? undefined} email={email ?? undefined} alamat={alamat} fb={fb} ig={ig} tt={tt} yt={yt} />
   </body>
 </html>

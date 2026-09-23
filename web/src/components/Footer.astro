@@ -5,13 +5,14 @@ import { tautanFooter } from '../lib/navigasi';
 interface Props {
   telp?: string;
   email?: string;
+  alamat?: string | null;
   fb?: string | null;
   ig?: string | null;
   tt?: string | null;
   yt?: string | null;
 }
 
-const { telp, email, fb, ig, tt, yt } = Astro.props;
+const { telp, email, alamat, fb, ig, tt, yt } = Astro.props;
 
 const sosial = [
   { url: fb, nama: 'facebook' as const, label: 'Facebook' },
@@ -47,10 +48,12 @@ const sosial = [
 
   <div class="border-t border-white/10">
     <div class="wadah flex flex-col gap-5 py-7 text-sm lg:flex-row lg:items-center lg:justify-between">
-      <p class="flex items-start gap-3">
-        <Ikon nama="gedung" class="mt-0.5 size-5 shrink-0 text-biru-300" />
-        <span>Jl. Drs. H. Abdullah Silondae No. 5, Kendari, Sulawesi Tenggara</span>
-      </p>
+      {alamat && (
+        <p class="flex items-start gap-3">
+          <Ikon nama="gedung" class="mt-0.5 size-5 shrink-0 text-biru-300" />
+          <span>{alamat}</span>
+        </p>
+      )}
 
       <div class="flex flex-wrap items-center gap-x-8 gap-y-3">
         {telp && (

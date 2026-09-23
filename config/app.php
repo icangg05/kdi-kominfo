@@ -138,21 +138,6 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Survei Kepuasan
-    |--------------------------------------------------------------------------
-    |
-    | Tombol "Survei Kepuasan" di situs publik membuka tautan ini dalam jendela
-    | di atas halaman. Matikan `aktif` untuk menyembunyikan tombolnya.
-    |
-    */
-
-    'survei' => [
-        'aktif' => true,
-        'url' => 'https://surveidigital.spbe.go.id/embed/survey/eyJzdXJ2ZXlfaWQiOjIsInNlcnZpY2VfaWQiOjg2NSwiaG9zdCI6Imh0dHBzOi8vc3BwZC5rZW5kYXJpa290YS5nby5pZC8saHR0cDovL2xvY2FsaG9zdDo4MDA0Iiwia2V5Ijoia0NFZW9ySGgifQ==/embed/view/?jenis_layanan=SPPD%20Kota%20Kendari',
-    ],
-
-    /*
-    |--------------------------------------------------------------------------
     | Berita dari Portal Berita Kota Kendari
     |--------------------------------------------------------------------------
     |
