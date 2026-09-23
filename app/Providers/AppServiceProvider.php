@@ -44,10 +44,14 @@ class AppServiceProvider extends ServiceProvider
     // Temp upload wajib di disk privat. Endpoint upload Livewire bisa dipanggil tamu
     // (halaman login pun komponen Filament) dan menyimpan file dengan ekstensi dari klien,
     // jadi di disk public file .html/.php kiriman siapa pun langsung bisa dibuka via /storage.
+    // RichEditor mengirim perubahan per path JSON; teks di butir daftar sudah 11 segmen
+    // (data.konten.content.N.content.N.content.N.content.N.text), tiap daftar bersarang +4,
+    // tautan/tabel menambah lagi. Bawaan 10 membuat simpan gagal, 30 cukup untuk daftar 4 tingkat.
     config([
       'livewire.temporary_file_upload.disk' => 'local',
       'livewire.temporary_file_upload.rules' => ['required', 'file', 'max:' . config('app.upload.file_maks_kb')],
       'livewire.temporary_file_upload.max_upload_time' => 30,
+      'livewire.payload.max_nesting_depth' => 30,
     ]);
 
     // Sapu sisa upload PHP tiap ada aktivitas Livewire/Filament (buka form,

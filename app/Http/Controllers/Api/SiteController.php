@@ -138,7 +138,8 @@ class SiteController
     $data = Pegawai::query()
       ->with('jabatan:id,nama')
       ->when($request->string('search')->toString(), fn ($q, $cari) => $q->where('nama', 'like', "%{$cari}%"))
-      ->orderBy('nama')
+      // Sama dengan tabel admin: terbaru dulu, id sebagai penentu urutan.
+      ->latest()->latest('id')
       ->paginate(perPage: 9, page: $request->integer('page', 1));
 
     return $this->paginated($data, fn (Pegawai $p) => [

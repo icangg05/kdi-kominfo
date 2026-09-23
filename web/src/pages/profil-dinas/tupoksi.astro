@@ -27,7 +27,7 @@ const data = await api<{ tugas: string | null; fungsi: string[] }>('/profil-dina
         <JudulBagian judul="Fungsi" />
         <ol class="grid gap-5 md:grid-cols-2">
           {data.fungsi.map((f, i) => (
-            <li class="flex gap-4 rounded border border-biru-100 p-5 dark:border-garis">
+            <li class="flex gap-4 rounded border border-garis bg-white p-5 bayangan-kartu dark:bg-malam-kartu">
               <span class="flex size-8 shrink-0 items-center justify-center rounded bg-biru-50 text-sm font-bold text-biru-700 dark:bg-biru-900 dark:text-biru-200">
                 {i + 1}
               </span>

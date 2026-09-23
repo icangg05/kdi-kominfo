@@ -11,6 +11,15 @@
         ],
         "createdAt": "2026-09-23T07:56:23.368Z",
         "reason": "Claude: img lightbox di #dialog-gambar sengaja tanpa src, diisi JS sebelum showModal()"
+      },
+      {
+        "rule": "broken-image",
+        "value": "*",
+        "files": [
+          "web/src/components/DialogGambar.astro"
+        ],
+        "createdAt": "2026-09-23T14:47:53.903Z",
+        "reason": "claude: src dialog lightbox diisi skrip sebelum showModal, tidak pernah tampil kosong (pola lama dari berita/[slug].astro)"
       }
     ]
   }

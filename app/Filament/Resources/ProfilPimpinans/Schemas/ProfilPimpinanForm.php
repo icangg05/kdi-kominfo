@@ -2,8 +2,10 @@
 
 namespace App\Filament\Resources\ProfilPimpinans\Schemas;
 
+use App\Filament\Resources\Pegawais\PegawaiResource;
 use App\Models\Pegawai;
 use App\Support\KompresGambar;
+use Filament\Actions\Action;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
@@ -11,12 +13,13 @@ use Filament\Schemas\Components\Flex;
 use Filament\Schemas\Components\Image;
 use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Schema;
+use Filament\Support\Icons\Heroicon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Storage;
 
 class ProfilPimpinanForm
 {
-    private const FOTO_MAKS = 4;
+    private const FOTO_MAKS = 3;
 
     public static function configure(Schema $schema): Schema
     {
@@ -36,7 +39,16 @@ class ProfilPimpinanForm
                         ->preload()
                         ->required()
                         ->live()
-                        ->helperText('Nama, jabatan, dan foto utama di situs diambil dari data pegawai. Ganti fotonya lewat menu Pegawai.'),
+                        // Tab baru supaya isian profil yang belum disimpan tidak hilang.
+                        ->hintAction(
+                            Action::make('editPegawai')
+                                ->label('Edit data pegawai')
+                                ->icon(Heroicon::OutlinedPencilSquare)
+                                ->url(fn ($state) => $state ? PegawaiResource::getUrl('edit', ['record' => $state]) : null)
+                                ->openUrlInNewTab()
+                                ->visible(fn ($state) => filled($state)),
+                        )
+                        ->helperText('Nama, jabatan, dan foto utama di situs diambil dari data pegawai. Ubah lewat tautan "Edit data pegawai".'),
                 ])->from('sm')->columnSpanFull(),
                 FileUpload::make('foto')
                     ->label('Foto tambahan')

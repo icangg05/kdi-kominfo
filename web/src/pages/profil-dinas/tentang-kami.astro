@@ -39,14 +39,14 @@ const data = await api<Data>('/profil-dinas/tentang-kami', Astro.request);
 
     <div class="grid gap-8 lg:grid-cols-2">
       {data.visi && (
-        <section class="rounded bg-biru-800 motif-komdigi p-8 text-white">
+        <section class="rounded bg-biru-800 motif-komdigi p-8 text-white bayangan-kartu">
           <h2 class="mb-4 text-xl font-bold">Visi</h2>
           <p class="text-lg leading-relaxed text-biru-100 italic">{data.visi}</p>
         </section>
       )}
 
       {data.misi.length > 0 && (
-        <section class="rounded border border-biru-100 p-8 dark:border-garis">
+        <section class="rounded border border-garis bg-white p-8 dark:bg-malam-kartu bayangan-kartu">
           <h2 class="mb-5 text-xl font-bold text-biru-900 dark:text-white">Misi</h2>
           <ol class="space-y-4">
             {data.misi.map((m, i) => (

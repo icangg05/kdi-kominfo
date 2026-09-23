@@ -359,7 +359,7 @@
         color: var(--danger-400);
     }
 
-    /* Form Profil Pimpinan: pratinjau foto profil pegawai, dan foto tambahan (maks 4) sebaris di layar lebar. */
+    /* Form Profil Pimpinan: pratinjau foto profil pegawai, dan foto tambahan (maks 3) sebaris di layar lebar. */
     .kdi-foto-pegawai {
         object-fit: cover;
         border-radius: 0.25rem;
@@ -368,17 +368,18 @@
 
     @media (min-width: 1024px) {
         .kdi-foto-tambahan .filepond--root[data-style-panel-layout='grid'] .filepond--item {
-            width: calc(25% - 0.5rem);
+            width: calc(33.333% - 0.5rem);
         }
     }
 
-    /* Tabel galeri, video, dokumen, pegawai, dan kategori dibuat rapat (bawaan Filament 1rem atas-bawah). */
+    /* Tabel galeri, video, dokumen, pegawai, jabatan, dan kategori dibuat rapat (bawaan Filament 1rem atas-bawah). */
     .fi-resource-dokumens .fi-ta-text,
     .fi-resource-pegawais .fi-ta-text,
     .fi-resource-pegawais .fi-ta-image,
     .fi-resource-galeris .fi-ta-text,
     .fi-resource-galeris .fi-ta-image,
     .fi-resource-videos .fi-ta-text,
+    .fi-resource-jabatans .fi-ta-text,
     .fi-resource-kategori-beritas .fi-ta-text,
     .fi-resource-kategori-dokumens .fi-ta-text {
         padding-block: 0.375rem;

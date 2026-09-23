@@ -588,7 +588,7 @@ const darurat = layanan['telpon-darurat-112'];
 <script>
   const kurangiGerak = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  // Sorotan: tombol nomor memilih slide; bergilir tiap 7 detik kecuali disentuh atau gerak dikurangi.
+  // Sorotan: tombol nomor memilih slide; bergilir tiap 7 detik (tetap jalan saat kursor di atasnya) kecuali fokus keyboard atau gerak dikurangi.
   const sorotan = document.querySelector<HTMLElement>('[data-sorotan]');
 
   if (sorotan) {
@@ -611,8 +611,6 @@ const darurat = layanan['telpon-darurat-112'];
     };
 
     tombol.forEach((t, i) => t.addEventListener('click', () => { tampil(i); jalan(); }));
-    sorotan.addEventListener('mouseenter', () => clearInterval(giliran));
-    sorotan.addEventListener('mouseleave', jalan);
     sorotan.addEventListener('focusin', () => clearInterval(giliran));
     sorotan.addEventListener('focusout', jalan);
     jalan();

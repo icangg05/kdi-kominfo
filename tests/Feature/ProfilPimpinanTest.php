@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Filament\Resources\Pegawais\PegawaiResource;
 use App\Filament\Resources\ProfilPimpinans\Pages\EditProfilPimpinan;
 use App\Models\Pegawai;
 use App\Models\ProfilPimpinan;
@@ -40,10 +41,10 @@ class ProfilPimpinanTest extends TestCase
     Storage::disk('public')->assertMissing('foto-kadis/b.webp');
   }
 
-  public function test_foto_dibatasi_empat(): void
+  public function test_foto_dibatasi_tiga(): void
   {
     Livewire::test(EditProfilPimpinan::class)
-      ->set('data.foto', array_map(fn ($i) => UploadedFile::fake()->image("{$i}.jpg"), range(1, 5)))
+      ->set('data.foto', array_map(fn ($i) => UploadedFile::fake()->image("{$i}.jpg"), range(1, 4)))
       ->call('save')
       ->assertHasFormErrors(['foto']);
   }
@@ -76,5 +77,23 @@ class ProfilPimpinanTest extends TestCase
       ->assertSeeHtml('/img/gambar-default.webp')
       ->set('data.pegawai_id', $pegawai->id)
       ->assertSeeHtml('/storage/pegawai/p.webp');
+  }
+
+  public function test_tautan_edit_pegawai_mengikuti_pilihan(): void
+  {
+    $pegawai = Pegawai::whereKeyNot(ProfilPimpinan::first()->pegawai_id)->first();
+
+    $halaman = Livewire::test(EditProfilPimpinan::class)->set('data.pegawai_id', $pegawai->id);
+
+    $halaman->assertSeeHtml(PegawaiResource::getUrl('edit', ['record' => $pegawai->id]));
+  }
+
+  public function test_teks_di_dalam_daftar_bisa_diperbarui(): void
+  {
+    // Editor mengirim perubahan per path; teks di dalam butir daftar sudah 11 segmen.
+    Livewire::test(EditProfilPimpinan::class)
+      ->set('data.konten.content.0.content.0.content.0.content.0.text', 'Butir baru')
+      ->call('save')
+      ->assertHasNoFormErrors();
   }
 }

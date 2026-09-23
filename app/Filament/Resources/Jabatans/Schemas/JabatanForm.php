@@ -11,7 +11,7 @@ class JabatanForm
     {
         return $schema
             ->components([
-                TextInput::make('nama')->required()->maxLength(255),
+                TextInput::make('nama')->required()->maxLength(255)->unique(ignoreRecord: true),
             ]);
     }
 }

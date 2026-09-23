@@ -131,9 +131,14 @@
   background-size: 14px 14px;
 }
 
+/* Bayangan kartu diam: garis halus di tepi plus bayangan lembut di bawah. */
+@utility bayangan-kartu {
+  @apply shadow-[0_1px_2px_rgba(7,31,61,0.06),0_10px_24px_-12px_rgba(7,31,61,0.28)] dark:shadow-[0_1px_2px_rgba(0,0,0,0.4),0_10px_24px_-12px_rgba(0,0,0,0.75)];
+}
+
 /* Kartu daftar (berita, galeri, dokumen, video): putih bertepi tipis dengan bayangan, supaya tidak menyatu dengan latar. */
 @utility kartu-timbul {
-  @apply rounded border border-garis bg-white shadow-[0_1px_2px_rgba(7,31,61,0.06),0_10px_24px_-12px_rgba(7,31,61,0.28)] transition dark:bg-malam-kartu dark:shadow-[0_1px_2px_rgba(0,0,0,0.4),0_10px_24px_-12px_rgba(0,0,0,0.75)];
+  @apply rounded border border-garis bg-white bayangan-kartu transition dark:bg-malam-kartu;
 
   &:hover {
     @apply border-biru-200 shadow-[0_2px_4px_rgba(7,31,61,0.08),0_20px_40px_-18px_rgba(7,31,61,0.42)] dark:border-biru-700 dark:shadow-[0_2px_4px_rgba(0,0,0,0.45),0_20px_40px_-18px_rgba(0,0,0,0.85)];
