@@ -26,8 +26,6 @@ class PegawaiSeeder extends Seeder
         'nip'           => '19850' . rand(10000000, 99999999),
         'foto'          => null,
         'jabatan_id'    => $jabatanIds[array_rand($jabatanIds)],
-        'tanggal_lahir' => now()->subYears(rand(25, 55))->subDays(rand(0, 365)),
-        'alamat'        => 'Jl. Contoh Alamat No. ' . $i . ', Kendari',
         'created_at'    => now(),
         'updated_at'    => now(),
       ];

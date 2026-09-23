@@ -2,6 +2,8 @@
 
 namespace Database\Seeders;
 
+use App\Models\Jabatan;
+use App\Models\Pegawai;
 use App\Models\ProfilPimpinan;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -13,24 +15,14 @@ class ProfilPimpinanSeeder extends Seeder
    */
   public function run(): void
   {
+    $kadis = Pegawai::create([
+      'nama'       => 'Sahuriyanto Meronda, SP., MM',
+      'jabatan_id' => Jabatan::where('nama', 'Kepala Dinas')->value('id'),
+    ]);
+
     ProfilPimpinan::create([
-      'nama'          => 'Sahuriyanto Meronda, SP., MM',
-      'awal_periode'  => 2025,
-      'akhir_periode' => 2029,
-      'foto'          => json_encode([
-        [
-          'id'    => 1,
-          'value' => "foto-kadis/kadis-1.webp",
-        ],
-        [
-          'id'    => 2,
-          'value' => "foto-kadis/kadis-2.webp",
-        ],
-        [
-          'id'    => 3,
-          'value' => "foto-kadis/kadis-3.webp",
-        ],
-      ]),
+      'pegawai_id'    => $kadis->id,
+      'foto'          => ['foto-kadis/kadis-1.webp', 'foto-kadis/kadis-2.webp', 'foto-kadis/kadis-3.webp'],
       'konten' => '<h3>Profil Singkat</h3>
         <ul>
           <li><strong>Nama:</strong> Sahuriyanto Meronda, SP., MM</li>

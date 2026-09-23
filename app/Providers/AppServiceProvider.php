@@ -2,10 +2,15 @@
 
 namespace App\Providers;
 
+use App\Support\NamaBerkas;
+use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\RichEditor;
+use Filament\Tables\Table;
 use Illuminate\Foundation\Http\Events\RequestHandled;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\ServiceProvider;
+use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -18,9 +23,29 @@ class AppServiceProvider extends ServiceProvider
   {
     Carbon::setLocale(config('app.locale'));
 
+    Table::configureUsing(fn (Table $table) => $table->defaultPaginationPageOption(25));
+
+    // Nama file pendek (NamaBerkas), menggantikan ULID 26 karakter bawaan FileUpload dan
+    // hash 40 karakter bawaan lampiran RichEditor. Ekstensinya tetap mengikuti bawaan
+    // masing-masing: FileUpload dari nama asli, lampiran editor ditebak dari MIME.
+    FileUpload::configureUsing(fn (FileUpload $upload) => $upload->getUploadedFileNameForStorageUsing(
+      fn (TemporaryUploadedFile $file) => NamaBerkas::acak($file->getClientOriginalExtension()),
+    ));
+    RichEditor::configureUsing(fn (RichEditor $editor) => $editor->saveUploadedFileAttachmentUsing(
+      fn (RichEditor $component, TemporaryUploadedFile $file) => $file->storeAs(
+        $component->getFileAttachmentsDirectory(),
+        NamaBerkas::acak($file->guessExtension()),
+        $component->getFileAttachmentsDiskName(),
+      ),
+    ));
+
     // Bawaan Livewire menolak upload sementara di atas 12 MB dan membatalkan
     // upload yang lebih lama dari 5 menit — terlalu ketat untuk dokumen 100 MB.
+    // Temp upload wajib di disk privat. Endpoint upload Livewire bisa dipanggil tamu
+    // (halaman login pun komponen Filament) dan menyimpan file dengan ekstensi dari klien,
+    // jadi di disk public file .html/.php kiriman siapa pun langsung bisa dibuka via /storage.
     config([
+      'livewire.temporary_file_upload.disk' => 'local',
       'livewire.temporary_file_upload.rules' => ['required', 'file', 'max:' . config('app.upload.file_maks_kb')],
       'livewire.temporary_file_upload.max_upload_time' => 30,
     ]);

@@ -90,7 +90,8 @@ class HalamanProfil extends Page
                             ->disk('public')
                             ->directory('foto-diskominfo')
                             ->maxSize(config('app.upload.gambar_maks_kb'))
-                            ->saveUploadedFileUsing(KompresGambar::simpan(...)),
+                            ->saveUploadedFileUsing(KompresGambar::simpan(...))
+                            ->helperText('Maksimal ' . (config('app.upload.gambar_maks_kb') / 1024) . ' MB per foto.'),
                     ]),
                     Tab::make('Tupoksi')->schema([
                         RichEditor::make('tugas')->label('Tugas')->required(),
@@ -109,7 +110,7 @@ class HalamanProfil extends Page
                         ])->columns(2)->statePath('bagan_organisasi'),
                         FileUpload::make('struktur_organisasi')
                             ->label('Gambar bagan resmi (opsional)')
-                            ->helperText('Ditautkan di bawah bagan, misalnya hasil pindai SK. Tampil sebagai pengganti bila bagan di atas kosong.')
+                            ->helperText('Ditautkan di bawah bagan, misalnya hasil pindai SK. Tampil sebagai pengganti bila bagan di atas kosong. Maksimal ' . (config('app.upload.gambar_maks_kb') / 1024) . ' MB.')
                             ->image()
                             ->disk('public')
                             ->directory('struktur-organisasi')
@@ -134,7 +135,8 @@ class HalamanProfil extends Page
             $baris = ProfilDinas::firstOrNew(['jenis' => $jenis]);
             $baris->konten = in_array($jenis, self::DAFTAR, true)
                 ? collect((array) $isi)->values()->map(fn ($v, $i) => ['id' => $i + 1, 'value' => $v])->all()
-                : $isi;
+                // Gambar bagan opsional: kalau dikosongkan jadi null, padahal kolom konten NOT NULL.
+                : $isi ?? '';
             $baris->save();
         }
 

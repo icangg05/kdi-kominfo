@@ -18,9 +18,10 @@ class PegawaisTable
         return $table
             ->columns([
                 TextColumn::make('no')->label('No')->rowIndex(),
-                ImageColumn::make('foto')->disk('public')->circular()->label('Foto'),
+                // Ukuran persegi supaya foto hasil crop bebas dan gambar default tetap bulat; file hilang jatuh ke default.
+                ImageColumn::make('foto')->disk('public')->circular()->imageSize(32)->label('Foto')->defaultImageUrl('/img/gambar-default.webp'),
                 TextColumn::make('nama')->searchable()->sortable(),
-                TextColumn::make('nip')->label('NIP')->searchable()->color('gray'),
+                TextColumn::make('nip')->label('NIP')->searchable()->color('gray')->placeholder('-'),
                 TextColumn::make('jabatan.nama')->badge()->sortable(),
             ])
             ->filters([
@@ -29,7 +30,7 @@ class PegawaisTable
                     ->relationship('jabatan', 'nama')
                     ->preload(),
             ])
-            ->defaultSort('nama')
+            ->defaultSort('created_at', 'desc')
             ->recordActions([
                 EditAction::make(),
                 DeleteAction::make(),

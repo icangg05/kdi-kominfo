@@ -17,7 +17,7 @@ class DokumensTable
         return $table
             ->columns([
                 TextColumn::make('no')->label('No')->rowIndex(),
-                TextColumn::make('judul')->searchable()->limit(60)->wrap(),
+                TextColumn::make('judul')->searchable()->limit(70)->tooltip(fn ($record): string => $record->judul),
                 TextColumn::make('kategori.nama')->badge()->sortable(),
                 TextColumn::make('total_unduhan')->label('Diunduh')->numeric()->sortable(),
                 TextColumn::make('created_at')->label('Ditambahkan')->date('d M Y')->sortable(),

@@ -15,11 +15,13 @@ class DokumenForm
         return $schema
             ->components([
                 TextInput::make('judul')
+                    ->placeholder('Contoh: Rencana Strategis Diskominfo Kota Kendari 2025-2029')
                     ->required()
                     ->maxLength(255)
                     ->columnSpanFull(),
                 Select::make('kategori_dokumen_id')
                     ->label('Kategori')
+                    ->placeholder('Pilih kategori')
                     ->relationship('kategori', 'nama')
                     ->searchable()
                     ->preload()
@@ -28,6 +30,7 @@ class DokumenForm
                     ->required()
                     ->disk('public')
                     ->directory('dokumen')
+                    ->placeholder('Seret dokumen ke sini atau klik untuk memilih')
                     ->acceptedFileTypes([
                         'application/pdf',
                         'application/msword',
@@ -38,6 +41,7 @@ class DokumenForm
                     ->maxSize(config('app.upload.file_maks_kb'))
                     ->helperText('PDF, Word, atau Excel. Maksimal ' . (config('app.upload.file_maks_kb') / 1024) . ' MB.'),
                 Textarea::make('deskripsi')
+                    ->placeholder('Ringkasan singkat isi dokumen, misalnya tujuan dan periode berlakunya')
                     ->required()
                     ->rows(4)
                     ->columnSpanFull(),

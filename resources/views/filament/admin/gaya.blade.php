@@ -345,6 +345,45 @@
         color: var(--gray-300);
     }
 
+    /* Keterangan di bawah pratinjau YouTube (form Video): abu-abu saat kosong, merah saat tautan tidak valid. */
+    .kdi-ket-pratinjau {
+        font-size: 0.875rem;
+        color: var(--gray-500);
+    }
+
+    .kdi-ket-pratinjau.kdi-galat {
+        color: var(--danger-600);
+    }
+
+    html.dark .kdi-ket-pratinjau.kdi-galat {
+        color: var(--danger-400);
+    }
+
+    /* Form Profil Pimpinan: pratinjau foto profil pegawai, dan foto tambahan (maks 4) sebaris di layar lebar. */
+    .kdi-foto-pegawai {
+        object-fit: cover;
+        border-radius: 0.25rem;
+        background: var(--gray-100);
+    }
+
+    @media (min-width: 1024px) {
+        .kdi-foto-tambahan .filepond--root[data-style-panel-layout='grid'] .filepond--item {
+            width: calc(25% - 0.5rem);
+        }
+    }
+
+    /* Tabel galeri, video, dokumen, pegawai, dan kategori dibuat rapat (bawaan Filament 1rem atas-bawah). */
+    .fi-resource-dokumens .fi-ta-text,
+    .fi-resource-pegawais .fi-ta-text,
+    .fi-resource-pegawais .fi-ta-image,
+    .fi-resource-galeris .fi-ta-text,
+    .fi-resource-galeris .fi-ta-image,
+    .fi-resource-videos .fi-ta-text,
+    .fi-resource-kategori-beritas .fi-ta-text,
+    .fi-resource-kategori-dokumens .fi-ta-text {
+        padding-block: 0.375rem;
+    }
+
     /* ---------- Statistik: bilah biru di atas, label kapital, angka tebal ---------- */
     .fi-wi-stats-overview-stat {
         position: relative;

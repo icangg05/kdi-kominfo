@@ -201,7 +201,7 @@ final class SinkronBerita
             return null;
         }
 
-        $path = 'berita/' . Str::ulid() . '.webp';
+        $path = 'berita/' . NamaBerkas::acak('webp');
         Storage::disk('public')->put($path, $webp);
 
         return $path;

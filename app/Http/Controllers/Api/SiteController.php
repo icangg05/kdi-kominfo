@@ -13,7 +13,6 @@ use App\Models\ProfilPimpinan;
 use App\Models\Video;
 use App\Models\Visitor;
 use Illuminate\Http\Request;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Storage;
 
 /**
@@ -41,9 +40,10 @@ class SiteController
     return [
       'sambutanKadis' => ProfilDinas::konten('sambutan-kadis'),
       'taglineSambutan' => ProfilDinas::nilai('tagline-sambutan'),
-      'kadis' => ($kadis = ProfilPimpinan::first()) ? [
-        ...$kadis->only(['nama', 'awal_periode', 'akhir_periode']),
-        'foto' => $this->fotoPimpinan($kadis)->first(),
+      'kadis' => ($kadis = ProfilPimpinan::with('pegawai.jabatan')->first())?->pegawai ? [
+        'nama' => $kadis->pegawai->nama,
+        'jabatan' => $kadis->pegawai->jabatan?->nama,
+        'foto' => $this->url($kadis->pegawai->foto),
       ] : null,
       'galeri' => Galeri::latest('tanggal')->latest('id')->limit(5)->get()->map($this->galeriItem(...)),
       'berita' => Berita::with('kategori:id,nama,slug')->latest('tanggal')->latest('id')->limit(6)->get()->map($this->beritaItem(...)),
@@ -145,22 +145,20 @@ class SiteController
       'nama' => $p->nama,
       'nip' => $p->nip,
       'jabatan' => $p->jabatan?->nama,
-      'alamat' => $p->alamat,
-      'tanggalLahir' => $p->tanggal_lahir?->toDateString(),
       'foto' => $this->url($p->foto),
     ]);
   }
 
   public function profilPimpinan(): array
   {
-    $data = ProfilPimpinan::first();
+    $data = ProfilPimpinan::with('pegawai.jabatan')->first();
 
     return [
-      'nama' => $data?->nama,
-      'awalPeriode' => $data?->awal_periode,
-      'akhirPeriode' => $data?->akhir_periode,
+      'nama' => $data?->pegawai?->nama,
+      'jabatan' => $data?->pegawai?->jabatan?->nama,
       'konten' => $data?->konten,
-      'foto' => $this->fotoPimpinan($data),
+      'foto' => $this->url($data?->pegawai?->foto),
+      'fotoTambahan' => collect($data?->foto)->map($this->url(...))->filter()->values(),
     ];
   }
 
@@ -173,7 +171,6 @@ class SiteController
         'visi' => ProfilDinas::konten('visi'),
         'misi' => ProfilDinas::nilai('misi'),
         'fotoDiskominfo' => collect(ProfilDinas::nilai('foto-diskominfo'))->map($this->url(...))->filter()->values(),
-        'awalPeriode' => ProfilPimpinan::first()?->awal_periode,
       ],
       'tupoksi' => [
         'tugas' => ProfilDinas::konten('tugas'),
@@ -237,15 +234,6 @@ class SiteController
     $path = ltrim((string) $path, '/');
 
     return $path !== '' && Storage::disk('public')->exists($path) ? "/storage/{$path}" : null;
-  }
-
-  /** Foto pimpinan tersimpan sebagai daftar [{value}] atau path biasa; hanya yang berkasnya ada. */
-  private function fotoPimpinan(?ProfilPimpinan $pimpinan): Collection
-  {
-    return collect((array) $pimpinan?->foto)
-      ->map(fn ($f) => $this->url(is_array($f) ? ($f['value'] ?? null) : $f))
-      ->filter()
-      ->values();
   }
 
   private function paginated(\Illuminate\Contracts\Pagination\LengthAwarePaginator $page, callable $map): array

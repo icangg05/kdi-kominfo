@@ -167,7 +167,7 @@ return [
     ],
 
     'upload' => [
-        'gambar_maks_kb' => 3 * 1024,
+        'gambar_maks_kb' => 5 * 1024,
         'file_maks_kb' => 100 * 1024,
         'kompres_gambar' => [
             'aktif' => true,

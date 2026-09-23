@@ -17,8 +17,9 @@ class GalerisTable
         return $table
             ->columns([
                 TextColumn::make('no')->label('No')->rowIndex(),
-                ImageColumn::make('gambar')->disk('public')->label('Gambar'),
-                TextColumn::make('judul')->searchable()->wrap(),
+                // Filament sudah mengecek file di disk; yang hilang atau kosong jatuh ke gambar default situs.
+                ImageColumn::make('gambar')->disk('public')->label('Gambar')->defaultImageUrl('/img/gambar-default.webp'),
+                TextColumn::make('judul')->searchable()->limit(70)->tooltip(fn ($record): string => $record->judul),
                 TextColumn::make('tanggal')->date('d M Y')->sortable(),
             ])
             ->defaultSort('tanggal', 'desc')

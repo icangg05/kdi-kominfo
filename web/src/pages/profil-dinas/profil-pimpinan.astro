@@ -6,14 +6,13 @@ import { api } from '../../lib/api';
 
 type Data = {
   nama: string | null;
-  awalPeriode: number | null;
-  akhirPeriode: number | null;
+  jabatan: string | null;
   konten: string | null;
-  foto: string[];
+  foto: string | null;
+  fotoTambahan: string[];
 };
 
 const data = await api<Data>('/profil-pimpinan', Astro.request);
-const [utama, ...lainnya] = data.foto;
 ---
 
 <Base judul="Profil Pimpinan" deskripsi={`Profil ${data.nama ?? 'Kepala Dinas'} Kominfo Kota Kendari.`}>
@@ -27,8 +26,8 @@ const [utama, ...lainnya] = data.foto;
     <div class="grid gap-12 lg:grid-cols-[360px_1fr]">
       <aside>
         <div class="overflow-hidden rounded bg-biru-50 dark:bg-biru-900">
-          {utama ? (
-            <img src={utama} alt={`Foto ${data.nama ?? ''}`} class="aspect-3/4 w-full object-cover" />
+          {data.foto ? (
+            <img src={data.foto} alt={`Foto ${data.nama ?? ''}`} class="aspect-3/4 w-full object-cover" />
           ) : (
             <div class="flex aspect-3/4 items-center justify-center text-biru-300 dark:text-biru-700">
               <Ikon nama="orang" class="size-16" />
@@ -38,17 +37,12 @@ const [utama, ...lainnya] = data.foto;
 
         <div class="mt-4 rounded bg-biru-800 p-5 text-white">
           <p class="text-lg font-bold">{data.nama}</p>
-          <p class="mt-1 text-sm text-biru-200">Kepala Dinas Kominfo Kota Kendari</p>
-          {data.awalPeriode && (
-            <p class="mt-3 inline-block rounded bg-white/15 px-3 py-1 text-xs">
-              Periode {data.awalPeriode}–{data.akhirPeriode}
-            </p>
-          )}
+          {data.jabatan && <p class="mt-1 text-sm text-biru-200">{data.jabatan}</p>}
         </div>
 
-        {lainnya.length > 0 && (
-          <div class="mt-4 grid grid-cols-3 gap-3">
-            {lainnya.map((f) => (
+        {data.fotoTambahan.length > 0 && (
+          <div class="mt-4 grid grid-cols-4 gap-3">
+            {data.fotoTambahan.map((f) => (
               <img src={f} alt="" loading="lazy" class="aspect-square w-full rounded object-cover" />
             ))}
           </div>

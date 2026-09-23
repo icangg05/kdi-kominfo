@@ -18,12 +18,14 @@ class BeritaForm
         return $schema
             ->components([
                 TextInput::make('judul')
+                    ->placeholder('Contoh: Diskominfo Kendari Gelar Pelatihan Literasi Digital')
                     ->required()
                     ->maxLength(255)
                     ->live(onBlur: true)
                     ->afterStateUpdated(fn (string $state, callable $set) => $set('slug', Str::slug($state)))
                     ->columnSpanFull(),
                 TextInput::make('slug')
+                    ->placeholder('Terisi otomatis dari judul')
                     ->required()
                     ->maxLength(255)
                     ->unique(ignoreRecord: true)
@@ -31,6 +33,7 @@ class BeritaForm
                 Select::make('kategori_berita_id')
                     ->label('Kategori')
                     ->relationship('kategori', 'nama')
+                    ->placeholder('Pilih kategori')
                     ->searchable()
                     ->preload()
                     ->required(),
@@ -43,8 +46,10 @@ class BeritaForm
                     ->directory('berita')
                     ->imageEditor()
                     ->maxSize(config('app.upload.gambar_maks_kb'))
-                    ->saveUploadedFileUsing(KompresGambar::simpan(...)),
+                    ->saveUploadedFileUsing(KompresGambar::simpan(...))
+                    ->helperText('Maksimal ' . (config('app.upload.gambar_maks_kb') / 1024) . ' MB.'),
                 RichEditor::make('konten')
+                    ->placeholder('Tulis isi berita di sini...')
                     ->required()
                     ->columnSpanFull(),
             ]);

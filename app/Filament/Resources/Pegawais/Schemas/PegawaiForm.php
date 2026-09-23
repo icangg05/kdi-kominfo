@@ -3,12 +3,11 @@
 namespace App\Filament\Resources\Pegawais\Schemas;
 
 use App\Support\KompresGambar;
-use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Select;
-use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Schema;
+use Illuminate\Support\Js;
 
 class PegawaiForm
 {
@@ -17,32 +16,35 @@ class PegawaiForm
         return $schema
             ->components([
                 TextInput::make('nama')
+                    ->placeholder('Contoh: Andi Pratama, S.Kom.')
                     ->required()
                     ->maxLength(255),
                 TextInput::make('nip')
                     ->label('NIP')
+                    ->placeholder('Contoh: 198501012010011001')
                     ->maxLength(255),
                 Select::make('jabatan_id')
                     ->label('Jabatan')
                     ->relationship('jabatan', 'nama')
+                    ->placeholder('Pilih jabatan')
                     ->searchable()
                     ->preload()
                     ->required()
                     ->createOptionForm([
-                        TextInput::make('nama')->required()->maxLength(255),
+                        TextInput::make('nama')->placeholder('Contoh: Kepala Bidang Aplikasi Informatika')->required()->maxLength(255),
                     ]),
-                DatePicker::make('tanggal_lahir'),
                 FileUpload::make('foto')
                     ->image()
-                    ->avatar()
                     ->disk('public')
                     ->directory('pegawai')
+                    ->placeholder('Seret foto ke sini atau klik untuk memilih')
                     ->imageEditor()
+                    ->imageEditorAspectRatioOptions([null, '1:1'])
+                    // Cropper sudah bebas saat dibuka; ini hanya menandai tombol "Bebas" aktif setiap editor dibuka.
+                    ->extraAlpineAttributes(['x-effect' => 'if (isEditorOpen) currentRatio = ' . Js::from(__('filament-forms::components.file_upload.editor.aspect_ratios.no_fixed.label'))])
                     ->maxSize(config('app.upload.gambar_maks_kb'))
-                    ->saveUploadedFileUsing(KompresGambar::simpan(...)),
-                Textarea::make('alamat')
-                    ->rows(3)
-                    ->columnSpanFull(),
+                    ->saveUploadedFileUsing(KompresGambar::simpan(...))
+                    ->helperText('Maksimal ' . (config('app.upload.gambar_maks_kb') / 1024) . ' MB.'),
             ]);
     }
 }

@@ -12,6 +12,14 @@
 :80 {
 	encode zstd gzip
 
+	# Berkas unggahan hanya disajikan, tidak pernah dieksekusi: php_server milik Octane
+	# menjalankan .php apa pun di public/, termasuk lewat symlink public/storage.
+	# Harus di atas handle @laravel — handle dengan matcher bernama dicek sesuai urutan tulis.
+	@php_unggahan path_regexp (?i)^/storage/.*\.php
+	handle @php_unggahan {
+		respond 404
+	}
+
 	# Panel admin Filament, API, aset Filament, dan berkas unggahan tetap di Laravel/Octane.
 	# Catatan: Livewire 4 menyajikan asetnya di prefix berhash (/livewire-39dcd574/...),
 	# jadi polanya harus /livewire* — /livewire/* tidak akan pernah cocok.

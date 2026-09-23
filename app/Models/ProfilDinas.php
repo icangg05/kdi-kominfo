@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 
 class ProfilDinas extends Model
 {
@@ -14,6 +15,29 @@ class ProfilDinas extends Model
    * Hanya jenis di bawah ini yang berbentuk JSON.
    */
   public const JENIS_DAFTAR = ['tagline-sambutan', 'misi', 'foto-diskominfo', 'fungsi', 'pengaturan', 'bagan-organisasi', 'sinkron-berita', 'sinkron-berita-atur'];
+
+  /** Jenis yang kontennya path gambar di disk public (satu path, atau daftar [{id, value}]). */
+  private const JENIS_GAMBAR = ['struktur-organisasi', 'foto-diskominfo'];
+
+  // Gambar yang diganti atau dihapus dari form ikut dibuang dari disk. Dipasang di
+  // updated, bukan updating, supaya file tidak hilang kalau query UPDATE-nya gagal.
+  protected static function booted(): void
+  {
+    static::updated(function (ProfilDinas $baris) {
+      if (in_array($baris->jenis, self::JENIS_GAMBAR, true)) {
+        Storage::disk('public')->delete(array_diff(self::berkas($baris->getOriginal('konten')), self::berkas($baris->konten)));
+      }
+    });
+  }
+
+  /** @return array<int, string> */
+  private static function berkas(mixed $konten): array
+  {
+    return collect(is_array($konten) ? $konten : [$konten])
+      ->map(fn ($item) => is_array($item) ? ($item['value'] ?? null) : $item)
+      ->filter()
+      ->all();
+  }
 
   public function getKontenAttribute(?string $value): mixed
   {

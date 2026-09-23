@@ -9,7 +9,6 @@ type Data = {
   visi: string | null;
   misi: string[];
   fotoDiskominfo: string[];
-  awalPeriode: number | null;
 };
 
 const data = await api<Data>('/profil-dinas/tentang-kami', Astro.request);
@@ -43,7 +42,6 @@ const data = await api<Data>('/profil-dinas/tentang-kami', Astro.request);
         <section class="rounded bg-biru-800 motif-komdigi p-8 text-white">
           <h2 class="mb-4 text-xl font-bold">Visi</h2>
           <p class="text-lg leading-relaxed text-biru-100 italic">{data.visi}</p>
-          {data.awalPeriode && <p class="mt-6 text-sm text-biru-200">Periode {data.awalPeriode}</p>}
         </section>
       )}
 

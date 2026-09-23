@@ -2,8 +2,6 @@
 
 namespace App\Filament\Resources\KategoriBeritas;
 
-use App\Filament\Resources\KategoriBeritas\Pages\CreateKategoriBerita;
-use App\Filament\Resources\KategoriBeritas\Pages\EditKategoriBerita;
 use App\Filament\Resources\KategoriBeritas\Pages\ListKategoriBeritas;
 use App\Filament\Resources\KategoriBeritas\Schemas\KategoriBeritaForm;
 use App\Filament\Resources\KategoriBeritas\Tables\KategoriBeritasTable;
@@ -51,8 +49,6 @@ class KategoriBeritaResource extends Resource
     {
         return [
             'index' => ListKategoriBeritas::route('/'),
-            'create' => CreateKategoriBerita::route('/create'),
-            'edit' => EditKategoriBerita::route('/{record}/edit'),
         ];
     }
 }

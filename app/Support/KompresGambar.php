@@ -4,7 +4,6 @@ namespace App\Support;
 
 use Filament\Forms\Components\BaseFileUpload;
 use GdImage;
-use Illuminate\Support\Str;
 use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
 
 /** Kompres gambar upload ke WebP; pengaturannya di config('app.upload.kompres_gambar'). */
@@ -29,7 +28,7 @@ final class KompresGambar
             return $component->saveUploadedFile($file);
         }
 
-        $path = trim($component->getDirectory() . '/' . Str::ulid() . '.webp', '/');
+        $path = trim($component->getDirectory() . '/' . NamaBerkas::acak('webp'), '/');
         $component->getDisk()->put($path, $webp, $component->getVisibility());
 
         return $path;

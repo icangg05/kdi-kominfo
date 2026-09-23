@@ -263,12 +263,34 @@ const awal = waktuWita();
   const tombol = document.querySelector<HTMLButtonElement>('[data-tombol-menu]');
   const menu = document.getElementById('menu-seluler');
 
-  tombol?.addEventListener('click', () => {
-    const terbuka = tombol.getAttribute('aria-expanded') === 'true';
+  const aturMenu = (buka: boolean) => {
     // Halaman dikunci selama menu terbuka, jadi menu harus muat dari posisinya sekarang sampai dasar layar.
-    if (!terbuka && menu) menu.style.maxHeight = `${innerHeight - menu.getBoundingClientRect().top}px`;
-    tombol.setAttribute('aria-expanded', String(!terbuka));
-    menu?.toggleAttribute('data-terbuka', !terbuka);
+    if (buka && menu) menu.style.maxHeight = `${innerHeight - menu.getBoundingClientRect().top}px`;
+    tombol?.setAttribute('aria-expanded', String(buka));
+    menu?.toggleAttribute('data-terbuka', buka);
+  };
+
+  // Menu terbuka = satu entri riwayat, supaya tombol kembali di ponsel menutup menu alih-alih pindah halaman.
+  // Menutup lewat tombol juga memakai history.back(), jadi entri itu tidak tertinggal.
+  tombol?.addEventListener('click', () => {
+    if (tombol.getAttribute('aria-expanded') === 'true') return history.back();
+    aturMenu(true);
+    history.pushState({ menuSeluler: true }, '');
+  });
+  addEventListener('popstate', () => aturMenu(false));
+
+  // Pindah halaman dari menu menimpa entri menu tadi; tanpa ini "kembali" di halaman tujuan cuma mendarat di entri menu yang kosong.
+  menu?.addEventListener('click', (e) => {
+    const a = (e.target as Element).closest('a');
+    if (!a || !history.state?.menuSeluler) return;
+    e.preventDefault();
+    location.replace(a.href);
+  });
+  menu?.querySelector('form')?.addEventListener('submit', (e) => {
+    if (!history.state?.menuSeluler) return;
+    e.preventDefault();
+    const form = e.currentTarget as HTMLFormElement;
+    location.replace(`${form.action}?${new URLSearchParams(new FormData(form) as any)}`);
   });
 
   // Nav desktop melekat tepat saat bilah identitas sudah lewat dari layar.

@@ -10,7 +10,7 @@ import { layanan } from '../lib/layanan';
 type Beranda = {
   sambutanKadis: string | null;
   taglineSambutan: string[];
-  kadis: { nama: string; foto: string | null; awal_periode: number; akhir_periode: number } | null;
+  kadis: { nama: string; jabatan: string | null; foto: string | null } | null;
   galeri: { judul: string; tanggal: string | null; gambar: string | null }[];
   berita: Berita[];
   pengunjung: { hariIni: number; total: number };
@@ -25,9 +25,6 @@ const [data, global, arsip, dokumen, galeri] = await Promise.all([
 ]);
 
 const fotoKadis = data.kadis?.foto ?? null;
-
-const inisial = (data.kadis?.nama ?? '').split(',')[0].split(/\s+/).filter(Boolean).slice(0, 2).map((k) => k[0]).join('');
-const kutipan = (data.sambutanKadis ?? '').match(/<p>([\s\S]*?)<\/p>/)?.[1]?.replace(/<[^>]+>/g, '').trim() ?? '';
 
 const angka = (n: number) => n.toLocaleString('id-ID');
 
@@ -144,6 +141,72 @@ const darurat = layanan['telpon-darurat-112'];
       </div>
     )}
   </section>
+
+  <!-- Sambutan Kepala Dinas. Kiri: kartu identitas pimpinan (tautan ke profil) dengan pernik bentuk, yaitu
+       bidang langit yang menjulur ke tepi layar, blok biru yang tergeser, dan dua siku bingkai. Kanan: kalimat
+       teks sambutan (prosa seragam), lalu tagline. Gerak masuk mengikuti gulir, lihat <style> di bawah. -->
+  {data.sambutanKadis && (
+    <section class="sambutan relative isolate overflow-x-clip pt-14 lg:pt-20" aria-labelledby="judul-sambutan">
+      <div class:list={['wadah grid items-start', data.kadis && 'lg:grid-cols-[17rem_minmax(0,1fr)] lg:gap-x-16 xl:grid-cols-[19rem_minmax(0,1fr)] xl:gap-x-20']}>
+        <div class:list={[data.kadis && 'lg:col-start-2']}>
+          <JudulBagian id="judul-sambutan" judul="Sambutan Kepala Dinas" />
+        </div>
+
+        {data.kadis && (
+          <div class="group/potret relative mb-10 mr-3 lg:col-start-1 lg:row-span-2 lg:row-start-1 lg:mt-2 lg:mb-0">
+            <div class="sambutan-bidang absolute top-20 right-1/3 -bottom-8 -left-[50vw] -z-10 hidden bg-langit lg:block" aria-hidden="true"></div>
+            <span class="sambutan-siku absolute -top-4 -left-4 hidden size-12 border-t-2 border-l-2 border-biru-300 transition-[translate] duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover/potret:-translate-1 lg:block dark:border-biru-700" aria-hidden="true"></span>
+            <span class="sambutan-siku sambutan-siku-bawah absolute -right-7 -bottom-7 hidden size-12 border-r-2 border-b-2 border-biru-300 transition-[translate] duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover/potret:translate-1 lg:block dark:border-biru-700" aria-hidden="true"></span>
+
+            <a href="/profil-dinas/profil-pimpinan" class="relative block rounded">
+              <span class="sambutan-geser absolute inset-0 translate-3 rounded bg-biru-600 transition-[translate] duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover/potret:translate-4.5" aria-hidden="true"></span>
+              <span class="sambutan-kartu relative grid grid-cols-[6.5rem_minmax(0,1fr)] overflow-hidden rounded bg-biru-800 text-white transition-[translate] duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover/potret:-translate-1.5 group-active/potret:translate-0 lg:grid-cols-1">
+                <span class="block overflow-hidden bg-biru-900">
+                  <img
+                    src={fotoKadis ?? GAMBAR_DEFAULT}
+                    alt=""
+                    loading="lazy"
+                    onerror={cadanganGambar}
+                    class="sambutan-foto aspect-4/5 size-full object-cover transition-[scale] duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover/potret:scale-105"
+                  />
+                </span>
+                <span class="motif-komdigi flex items-center gap-4 p-4 lg:p-5">
+                  <span class="min-w-0 flex-1">
+                    <span class="sr-only">Profil pimpinan: </span>
+                    <span class="block leading-snug font-bold text-balance">{data.kadis.nama}</span>
+                    {data.kadis.jabatan && <span class="mt-1 block text-sm text-biru-200">{data.kadis.jabatan}</span>}
+                  </span>
+                  <span class="flex size-9 shrink-0 items-center justify-center rounded border border-white/40 transition group-hover/potret:border-white group-hover/potret:bg-white group-hover/potret:text-biru-800" aria-hidden="true">
+                    <Ikon nama="panah-kanan" class="size-4 transition-[translate] duration-300 group-hover/potret:translate-x-0.5" />
+                  </span>
+                </span>
+              </span>
+            </a>
+          </div>
+        )}
+
+        <div class:list={[data.kadis && 'lg:col-start-2']}>
+          <div class="relative isolate lg:mt-2">
+            <span class="sambutan-kutip pointer-events-none absolute -top-8 -left-1 -z-10 text-[8rem] leading-none font-bold text-biru-100 select-none lg:-top-10 lg:-left-7 lg:text-[10rem] dark:text-biru-900" aria-hidden="true">“</span>
+            <div class="sambutan-teks prosa max-w-[65ch] *:last:mb-0 lg:text-lg" set:html={data.sambutanKadis} />
+          </div>
+
+          {data.taglineSambutan.length > 0 && (
+            <ul class="mt-9 flex flex-wrap gap-2" aria-label="Tagline Diskominfo Kota Kendari">
+              {data.taglineSambutan.map((t, i) => (
+                <li
+                  class="sambutan-tagline rounded border border-biru-200 bg-biru-50 px-3.5 py-2 text-xs font-bold tracking-wide text-biru-800 uppercase dark:border-biru-800 dark:bg-biru-900/50 dark:text-biru-100"
+                  style={`--mulai: ${40 + i * 6}%; --akhir: ${62 + i * 6}%`}
+                >
+                  {t}
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+      </div>
+    </section>
+  )}
 
   <!-- Layanan -->
   <section class="py-14 lg:py-20" aria-labelledby="judul-layanan">
@@ -329,13 +392,36 @@ const darurat = layanan['telpon-darurat-112'];
     </section>
   )}
 
-  <!-- Topik, dokumen terbaru, dan bilah samping -->
+  <!-- Dokumen terbaru, dengan topik berita dan Kendari Siaga 112 di bilah samping -->
   <section class="py-14 lg:py-20">
-    <div class="wadah grid gap-12 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]">
-      <div>
+    <div class:list={['wadah grid gap-12', dokumen.data.length > 0 && 'lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]']}>
+      {dokumen.data.length > 0 && (
+        <div>
+          <JudulBagian id="judul-dokumen-terbaru" judul="Dokumen Publik Terbaru" tautan={{ label: 'Lihat lainnya', href: '/dokumen' }} />
+          <ul class="grid gap-4 max-sm:[&>li:nth-child(n+4)]:hidden sm:grid-cols-2 xl:grid-cols-3">
+            {dokumen.data.map((d) => (
+              <li class="kartu-timbul group relative flex flex-col p-5">
+                <div class="flex items-start justify-between gap-3">
+                  <span class="flex h-12 w-10 items-center justify-center rounded bg-biru-600 text-[11px] font-bold text-white uppercase">{d.ekstensi || 'file'}</span>
+                  <span class="text-xs text-teks-lembut tabular-nums">{angka(d.totalUnduhan)} unduhan</span>
+                </div>
+                <h3 class="mt-4 line-clamp-2 font-semibold leading-snug text-biru-950 dark:text-white">{d.judul}</h3>
+                {d.kategori && <p class="mt-1 text-xs font-semibold text-biru-600 dark:text-biru-300">{d.kategori.nama}</p>}
+                <p class="mt-2 line-clamp-2 text-sm text-teks-lembut">{d.deskripsi}</p>
+                <a href={d.unduh} class="mt-auto inline-flex items-center gap-2 pt-4 text-sm font-semibold text-biru-600 after:absolute after:inset-0 hover:text-biru-800 dark:text-biru-300 dark:hover:text-white">
+                  <Ikon nama="unduh" class="size-4" />
+                  Unduh dokumen
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
+      <aside class="space-y-6">
         {global.kategoriBerita.length > 0 && (
-          <div class="rounded bg-linear-to-br from-nila to-biru-700 p-6 text-white sm:p-8">
-            <h2 class="text-lg font-bold tracking-wide uppercase">Pilih Topik Berita</h2>
+          <section class="rounded bg-linear-to-br from-nila to-biru-700 p-6 text-white" aria-labelledby="judul-topik">
+            <h2 id="judul-topik" class="text-lg font-bold tracking-wide uppercase">Pilih Topik Berita</h2>
             <p class="mt-2 text-sm text-biru-100">Baca berita Diskominfo Kota Kendari sesuai topik yang Anda minati.</p>
             <ul class="mt-5 flex flex-wrap gap-2">
               {global.kategoriBerita.map((k) => (
@@ -347,56 +433,6 @@ const darurat = layanan['telpon-darurat-112'];
                 </li>
               ))}
             </ul>
-          </div>
-        )}
-
-        {dokumen.data.length > 0 && (
-          <div class="mt-12">
-            <JudulBagian judul="Dokumen Publik Terbaru" tautan={{ label: 'Lihat lainnya', href: '/dokumen' }} />
-            <ul class="grid gap-4 max-sm:[&>li:nth-child(n+4)]:hidden sm:grid-cols-2 xl:grid-cols-3">
-              {dokumen.data.map((d) => (
-                <li class="kartu-timbul group relative flex flex-col p-5">
-                  <div class="flex items-start justify-between gap-3">
-                    <span class="flex h-12 w-10 items-center justify-center rounded bg-biru-600 text-[11px] font-bold text-white uppercase">{d.ekstensi || 'file'}</span>
-                    <span class="text-xs text-teks-lembut tabular-nums">{angka(d.totalUnduhan)} unduhan</span>
-                  </div>
-                  <h3 class="mt-4 line-clamp-2 font-semibold leading-snug text-biru-950 dark:text-white">{d.judul}</h3>
-                  {d.kategori && <p class="mt-1 text-xs font-semibold text-biru-600 dark:text-biru-300">{d.kategori.nama}</p>}
-                  <p class="mt-2 line-clamp-2 text-sm text-teks-lembut">{d.deskripsi}</p>
-                  <a href={d.unduh} class="mt-auto inline-flex items-center gap-2 pt-4 text-sm font-semibold text-biru-600 after:absolute after:inset-0 hover:text-biru-800 dark:text-biru-300 dark:hover:text-white">
-                    <Ikon nama="unduh" class="size-4" />
-                    Unduh dokumen
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
-      </div>
-
-      <aside class="space-y-10">
-        {data.sambutanKadis && (
-          <section aria-labelledby="judul-sambutan">
-            <h2 id="judul-sambutan" class="text-lg font-bold tracking-wide text-biru-950 uppercase dark:text-white">Sambutan Kepala Dinas</h2>
-            <div class="mt-4 overflow-hidden rounded border border-garis bg-white dark:bg-malam-kartu">
-              <div class="flex items-center gap-4 bg-langit p-4">
-                <span class="relative flex size-16 shrink-0 items-center justify-center overflow-hidden rounded bg-biru-600 text-xl font-bold text-white">
-                  {inisial}
-                  {fotoKadis && <img src={fotoKadis} alt={`Foto ${data.kadis?.nama ?? 'Kepala Dinas'}`} loading="lazy" onerror="this.remove()" class="absolute inset-0 size-full object-cover" />}
-                </span>
-                {data.kadis && (
-                  <div>
-                    <p class="leading-snug font-semibold text-biru-950 dark:text-white">{data.kadis.nama}</p>
-                    <p class="mt-0.5 text-xs text-teks-lembut">Kepala Dinas, periode {data.kadis.awal_periode}-{data.kadis.akhir_periode}</p>
-                  </div>
-                )}
-              </div>
-              {kutipan && <p class="line-clamp-6 p-4 text-sm leading-relaxed text-teks-lembut">{kutipan}</p>}
-              <a href="/profil-dinas/profil-pimpinan" class="flex items-center justify-between border-t border-garis px-4 py-3 text-sm font-semibold text-biru-600 transition hover:bg-langit dark:text-biru-300">
-                Profil pimpinan
-                <Ikon nama="panah-kanan" class="size-4" />
-              </a>
-            </div>
           </section>
         )}
 
@@ -441,6 +477,113 @@ const darurat = layanan['telpon-darurat-112'];
     </ul>
   </nav>
 </Base>
+
+<style>
+  /* Sambutan: satu gerak masuk yang disetir gulir (tanpa JS). Semua memakai timeline view milik section,
+     jadi urutannya terjaga: bidang menyapu, kartu terbuka dari atas sambil foto mengendap, blok biru keluar
+     dari balik kartu, siku merapat, lalu teks sambutan dan tagline menyusul. Keyframe memakai `transform`,
+     sedangkan efek hover memakai properti `translate`/`scale`, jadi keduanya bertumpuk dan tidak saling timpa.
+     Peramban tanpa animation-timeline dan pengguna yang memilih gerak dikurangi melihat keadaan akhir yang statis. */
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+      .sambutan {
+        view-timeline-name: --sambutan;
+      }
+
+      .sambutan-bidang,
+      .sambutan-kartu,
+      .sambutan-foto,
+      .sambutan-geser,
+      .sambutan-siku,
+      .sambutan-kutip,
+      .sambutan-teks,
+      .sambutan-tagline {
+        animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+        animation-fill-mode: both;
+        animation-timeline: --sambutan;
+      }
+
+      .sambutan-bidang {
+        transform-origin: left;
+        animation-name: sambutan-sapu;
+        animation-range: entry 0% entry 75%;
+      }
+
+      .sambutan-kartu {
+        animation-name: sambutan-buka;
+        animation-range: entry 5% entry 55%;
+      }
+
+      .sambutan-foto {
+        animation-name: sambutan-endap;
+        animation-range: entry 5% entry 70%;
+      }
+
+      .sambutan-geser {
+        animation-name: sambutan-keluar;
+        animation-range: entry 30% entry 75%;
+      }
+
+      .sambutan-siku {
+        animation-name: sambutan-rapat;
+        animation-range: entry 35% entry 80%;
+      }
+
+      .sambutan-siku-bawah {
+        animation-name: sambutan-rapat-bawah;
+      }
+
+      .sambutan-kutip {
+        animation-name: sambutan-kutip;
+        animation-range: entry 10% entry 60%;
+      }
+
+      .sambutan-teks {
+        animation-name: sambutan-naik;
+        animation-range: entry 15% entry 60%;
+      }
+
+      .sambutan-tagline {
+        animation-name: sambutan-naik;
+        animation-range: entry var(--mulai) entry var(--akhir);
+      }
+    }
+  }
+
+  @keyframes sambutan-sapu {
+    from { transform: scaleX(0); }
+  }
+
+  @keyframes sambutan-buka {
+    from { clip-path: inset(0 0 100% 0 round 4px); }
+    to { clip-path: inset(0 0 0 0 round 4px); }
+  }
+
+  @keyframes sambutan-endap {
+    from { transform: scale(1.18); }
+  }
+
+  /* Blok biru mulai tepat di balik kartu (menetralkan geser 0.75rem dari kelas translate-3), lalu keluar. */
+  @keyframes sambutan-keluar {
+    from { transform: translate(-0.75rem, -0.75rem); }
+  }
+
+  @keyframes sambutan-rapat {
+    from { opacity: 0; transform: translate(-1rem, -1rem); }
+  }
+
+  @keyframes sambutan-rapat-bawah {
+    from { opacity: 0; transform: translate(1rem, 1rem); }
+  }
+
+  @keyframes sambutan-kutip {
+    from { opacity: 0; transform: translateY(1.5rem) scale(0.85); }
+  }
+
+  @keyframes sambutan-naik {
+    from { opacity: 0; transform: translateY(1rem); }
+  }
+</style>
 
 <script>
   const kurangiGerak = window.matchMedia('(prefers-reduced-motion: reduce)').matches;

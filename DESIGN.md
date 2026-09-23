@@ -150,9 +150,9 @@ components:
 
 The public site reads as a sibling of komdigi.go.id: an institutional portal where government blue carries the identity from the navy topbar to the footer, and white and pale-sky bands carry the reading. The owner pinned this world (blue-dominant theme, Komdigi homepage module order) after rejecting an earlier display-board concept; nothing from that concept survives. Authority comes from order and consistency, not ornament: a strict 1280px container, bold uppercase section headings, square 4px corners on everything, and one sans family.
 
-Density is portal-grade. The homepage stacks full-width bands in Komdigi's order: blue news highlight carousel, gradient services panel, public document search split panel, the dark Transformasi Digital profile band, gallery with a teal statistics card, a horizontal news carousel on the sky band, then a two-column zone of topics and documents with a sidebar (Kepala Dinas greeting, Kendari Siaga 112), related links, footer. Komdigi's content is never copied; every module is filled only with real Diskominfo data from the API or the organisation's own static facts.
+Density is portal-grade. The homepage stacks full-width bands in Komdigi's order: blue news highlight carousel, the Kepala Dinas greeting with the admin-managed taglines, gradient services panel, public document search split panel, the dark Transformasi Digital profile band, gallery with a teal statistics card, a horizontal news carousel on the sky band, then a two-column zone of latest documents with a sidebar (Pilih Topik Berita, Kendari Siaga 112), related links, footer. Komdigi's content is never copied; every module is filled only with real Diskominfo data from the API or the organisation's own static facts.
 
-Komdigi's circles and pills are deliberately translated to 4px squares. Motion is quiet: a highlight title rising in on slide change, gentle card lifts on hover, all neutralised under reduced motion.
+Komdigi's circles and pills are deliberately translated to 4px squares. Motion is quiet: a highlight title rising in on slide change, gentle card lifts on hover, and one scroll-driven entrance on the Kepala Dinas greeting, all neutralised under reduced motion.
 
 **Key Characteristics:**
 - Blue-dominant: navy and institutional blue bands alternate with white and langit (#eef4fb) reading bands.
@@ -182,7 +182,7 @@ A single blue family from pale biru-50 to navy biru-950 does nearly all the work
 
 ### Neutral
 - **Putih** (putih): page background, cards, the sticky nav bar, white buttons on blue.
-- **Langit** (langit): pale-sky bands and panels (news carousel band, document search left panel, greeting header, gallery count tile, dropdown hover).
+- **Langit** (langit): pale-sky bands and panels (news carousel band, document search left panel, greeting tagline bar, gallery count tile, dropdown hover).
 - **Teks** (teks): default body text.
 - **Teks Lembut** (teks-lembut): secondary text, descriptions, metadata, placeholders.
 - **Garis** (garis): card borders, dividers, nav bottom border.
@@ -239,7 +239,7 @@ A single blue family from pale biru-50 to navy biru-950 does nearly all the work
 
 A single centered container (`wadah`: max 1280px, 16px gutters, 32px from lg) holds every band. Bands run full bleed; content does not.
 
-Homepage module order is fixed to Komdigi's pattern: highlight carousel (min-height 26rem, 32rem at lg; title left, numbered slide squares right, a strip of three more news items plus "Semua berita" at the base) → services gradient panel (4 columns at lg, 2 at sm) → document search split panel (2fr/3fr) → Transformasi Digital navy band with four bidang → gallery grid (2fr) beside the toska stat card (1fr) → news carousel on langit (4 cards visible at lg, 2 at sm, 78% width snap cards on mobile) → main 2fr column (topic panel, latest documents in 3 columns at xl) beside a 1fr sidebar (Kepala Dinas greeting, Kendari Siaga 112) → related links row → footer.
+Homepage module order is fixed to Komdigi's pattern: highlight carousel (min-height 26rem, 32rem at lg; title left, numbered slide squares right, a strip of three more news items plus "Semua berita" at the base) → Kepala Dinas greeting (identity card column 17rem, 19rem at xl, beside the section heading, the greeting prose at 65ch and the tagline chips; on mobile the card becomes a horizontal row, 6.5rem photo beside the nameplate) → services gradient panel (4 columns at lg, 2 at sm) → document search split panel (2fr/3fr) → Transformasi Digital navy band with four bidang → gallery grid (2fr) beside the toska stat card (1fr) → news carousel on langit (4 cards visible at lg, 2 at sm, 78% width snap cards on mobile) → main 2fr column (latest documents, 2 columns at sm, 3 at xl so six cards sit in two rows level with the sidebar) beside a 1fr sidebar (topic panel, Kendari Siaga 112) → related links row → footer.
 
 Vertical rhythm: sections use 56px padding (80px at lg); dark bands 64px (96px at lg). Grid gaps are 12px to 16px for cards, 24px to 48px between columns. Panels pad 24px, 32px at sm, 40px at lg. Mobile collapses every grid to one column, horizontal strips become scroll-snap rows with hidden scrollbars (`tanpa-scrollbar`), and the documents list shows three items.
 
@@ -262,6 +262,8 @@ Mostly flat, with depth carried by tonal bands (white, langit, blue, navy) and p
 **The Motif Rule.** `motif-komdigi` (two faint white radial glows) goes only on a solid blue background (biru-800 or biru-900). Never combine it with a gradient background on the same element: both set `background-image` and the gradient disappears.
 
 **The Dot Grid Rule.** The `kisi-titik` dot grid is reserved for the Transformasi Digital band only.
+
+**The Identity Card Rule.** The offset biru-600 block, the corner brackets and the edge-running langit field belong to the Kepala Dinas greeting only. Repeating them on other cards turns a signature into wallpaper.
 
 ## Shapes
 
@@ -291,6 +293,12 @@ Solid, square, confident.
 - **Document card:** white, garis border, biru-600 extension badge, download count, title, category, clamped description, "Unduh dokumen" link; hover biru-300 border and card shadow.
 - **Stat card:** toska fill, white, large tabular total with a divided list of counts.
 - **Gallery tile:** 4:3, `gambar-default.webp` when missing, navy bottom scrim with uppercase caption; a langit count tile closes the grid.
+- **Kepala Dinas greeting (signature):** the section heading has no link; the identity card is the link to Profil Pimpinan.
+  - *Identity card:* 4:5 photo (`gambar-default.webp` when the pimpinan has no photo) over a biru-800 `motif-komdigi` nameplate with name, "Kepala Dinas" and the arrow square.
+  - *Shapes (desktop only, except the offset block):* a solid biru-600 block offset 12px down-right behind the card; two 48px corner brackets (2px biru-300 L-marks, biru-700 in dark) at the top-left and bottom-right; a langit field that runs from the card's lower two thirds out to the left viewport edge (the section clips horizontal overflow).
+  - *Text:* the admin HTML renders as one uniform `prosa` block at 65ch (every paragraph styled alike, no enlarged lead) with a 10rem biru-100 typographic opening quote behind its start; the taglines follow as biru-50 chips with a biru-200 border and uppercase biru-800 12px labels.
+  - *Hover:* the card lifts 6px up-left while the offset block moves out to 18px, so the gap widens; the photo scales to 1.05; the brackets step 4px outward; the arrow square fills white. Press returns the card to rest.
+  - *Entrance:* CSS scroll-driven (`view-timeline` on the section, no JS), in the house easing: the langit field sweeps in, the card opens top-down by clip-path while the photo settles from 1.18, the offset block slides out from behind the card, the brackets close in, then the greeting prose and each tagline chip rise in sequence. Keyframes use `transform` while hover uses the individual `translate` and `scale` properties, so the two compose. Browsers without `animation-timeline` and reduced-motion users get the static end state.
 
 ### Inputs / Fields
 - **Style:** white field, 44px to 48px tall, 4px corners, teks text, teks-lembut placeholder, with a 36px biru-600 submit square set inside the right edge.

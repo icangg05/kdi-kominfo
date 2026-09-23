@@ -15,6 +15,7 @@ class GaleriForm
         return $schema
             ->components([
                 TextInput::make('judul')
+                    ->placeholder('Contoh: Rapat Koordinasi Smart City Kota Kendari')
                     ->required()
                     ->maxLength(255),
                 DatePicker::make('tanggal')
@@ -25,9 +26,11 @@ class GaleriForm
                     ->image()
                     ->disk('public')
                     ->directory('galeri')
+                    ->placeholder('Seret foto ke sini atau klik untuk memilih')
                     ->imageEditor()
                     ->maxSize(config('app.upload.gambar_maks_kb'))
                     ->saveUploadedFileUsing(KompresGambar::simpan(...))
+                    ->helperText('Maksimal ' . (config('app.upload.gambar_maks_kb') / 1024) . ' MB.')
                     ->columnSpanFull(),
             ]);
     }
