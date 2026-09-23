@@ -1,10 +1,11 @@
 ---
+import DialogDokumen from '../components/DialogDokumen.astro';
 import Ikon from '../components/Ikon.astro';
 import JudulHalaman from '../components/JudulHalaman.astro';
 import KosongAda from '../components/KosongAda.astro';
 import Paginasi from '../components/Paginasi.astro';
 import Base from '../layouts/Base.astro';
-import { api, query, type Dokumen, type Halaman, type Kategori } from '../lib/api';
+import { api, query, rincianDokumen, type Dokumen, type Halaman, type Kategori } from '../lib/api';
 
 const p = Astro.url.searchParams;
 const search = p.get('search') ?? '';
@@ -30,11 +31,13 @@ const dasar = Object.fromEntries(
 
   <div class="wadah py-12">
     <div class="mb-8 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-      <div class="flex flex-wrap gap-2">
+      <!-- Kategori bisa banyak: satu baris yang digeser ke samping, bukan membungkus jadi beberapa baris. -->
+      <nav class="relative -mx-4 flex min-w-0 gap-2 overflow-x-auto px-4 pb-2 [scrollbar-width:thin] lg:mx-0 lg:px-0" aria-label="Kategori dokumen" data-kategori>
         <a
           href={`/dokumen${query({ search })}`}
+          aria-current={kategori === '' ? 'page' : undefined}
           class:list={[
-            'rounded border px-4 py-1.5 text-sm transition',
+            'shrink-0 rounded border px-4 py-1.5 text-sm whitespace-nowrap transition',
             kategori === '' ? 'border-biru-600 bg-biru-600 font-semibold text-white' : 'border-biru-200 hover:bg-biru-50 dark:border-biru-800 dark:hover:bg-white/5',
           ]}
         >
@@ -43,17 +46,18 @@ const dasar = Object.fromEntries(
         {global.kategoriDokumen.map((k) => (
           <a
             href={`/dokumen${query({ search, kategori: k.slug })}`}
+            aria-current={kategori === k.slug ? 'page' : undefined}
             class:list={[
-              'rounded border px-4 py-1.5 text-sm transition',
+              'shrink-0 rounded border px-4 py-1.5 text-sm whitespace-nowrap transition',
               kategori === k.slug ? 'border-biru-600 bg-biru-600 font-semibold text-white' : 'border-biru-200 hover:bg-biru-50 dark:border-biru-800 dark:hover:bg-white/5',
             ]}
           >
             {k.nama}
           </a>
         ))}
-      </div>
+      </nav>
 
-      <form method="get" action="/dokumen" class="relative w-full lg:w-72" role="search">
+      <form method="get" action="/dokumen" class="relative w-full shrink-0 lg:w-72" role="search">
         {kategori && <input type="hidden" name="kategori" value={kategori} />}
         <label for="cari-dokumen" class="sr-only">Cari dokumen</label>
         <input
@@ -85,14 +89,24 @@ const dasar = Object.fromEntries(
                 <h2 class="font-bold leading-snug text-biru-900 dark:text-white">{d.judul}</h2>
                 <p class="mt-2 line-clamp-2 text-sm text-teks-lembut">{d.deskripsi}</p>
 
-                <div class="mt-4 flex items-center gap-4">
-                  <a
-                    href={d.unduh}
-                    class="inline-flex items-center gap-2 rounded bg-biru-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-biru-700"
-                  >
-                    <Ikon nama="unduh" class="size-4" />
-                    Unduh {d.ekstensi.toUpperCase()}
-                  </a>
+                <div class="mt-4 flex flex-wrap items-center gap-x-4 gap-y-3">
+                  <div class="flex flex-wrap gap-2">
+                    <a
+                      href={d.unduh}
+                      class="inline-flex items-center gap-2 rounded bg-biru-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-biru-700"
+                    >
+                      <Ikon nama="unduh" class="size-4" />
+                      Unduh {d.ekstensi.toUpperCase()}
+                    </a>
+                    <button
+                      type="button"
+                      data-dokumen={rincianDokumen(d)}
+                      class="inline-flex items-center gap-2 rounded border border-biru-200 px-4 py-2 text-sm font-semibold text-biru-700 transition hover:bg-biru-50 dark:border-biru-800 dark:text-biru-200 dark:hover:bg-white/5"
+                    >
+                      <Ikon nama="mata" class="size-4" />
+                      Lihat
+                    </button>
+                  </div>
                   <span class="text-xs text-teks-lembut">{d.totalUnduhan.toLocaleString('id-ID')} kali diunduh</span>
                 </div>
               </div>
@@ -105,4 +119,13 @@ const dasar = Object.fromEntries(
       <KosongAda pesan={search ? `Tidak ada dokumen yang cocok dengan “${search}”.` : 'Belum ada dokumen di kategori ini.'} />
     )}
   </div>
+
+  <DialogDokumen />
 </Base>
+
+<script>
+  // Kategori aktif bisa berada di luar layar setelah halaman dimuat ulang; geser barisnya (bukan halaman) ke tengah kategori itu.
+  const baris = document.querySelector<HTMLElement>('[data-kategori]');
+  const aktif = baris?.querySelector<HTMLElement>('[aria-current]');
+  if (baris && aktif) baris.scrollLeft = aktif.offsetLeft - (baris.clientWidth - aktif.offsetWidth) / 2;
+</script>

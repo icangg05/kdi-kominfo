@@ -29,8 +29,8 @@ const daftar = await api<Halaman<Video>>(`/video${query({ page })}`, Astro.reque
           {daftar.data.map((v) => (
             <article class="kartu-timbul group overflow-hidden">
               <div class="relative aspect-video overflow-hidden bg-biru-900" data-video-wadah>
-                <!-- Tanpa JavaScript tautan membuka YouTube; dengan JavaScript pemutar disematkan di tempat. -->
-                <a href={v.tautan} target="_blank" rel="noopener noreferrer" class="absolute inset-0 block" data-video={v.youtubeId ?? undefined} data-judul={v.judul}>
+                <!-- Tanpa JavaScript tautan membuka YouTube; dengan JavaScript video diputar di dialog. -->
+                <a href={v.tautan} target="_blank" rel="noopener noreferrer" class="absolute inset-0 block" data-video={v.youtubeId ?? undefined} data-judul={v.judul} data-tanggal={tanggalPanjang(v.tanggal)}>
                   {v.youtubeId && (
                     <img src={`https://i.ytimg.com/vi/${v.youtubeId}/hqdefault.jpg`} alt="" loading="lazy" class="size-full object-cover transition duration-500 group-hover:scale-105" />
                   )}
@@ -55,10 +55,28 @@ const daftar = await api<Halaman<Video>>(`/video${query({ page })}`, Astro.reque
       <KosongAda pesan="Belum ada video di galeri." />
     )}
   </div>
+
+  <dialog id="dialog-video" aria-label="Pemutar video" class="dialog-halus m-auto w-[min(64rem,calc(100vw-2rem))] max-w-none overflow-visible bg-transparent p-0 [--pekat:0.92]">
+    <div class="aspect-video overflow-hidden rounded bg-black" data-pemutar></div>
+    <div class="pt-3 text-white">
+      <p class="line-clamp-2 font-semibold leading-snug" data-judul></p>
+      <p class="mt-1 text-sm text-biru-200" data-tanggal></p>
+    </div>
+    <!-- Tombol tutup di atas video supaya tidak menutupi kontrol YouTube di pojok kanan atas.
+         autofocus: tanpa itu fokus jatuh ke iframe YouTube dan tombol Escape tertelan olehnya. -->
+    <form method="dialog">
+      <button autofocus class="absolute right-0 bottom-full mb-2 flex size-10 items-center justify-center rounded bg-biru-950/70 text-white transition hover:bg-biru-950" aria-label="Tutup video">
+        <Ikon nama="silang" class="size-5" />
+      </button>
+    </form>
+  </dialog>
 </Base>
 
 <script>
   // Pemutar YouTube baru dimuat saat diklik, supaya halaman tetap ringan di seluler.
+  const dialogVideo = document.querySelector<HTMLDialogElement>('#dialog-video')!;
+  const pemutar = dialogVideo.querySelector<HTMLElement>('[data-pemutar]')!;
+
   document.querySelectorAll<HTMLAnchorElement>('[data-video]').forEach((tautan) => {
     tautan.addEventListener('click', (e) => {
       e.preventDefault();
@@ -67,8 +85,16 @@ const daftar = await api<Halaman<Video>>(`/video${query({ page })}`, Astro.reque
       iframe.title = tautan.dataset.judul ?? 'Video';
       iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
       iframe.allowFullscreen = true;
-      iframe.className = 'absolute inset-0 size-full';
-      tautan.replaceWith(iframe);
+      iframe.className = 'size-full';
+      pemutar.replaceChildren(iframe);
+      dialogVideo.setAttribute('aria-label', iframe.title);
+      dialogVideo.querySelector('[data-judul]')!.textContent = iframe.title;
+      dialogVideo.querySelector('[data-tanggal]')!.textContent = tautan.dataset.tanggal ?? '';
+      dialogVideo.showModal();
     });
   });
+
+  // Iframe dibuang saat dialog ditutup supaya suara video ikut berhenti; klik di luar video menutup dialog.
+  dialogVideo.addEventListener('close', () => pemutar.replaceChildren());
+  dialogVideo.addEventListener('click', (e) => e.target === dialogVideo && dialogVideo.close());
 </script>

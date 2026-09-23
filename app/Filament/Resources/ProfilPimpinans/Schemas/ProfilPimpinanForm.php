@@ -56,6 +56,9 @@ class ProfilPimpinanForm
                     ->multiple()
                     ->maxFiles(self::FOTO_MAKS)
                     ->reorderable()
+                    // Tanpa ini Filament menampilkan foto terbalik dari urutan simpan (terbaru di depan),
+                    // jadi urutan hasil seret di admin berkebalikan dengan halaman depan.
+                    ->appendFiles()
                     ->panelLayout('grid')
                     ->imagePreviewHeight('200')
                     ->extraAttributes(['class' => 'kdi-foto-tambahan'])

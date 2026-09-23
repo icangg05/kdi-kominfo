@@ -2,8 +2,10 @@
 
 namespace Tests\Feature;
 
+use App\Filament\Pages\HalamanProfil;
 use App\Filament\Resources\Galeris\Pages\CreateGaleri;
 use App\Models\Galeri;
+use App\Models\ProfilDinas;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
@@ -47,5 +49,19 @@ class UploadGambarTest extends TestCase
       ->set('data.gambar', UploadedFile::fake()->createWithContent('besar.jpg', $besar))
       ->call('create')
       ->assertHasFormErrors(['gambar']);
+  }
+
+  public function test_bagan_resmi_pdf_disimpan_tanpa_kompres(): void
+  {
+    $pdf = UploadedFile::fake()->createWithContent('bagan.pdf', "%PDF-1.4\n%%EOF");
+
+    Livewire::test(HalamanProfil::class)
+      ->set('data.struktur_organisasi', $pdf)
+      ->call('save')
+      ->assertHasNoFormErrors();
+
+    $path = ProfilDinas::konten('struktur-organisasi');
+    $this->assertStringEndsWith('.pdf', $path);
+    $this->assertSame("%PDF-1.4\n%%EOF", Storage::disk('public')->get($path));
   }
 }

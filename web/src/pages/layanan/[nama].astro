@@ -48,7 +48,7 @@ const { pengaturan } = await api<{ pengaturan: Record<string, string | null> }>(
         <h2 class="mb-6 text-xl font-bold text-biru-900 dark:text-white">Fitur yang Tersedia</h2>
         <ul class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {isi.fitur.map((f) => (
-            <li class="flex items-center gap-3 rounded border border-biru-100 px-5 py-4 text-sm dark:border-garis">
+            <li class="flex items-center gap-3 rounded border border-garis bg-white px-5 py-4 text-sm bayangan-kartu dark:bg-malam-kartu">
               <Ikon nama="panah-kanan" class="size-4 shrink-0 text-biru-600 dark:text-biru-400" />
               {f}
             </li>
@@ -62,7 +62,7 @@ const { pengaturan } = await api<{ pengaturan: Record<string, string | null> }>(
         <h2 class="mb-6 text-xl font-bold text-biru-900 dark:text-white">Keunggulan Layanan</h2>
         <div class="grid gap-5 md:grid-cols-3">
           {isi.keunggulan.map((k) => (
-            <div class="rounded border border-biru-100 p-6 dark:border-garis">
+            <div class="rounded border border-garis bg-white p-6 bayangan-kartu dark:bg-malam-kartu">
               <h3 class="mb-2 font-bold text-biru-900 dark:text-white">{k.judul}</h3>
               <p class="text-sm text-teks-lembut">{k.isi}</p>
             </div>
@@ -73,7 +73,7 @@ const { pengaturan } = await api<{ pengaturan: Record<string, string | null> }>(
 
     <div class="mt-16 grid gap-8 lg:grid-cols-2">
       {isi.syarat && (
-        <section class="rounded border border-biru-100 p-7 dark:border-garis">
+        <section class="rounded border border-garis bg-white p-7 bayangan-kartu dark:bg-malam-kartu">
           <h2 class="mb-5 text-xl font-bold text-biru-900 dark:text-white">Persyaratan Pengajuan</h2>
           <ol class="space-y-3">
             {isi.syarat.map((s, i) => (
@@ -87,7 +87,7 @@ const { pengaturan } = await api<{ pengaturan: Record<string, string | null> }>(
       )}
 
       {isi.prosedur && (
-        <section class="rounded bg-biru-800 motif-komdigi p-7 text-white">
+        <section class="rounded bg-biru-800 motif-komdigi p-7 text-white bayangan-kartu">
           <h2 class="mb-5 text-xl font-bold">Prosedur Pengajuan</h2>
           <ol class="space-y-3">
             {isi.prosedur.map((p, i) => (
@@ -102,7 +102,7 @@ const { pengaturan } = await api<{ pengaturan: Record<string, string | null> }>(
     </div>
 
     <!-- Kontak diambil dari pengaturan admin supaya tidak perlu diubah di dua tempat. -->
-    <section class="mt-16 rounded border border-biru-100 bg-biru-50/60 p-8 dark:border-garis dark:bg-malam-kartu">
+    <section class="mt-16 rounded border border-garis bg-biru-50/60 p-8 bayangan-kartu dark:bg-malam-kartu">
       <h2 class="mb-2 text-xl font-bold text-biru-900 dark:text-white">Hubungi Kami</h2>
       <p class="mb-6 text-sm text-teks-lembut">Untuk pertanyaan atau pengajuan layanan, silakan hubungi:</p>
 
@@ -119,10 +119,12 @@ const { pengaturan } = await api<{ pengaturan: Record<string, string | null> }>(
             {pengaturan.telp}
           </a>
         )}
-        <span class="flex items-center gap-2 text-teks-lembut">
-          <Ikon nama="gedung" class="size-5" />
-          Jl. Balaikota Blok A, Kendari
-        </span>
+        {pengaturan.alamat && (
+          <span class="flex items-center gap-2 text-teks-lembut">
+            <Ikon nama="gedung" class="size-5 shrink-0" />
+            {pengaturan.alamat}
+          </span>
+        )}
       </div>
     </section>
   </div>

@@ -2,6 +2,8 @@
 
 namespace App\Filament\Pages\Auth;
 
+use DanHarrin\LivewireRateLimiting\Exceptions\TooManyRequestsException;
+use Filament\Auth\Http\Responses\Contracts\LoginResponse;
 use Filament\Auth\Pages\Login;
 use Filament\Schemas\Components\Component;
 use Illuminate\Contracts\Support\Htmlable;
@@ -15,6 +17,23 @@ class Masuk extends Login
     protected string $view = 'filament.pages.auth.masuk';
 
     protected static string $layout = 'filament.pages.auth.masuk-layout';
+
+    /**
+     * Bawaan Filament 5 percobaan per menit per IP; di sini diperketat jadi 4. Kunci terpisah ('masuk'),
+     * jadi pembatas bawaan di parent tidak pernah tercapai lebih dulu.
+     */
+    public function authenticate(): ?LoginResponse
+    {
+        try {
+            $this->rateLimit(4, method: 'masuk');
+        } catch (TooManyRequestsException $exception) {
+            $this->getRateLimitedNotification($exception)?->send();
+
+            return null;
+        }
+
+        return parent::authenticate();
+    }
 
     protected function getEmailFormComponent(): Component
     {

@@ -1,4 +1,6 @@
 ---
+import Ikon from './Ikon.astro';
+
 interface Props {
   halaman: number;
   halamanTerakhir: number;
@@ -21,17 +23,23 @@ const nomor = Array.from({ length: Math.min(5, halamanTerakhir) }, (_, i) => mul
   .filter((n) => n <= halamanTerakhir);
 ---
 
+<!--
+  Di layar sempit "Sebelumnya/Berikutnya" jadi ikon dan kotak nomor mengecil, supaya 7 tombol muat
+  di lebar 320px. flex-wrap sebagai pengaman: lebih baik turun baris daripada meluber ke samping.
+-->
 {halamanTerakhir > 1 && (
-  <nav class="mt-10 flex items-center justify-center gap-2" aria-label="Paginasi">
+  <nav class="mt-10 flex flex-wrap items-center justify-center gap-1.5 sm:gap-2" aria-label="Paginasi">
     <a
       href={tautan(halaman - 1)}
       class:list={[
-        'rounded border border-biru-200 px-3 py-2 text-sm transition dark:border-biru-800',
+        'flex min-h-9 min-w-9 items-center justify-center rounded border border-biru-200 text-sm transition sm:px-3 sm:py-2 dark:border-biru-800',
         halaman <= 1 ? 'pointer-events-none opacity-40' : 'hover:bg-biru-50 dark:hover:bg-white/5',
       ]}
       aria-disabled={halaman <= 1}
+      aria-label="Halaman sebelumnya"
     >
-      Sebelumnya
+      <Ikon nama="chevron" class="size-4 rotate-90 sm:hidden" />
+      <span class="max-sm:hidden">Sebelumnya</span>
     </a>
 
     {nomor.map((n) => (
@@ -39,7 +47,7 @@ const nomor = Array.from({ length: Math.min(5, halamanTerakhir) }, (_, i) => mul
         href={tautan(n)}
         aria-current={n === halaman ? 'page' : undefined}
         class:list={[
-          'min-w-10 rounded border px-3 py-2 text-center text-sm transition',
+          'flex min-h-9 min-w-9 items-center justify-center rounded border px-2 text-sm tabular-nums transition sm:min-w-10 sm:px-3 sm:py-2',
           n === halaman
             ? 'border-biru-600 bg-biru-600 font-semibold text-white'
             : 'border-biru-200 hover:bg-biru-50 dark:border-biru-800 dark:hover:bg-white/5',
@@ -52,12 +60,14 @@ const nomor = Array.from({ length: Math.min(5, halamanTerakhir) }, (_, i) => mul
     <a
       href={tautan(halaman + 1)}
       class:list={[
-        'rounded border border-biru-200 px-3 py-2 text-sm transition dark:border-biru-800',
+        'flex min-h-9 min-w-9 items-center justify-center rounded border border-biru-200 text-sm transition sm:px-3 sm:py-2 dark:border-biru-800',
         halaman >= halamanTerakhir ? 'pointer-events-none opacity-40' : 'hover:bg-biru-50 dark:hover:bg-white/5',
       ]}
       aria-disabled={halaman >= halamanTerakhir}
+      aria-label="Halaman berikutnya"
     >
-      Berikutnya
+      <Ikon nama="chevron" class="size-4 -rotate-90 sm:hidden" />
+      <span class="max-sm:hidden">Berikutnya</span>
     </a>
   </nav>
 )}

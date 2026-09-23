@@ -1,4 +1,5 @@
 ---
+import Aksesibilitas from '../components/Aksesibilitas.astro';
 import Footer from '../components/Footer.astro';
 import Header from '../components/Header.astro';
 import { api, asalSitus } from '../lib/api';
@@ -92,6 +93,13 @@ const gambarPenuh = new URL(gambar || '/img/og-default.jpg', asal + '/').href;
       terapkanTema();
       // Kembali dari admin lewat tombol Back memulihkan halaman dari cache; tema bisa sudah diganti di sana.
       addEventListener('pageshow', (e) => e.persisted && terapkanTema());
+
+      // Pilihan panel Aksesibilitas, juga dipasang sebelum dilukis supaya ukuran teks tidak melompat.
+      try {
+        const a = JSON.parse(localStorage.getItem('aksesibilitas') || '{}');
+        for (const k in a) if (a[k] && k !== 'skala') document.documentElement.setAttribute('data-' + k, '');
+        if (a.skala) document.documentElement.style.fontSize = a.skala + '%';
+      } catch {}
     </script>
   </head>
   <body class="flex min-h-screen flex-col">
@@ -106,5 +114,6 @@ const gambarPenuh = new URL(gambar || '/img/og-default.jpg', asal + '/').href;
     </main>
 
     <Footer telp={telp ?? undefined} email={email ?? undefined} alamat={alamat} fb={fb} ig={ig} tt={tt} yt={yt} />
+    <Aksesibilitas />
   </body>
 </html>

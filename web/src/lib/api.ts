@@ -19,6 +19,9 @@ export type Dokumen = {
   kategori: Kategori | null;
   totalUnduhan: number;
   ekstensi: string;
+  tanggal: string | null;
+  /** Byte; null bila berkasnya hilang dari penyimpanan. */
+  ukuran: number | null;
   unduh: string;
 };
 
@@ -60,6 +63,31 @@ export function tanggalPanjang(iso: string | null | undefined): string {
     day: 'numeric',
     month: 'long',
     year: 'numeric',
+  });
+}
+
+/** Ukuran berkas yang mudah dibaca, mis. 1,4 MB. */
+export function ukuranBerkas(byte: number): string {
+  const satuan = ['B', 'KB', 'MB', 'GB'];
+  let i = 0;
+  while (byte >= 1024 && i < satuan.length - 1) {
+    byte /= 1024;
+    i++;
+  }
+  return `${byte.toLocaleString('id-ID', { maximumFractionDigits: i ? 1 : 0 })} ${satuan[i]}`;
+}
+
+/** Isi atribut data-dokumen: rincian yang sudah diformat untuk DialogDokumen, jadi skrip peramban cukup menyalin teks. */
+export function rincianDokumen(d: Dokumen): string {
+  return JSON.stringify({
+    judul: d.judul,
+    kategori: d.kategori?.nama ?? '',
+    deskripsi: d.deskripsi,
+    ekstensi: d.ekstensi || '–',
+    ukuran: d.ukuran == null ? '–' : ukuranBerkas(d.ukuran),
+    tanggal: tanggalPanjang(d.tanggal) || '–',
+    unduhan: `${d.totalUnduhan.toLocaleString('id-ID')} kali`,
+    unduh: d.unduh,
   });
 }
 

@@ -10,6 +10,8 @@ const data = await api<{ bagan: Simpul | null; gambar: string | null }>('/profil
 
 const bagan = data.bagan ?? {};
 const adaBagan = Boolean(bagan.nama || bagan.pejabat || bagan.anak?.length);
+// Bagan resmi bisa gambar atau PDF; PDF cukup ditautkan.
+const pdf = data.gambar?.toLowerCase().endsWith('.pdf') ?? false;
 ---
 
 <Base judul="Struktur Organisasi" deskripsi="Bagan struktur organisasi Diskominfo Kota Kendari.">
@@ -29,11 +31,16 @@ const adaBagan = Boolean(bagan.nama || bagan.pejabat || bagan.anak?.length);
 
         {data.gambar && (
           <a href={data.gambar} target="_blank" rel="noopener" class="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-biru-600 hover:underline dark:text-biru-300">
-            <Ikon nama="foto" class="size-4" />
-            Lihat bagan resmi (gambar)
+            <Ikon nama={pdf ? 'berkas' : 'foto'} class="size-4" />
+            Lihat bagan resmi ({pdf ? 'PDF' : 'gambar'})
           </a>
         )}
       </>
+    ) : data.gambar && pdf ? (
+      <a href={data.gambar} target="_blank" rel="noopener" class="inline-flex items-center gap-2 text-sm font-semibold text-biru-600 hover:underline dark:text-biru-300">
+        <Ikon nama="berkas" class="size-4" />
+        Lihat bagan struktur organisasi (PDF)
+      </a>
     ) : data.gambar ? (
       <div class="overflow-x-auto rounded border border-garis bg-white p-4 bayangan-kartu dark:bg-malam-kartu">
         <img src={data.gambar} alt="Bagan struktur organisasi Diskominfo Kota Kendari" class="mx-auto min-w-3xl" />

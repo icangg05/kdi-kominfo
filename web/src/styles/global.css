@@ -172,8 +172,8 @@
   mix-blend-mode: normal;
 }
 
-/* Dialog memudar dan naik sedikit saat dibuka, kebalikannya saat ditutup. display dan overlay ikut
-   ditransisikan (allow-discrete) supaya dialog tetap tampil sampai animasi tutup selesai. */
+/* Dialog dan popover (panel Aksesibilitas) memudar dan naik sedikit saat dibuka, kebalikannya saat ditutup.
+   display dan overlay ikut ditransisikan (allow-discrete) supaya tetap tampil sampai animasi tutup selesai. */
 .dialog-halus,
 .dialog-halus::backdrop {
   transition:
@@ -191,7 +191,7 @@
   scale: 0.97;
 }
 
-.dialog-halus[open] {
+.dialog-halus:is([open], :popover-open) {
   opacity: 1;
   translate: 0 0;
   scale: 1;
@@ -206,7 +206,7 @@
 }
 
 @starting-style {
-  .dialog-halus[open] {
+  .dialog-halus:is([open], :popover-open) {
     opacity: 0;
     translate: 0 1rem;
     scale: 0.97;
@@ -254,4 +254,40 @@ html[data-ganti-tema] {
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
+}
+
+/* Panel Aksesibilitas: atribut di <html> dipasang skrip di <head> Base dan komponen Aksesibilitas. */
+html[data-kontras] { filter: contrast(1.4); }
+html[data-abu] { filter: grayscale(1); }
+html[data-kontras][data-abu] { filter: grayscale(1) contrast(1.4); }
+
+/* Garis putus-putus warna teks tautan itu sendiri, jadi selalu kontras dengan latarnya; beda dari cincin fokus yang utuh. */
+html[data-sorot-tautan] a {
+  outline: 2px dashed currentColor !important;
+  outline-offset: 3px;
+  text-decoration: underline !important;
+  text-underline-offset: 3px;
+}
+
+/* Nilai uji WCAG 1.4.12 (spasi teks). Panel sendiri dikecualikan supaya tombolnya tidak pecah baris. */
+html[data-renggang] body :not(#aksesibilitas, #aksesibilitas *) {
+  letter-spacing: 0.12em !important;
+  word-spacing: 0.16em !important;
+  line-height: 1.8 !important;
+}
+
+html[data-henti-animasi],
+html[data-henti-animasi] *,
+html[data-henti-animasi] *::before,
+html[data-henti-animasi] *::after {
+  animation: none !important;
+  transition: none !important;
+  scroll-behavior: auto !important;
+}
+
+/* Penanda bagian yang akan dibaca; selektornya sama dengan skrip komponen Aksesibilitas. */
+html[data-baca-klik] body :is(p, h1, h2, h3, h4, h5, h6, li, dt, dd, td, th, figcaption, blockquote, label, a, button):not(#aksesibilitas *):hover {
+  outline: 2px solid var(--color-biru-400);
+  outline-offset: 2px;
+  cursor: pointer;
 }

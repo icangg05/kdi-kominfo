@@ -2,9 +2,19 @@
 import Ikon from './Ikon.astro';
 ---
 
-<!-- Satu dialog untuk semua gambar di dalam [data-perbesar]; klik di luar gambar untuk menutup. -->
+<!--
+  Satu dialog untuk semua gambar di dalam [data-perbesar]; klik di luar gambar untuk menutup.
+  Gambar ber-data-judul/data-tanggal (galeri) ikut menampilkan keterangan. Figure dibuat tabel supaya
+  keterangan (table-caption) selebar gambar, bukan melebar mengikuti panjang judul.
+-->
 <dialog id="dialog-gambar" aria-label="Gambar diperbesar" class="dialog-halus m-auto max-h-none max-w-none overflow-visible bg-transparent p-0 [--pekat:0.92]">
-  <img alt="" class="max-h-[calc(100dvh-2rem)] max-w-[calc(100vw-2rem)] rounded object-contain" />
+  <figure class="table">
+    <img alt="" class="max-h-[calc(100dvh-2rem)] max-w-[calc(100vw-2rem)] rounded object-contain" />
+    <figcaption class="table-caption caption-bottom pt-3 text-white" hidden>
+      <p class="line-clamp-2 font-semibold leading-snug" data-judul></p>
+      <p class="mt-1 text-sm text-biru-200" data-tanggal></p>
+    </figcaption>
+  </figure>
   <form method="dialog">
     <button class="absolute top-2 right-2 flex size-10 items-center justify-center rounded bg-biru-950/70 text-white transition hover:bg-biru-950" aria-label="Tutup gambar">
       <Ikon nama="silang" class="size-5" />
@@ -17,6 +27,7 @@ import Ikon from './Ikon.astro';
   // Gambar yang dibungkus tautan tetap membuka tautannya; yang dibungkus tombol memakai tombol itu sebagai pemicu.
   const dialogGambar = document.querySelector<HTMLDialogElement>('#dialog-gambar')!;
   const besar = dialogGambar.querySelector('img')!;
+  const keterangan = dialogGambar.querySelector('figcaption')!;
   let dibuka: HTMLImageElement | null = null;
 
   document.querySelectorAll<HTMLImageElement>('[data-perbesar] img:not([aria-hidden])').forEach((img) => {
@@ -28,6 +39,11 @@ import Ikon from './Ikon.astro';
       besar.removeAttribute('srcset');
       besar.src = img.currentSrc || img.src;
       besar.alt = img.alt;
+      // Keterangan butuh ruang di bawah gambar, jadi tinggi gambar dikurangi saat keterangan tampil.
+      keterangan.hidden = !img.dataset.judul;
+      keterangan.querySelector('[data-judul]')!.textContent = img.dataset.judul ?? '';
+      keterangan.querySelector('[data-tanggal]')!.textContent = img.dataset.tanggal ?? '';
+      besar.style.maxHeight = keterangan.hidden ? '' : 'calc(100dvh - 7rem)';
       dialogGambar.showModal();
 
       // Versi terbesar yang pas di layar dimuat di belakang, baru dipasang setelah siap.
@@ -54,5 +70,5 @@ import Ikon from './Ikon.astro';
     });
   });
 
-  dialogGambar.addEventListener('click', (e) => e.target !== besar && dialogGambar.close());
+  dialogGambar.addEventListener('click', (e) => !(e.target as Element).closest('img, figcaption') && dialogGambar.close());
 </script>

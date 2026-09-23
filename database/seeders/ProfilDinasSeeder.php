@@ -100,10 +100,6 @@ class ProfilDinasSeeder extends Seeder
             'id'    => 3,
             'value' => "foto-diskominfo/diskominfo-3.webp",
           ],
-          [
-            'id'    => 4,
-            'value' => "foto-diskominfo/diskominfo-4.webp",
-          ],
         ]),
       ],
 

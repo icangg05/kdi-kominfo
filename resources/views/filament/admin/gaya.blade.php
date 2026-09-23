@@ -359,7 +359,7 @@
         color: var(--danger-400);
     }
 
-    /* Form Profil Pimpinan: pratinjau foto profil pegawai, dan foto tambahan (maks 3) sebaris di layar lebar. */
+    /* Form Profil Pimpinan: pratinjau foto profil pegawai. Foto tambahan pimpinan dan foto kantor (Isi Halaman), maks 3, sebaris di layar lebar. */
     .kdi-foto-pegawai {
         object-fit: cover;
         border-radius: 0.25rem;
@@ -370,6 +370,186 @@
         .kdi-foto-tambahan .filepond--root[data-style-panel-layout='grid'] .filepond--item {
             width: calc(33.333% - 0.5rem);
         }
+    }
+
+    /*
+     * ---------- Bagan struktur organisasi (Isi Halaman): pimpinan → unit → sub unit sebagai pohon ----------
+     * Tingkat dibedakan oleh chip bergradasi (biru pekat → biru muda → putih bergaris), garis cabang 1px dari
+     * induk, dan bidang: pimpinan berlatar biru, unit kartu putih, sub unit baris datar (bukan kartu di kartu).
+     * Kepala item diberi tinggi tetap = 2 × --kdi-tengah supaya garis mendatar tepat di tengahnya.
+     */
+    .kdi-bagan-akar {
+        border-color: var(--primary-200);
+        background: var(--primary-50);
+    }
+
+    html.dark .kdi-bagan-akar {
+        border-color: var(--primary-800);
+        background: var(--primary-900);
+    }
+
+    .kdi-bagan-akar > legend,
+    .kdi-bagan-chip {
+        display: inline-block;
+        padding-inline: 0.5rem;
+        border-radius: 0.25rem;
+        font-size: 0.6875rem;
+        font-weight: 700;
+        line-height: 1.375rem;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        vertical-align: 0.0625rem;
+    }
+
+    .kdi-bagan-akar > legend {
+        margin-inline-start: 0;
+        background: var(--primary-600);
+        color: #fff;
+    }
+
+    .kdi-bagan-chip {
+        margin-inline-end: 0.25rem;
+        white-space: nowrap;
+    }
+
+    .kdi-bagan-chip-1 {
+        background: var(--primary-100);
+        color: var(--primary-800);
+    }
+
+    .kdi-bagan-chip-2 {
+        background: #fff;
+        box-shadow: inset 0 0 0 1px var(--gray-200);
+        color: var(--gray-600);
+    }
+
+    html.dark .kdi-bagan-chip-1 {
+        background: var(--primary-800);
+        color: var(--primary-100);
+    }
+
+    html.dark .kdi-bagan-chip-2 {
+        background: rgb(255 255 255 / 0.06);
+        box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.1);
+        color: var(--gray-300);
+    }
+
+    .kdi-bagan-kosong,
+    .kdi-bagan-jumlah {
+        font-weight: 400;
+        color: var(--gray-500);
+    }
+
+    .kdi-bagan-jumlah {
+        margin-inline-start: 0.5rem;
+        font-size: 0.75rem;
+        white-space: nowrap;
+    }
+
+    html.dark .kdi-bagan-kosong,
+    html.dark .kdi-bagan-jumlah {
+        color: var(--gray-400);
+    }
+
+    .kdi-bagan-tingkat {
+        --kdi-indentasi: 1.5rem;
+        --kdi-rel: 0.625rem;
+        --kdi-sela: 1rem;
+        --kdi-atas: 1.5rem;
+        --kdi-tengah: 1.625rem;
+    }
+
+    .kdi-bagan-tingkat-2 {
+        --kdi-tengah: 1.375rem;
+    }
+
+    /* "Sembunyikan/Tampilkan semua" hanya di tingkat unit, rata kanan dan bertinggi tetap agar garis dari pimpinan tetap menyambung. */
+    .kdi-bagan-tingkat-1 > .fi-fo-repeater-actions {
+        justify-content: flex-end;
+        align-items: center;
+        height: 1.5rem;
+    }
+
+    .kdi-bagan-tingkat-1 > .fi-fo-repeater-actions:not(.fi-hidden) + .fi-fo-repeater-items {
+        --kdi-atas: 4rem;
+    }
+
+    .kdi-bagan-tingkat-2 > .fi-fo-repeater-actions {
+        display: none;
+    }
+
+    .kdi-bagan-tingkat > .fi-fo-repeater-items,
+    .kdi-bagan-tingkat > .fi-fo-repeater-add {
+        padding-inline-start: var(--kdi-indentasi);
+    }
+
+    .kdi-bagan-tingkat > .fi-fo-repeater-items > .fi-fo-repeater-item {
+        position: relative;
+    }
+
+    .kdi-bagan-tingkat > .fi-fo-repeater-items > .fi-fo-repeater-item::before,
+    .kdi-bagan-tingkat > .fi-fo-repeater-items > .fi-fo-repeater-item::after {
+        content: "";
+        position: absolute;
+        inset-inline-start: calc(var(--kdi-rel) - var(--kdi-indentasi));
+        pointer-events: none;
+    }
+
+    /* Garis tegak turun dari induk, menyambung antar item, berhenti di tengah kepala item terakhir. */
+    .kdi-bagan-tingkat > .fi-fo-repeater-items > .fi-fo-repeater-item::before {
+        top: calc(var(--kdi-sela) * -1);
+        bottom: 0;
+        border-inline-start: 1px solid var(--gray-300);
+    }
+
+    .kdi-bagan-tingkat > .fi-fo-repeater-items > .fi-fo-repeater-item:first-child::before {
+        top: calc(var(--kdi-atas) * -1);
+    }
+
+    .kdi-bagan-tingkat > .fi-fo-repeater-items > .fi-fo-repeater-item:last-child::before {
+        bottom: auto;
+        height: calc(var(--kdi-sela) + var(--kdi-tengah));
+    }
+
+    .kdi-bagan-tingkat > .fi-fo-repeater-items > .fi-fo-repeater-item:first-child:last-child::before {
+        height: calc(var(--kdi-atas) + var(--kdi-tengah));
+    }
+
+    .kdi-bagan-tingkat > .fi-fo-repeater-items > .fi-fo-repeater-item::after {
+        top: var(--kdi-tengah);
+        width: calc(var(--kdi-indentasi) - var(--kdi-rel));
+        border-top: 1px solid var(--gray-300);
+    }
+
+    html.dark .kdi-bagan-tingkat > .fi-fo-repeater-items > .fi-fo-repeater-item::before,
+    html.dark .kdi-bagan-tingkat > .fi-fo-repeater-items > .fi-fo-repeater-item::after {
+        border-color: var(--gray-700);
+    }
+
+    .kdi-bagan-tingkat > .fi-fo-repeater-items > .fi-fo-repeater-item > .fi-fo-repeater-item-header {
+        min-height: calc(var(--kdi-tengah) * 2);
+        padding-block: 0.25rem;
+    }
+
+    .kdi-bagan-tingkat-1 > .fi-fo-repeater-items > .fi-fo-repeater-item > .fi-fo-repeater-item-header .fi-fo-repeater-item-header-label {
+        font-weight: 600;
+    }
+
+    .kdi-bagan-tingkat-2 > .fi-fo-repeater-items > .fi-fo-repeater-item {
+        background: var(--gray-50);
+        box-shadow: none;
+    }
+
+    html.dark .kdi-bagan-tingkat-2 > .fi-fo-repeater-items > .fi-fo-repeater-item {
+        background: rgb(255 255 255 / 0.04);
+    }
+
+    .kdi-bagan-tingkat-2 > .fi-fo-repeater-items > .fi-fo-repeater-item > .fi-fo-repeater-item-content {
+        border-color: var(--gray-200);
+    }
+
+    html.dark .kdi-bagan-tingkat-2 > .fi-fo-repeater-items > .fi-fo-repeater-item > .fi-fo-repeater-item-content {
+        border-color: rgb(255 255 255 / 0.1);
     }
 
     /* Tabel galeri, video, dokumen, pegawai, jabatan, dan kategori dibuat rapat (bawaan Filament 1rem atas-bawah). */

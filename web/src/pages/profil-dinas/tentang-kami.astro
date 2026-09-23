@@ -1,4 +1,5 @@
 ---
+import DialogGambar from '../../components/DialogGambar.astro';
 import JudulBagian from '../../components/JudulBagian.astro';
 import JudulHalaman from '../../components/JudulHalaman.astro';
 import Base from '../../layouts/Base.astro';
@@ -12,6 +13,24 @@ type Data = {
 };
 
 const data = await api<Data>('/profil-dinas/tentang-kami', Astro.request);
+
+// Admin membatasi foto kantor maksimal 3; susunannya menyesuaikan jumlah.
+// Rasio foto bebas (potret/lanskap), jadi bingkai memotong dengan object-cover dan versi utuhnya dilihat lewat perbesar.
+const foto = data.fotoDiskominfo.slice(0, 3);
+const susunan = {
+  // 1: satu bingkai lebar.
+  1: { wadah: '', sel: ['aspect-4/3 sm:aspect-21/9'] },
+  // 2: berdampingan 3:2 supaya tidak jadi dua kotak kembar.
+  2: {
+    wadah: 'sm:grid-cols-[3fr_2fr] sm:h-88 lg:h-104',
+    sel: ['aspect-4/3 sm:aspect-auto', 'aspect-4/3 sm:aspect-auto'],
+  },
+  // 3: foto pertama besar di kiri, dua lainnya bertumpuk di kanan; di ponsel foto pertama melebar, dua sisanya berdampingan.
+  3: {
+    wadah: 'grid-cols-2 sm:grid-cols-[3fr_2fr] sm:grid-rows-2 sm:h-104 lg:h-120',
+    sel: ['col-span-2 aspect-4/3 sm:col-span-1 sm:row-span-2 sm:aspect-auto', 'aspect-4/3 sm:aspect-auto', 'aspect-4/3 sm:aspect-auto'],
+  },
+}[foto.length];
 ---
 
 <Base judul="Tentang Kami" deskripsi="Sejarah, visi, dan misi Diskominfo Kota Kendari.">
@@ -22,10 +41,17 @@ const data = await api<Data>('/profil-dinas/tentang-kami', Astro.request);
   />
 
   <div class="wadah py-12">
-    {data.fotoDiskominfo.length > 0 && (
-      <div class="mb-14 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        {data.fotoDiskominfo.map((f) => (
-          <img src={f} alt="" loading="lazy" class="aspect-4/3 w-full rounded object-cover" />
+    {susunan && (
+      <div class:list={['mb-14 grid gap-3 sm:gap-4', susunan.wadah]} data-perbesar>
+        {foto.map((f, i) => (
+          <figure class:list={['group relative overflow-hidden rounded bg-biru-100 dark:bg-biru-900', susunan.sel[i]]}>
+            <img
+              src={f}
+              alt={foto.length > 1 ? `Kantor Diskominfo Kota Kendari, foto ${i + 1} dari ${foto.length}` : 'Kantor Diskominfo Kota Kendari'}
+              fetchpriority={i === 0 ? 'high' : 'auto'}
+              class="absolute inset-0 size-full object-cover transition duration-500 group-hover:scale-[1.03] focus-visible:-outline-offset-2 motion-reduce:transition-none motion-reduce:group-hover:scale-100"
+            />
+          </figure>
         ))}
       </div>
     )}
@@ -62,4 +88,6 @@ const data = await api<Data>('/profil-dinas/tentang-kami', Astro.request);
       )}
     </div>
   </div>
+
+  <DialogGambar />
 </Base>

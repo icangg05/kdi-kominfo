@@ -2,8 +2,6 @@
 
 namespace App\Filament\Resources\KategoriDokumens;
 
-use App\Filament\Resources\KategoriDokumens\Pages\CreateKategoriDokumen;
-use App\Filament\Resources\KategoriDokumens\Pages\EditKategoriDokumen;
 use App\Filament\Resources\KategoriDokumens\Pages\ListKategoriDokumens;
 use App\Filament\Resources\KategoriDokumens\Schemas\KategoriDokumenForm;
 use App\Filament\Resources\KategoriDokumens\Tables\KategoriDokumensTable;
@@ -51,8 +49,6 @@ class KategoriDokumenResource extends Resource
     {
         return [
             'index' => ListKategoriDokumens::route('/'),
-            'create' => CreateKategoriDokumen::route('/create'),
-            'edit' => EditKategoriDokumen::route('/{record}/edit'),
         ];
     }
 }

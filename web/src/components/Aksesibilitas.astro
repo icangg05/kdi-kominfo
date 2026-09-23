@@ -1,0 +1,256 @@
+---
+import Ikon from './Ikon.astro';
+
+// Kunci = nama atribut data-* di <html>; gayanya ada di global.css.
+const opsi = [
+  { kunci: 'kontras', label: 'Kontras Tinggi', ikon: 'kontras' },
+  { kunci: 'abu', label: 'Skala Abu-abu', ikon: 'abu' },
+  { kunci: 'sorot-tautan', label: 'Sorot Tautan', ikon: 'tautan' },
+  { kunci: 'renggang', label: 'Teks Renggang', ikon: 'renggang' },
+  { kunci: 'henti-animasi', label: 'Stop Animasi', ikon: 'larang' },
+  { kunci: 'baca-klik', label: 'Baca dengan Klik', ikon: 'suara' },
+] as const;
+
+// Bidang isian: biru muda di mode terang, putih tipis di mode gelap supaya tetap terangkat dari kartu.
+const bidang = 'bg-langit dark:bg-white/[0.06]';
+const tombolSkala = 'flex size-9 items-center justify-center rounded font-bold transition hover:bg-white hover:shadow-sm active:scale-90 disabled:pointer-events-none disabled:opacity-35 dark:hover:bg-white/10';
+---
+
+<!-- Panel memakai Popover API: klik di luar atau Escape menutupnya tanpa skrip. -->
+<button
+  type="button"
+  popovertarget="aksesibilitas"
+  data-pemicu-aksesibilitas
+  class="fixed bottom-5 left-5 z-40 rounded bg-biru-600 p-3 text-white shadow-[0_12px_28px_-10px_rgba(7,31,61,0.6)] transition hover:-translate-y-0.5 hover:bg-biru-700 active:translate-y-0 active:scale-95 [body:has(#aksesibilitas:popover-open)_&]:bg-biru-800"
+  aria-label="Mode aksesibilitas"
+>
+  <Ikon nama="aksesibilitas" class="size-5" />
+  <!-- Jumlah pengaturan yang aktif, supaya jelas kenapa tampilan situs berubah walau panel tertutup. -->
+  <span data-jumlah hidden class="absolute -top-1.5 -right-1.5 flex h-5 min-w-5 items-center justify-center rounded bg-white px-1 text-[11px] font-bold text-biru-700 ring-2 ring-biru-600"></span>
+</button>
+
+<div
+  id="aksesibilitas"
+  popover
+  role="dialog"
+  aria-labelledby="judul-aksesibilitas"
+  class="dialog-halus top-auto right-auto bottom-20 left-5 m-0 max-h-[calc(100dvh-6rem)] w-[min(22rem,calc(100vw-2.5rem))] origin-bottom-left overflow-y-auto rounded border border-garis bg-white p-0 text-teks shadow-[0_2px_6px_rgba(7,31,61,0.08),0_28px_56px_-16px_rgba(7,31,61,0.45)] dark:bg-malam-kartu dark:shadow-[0_28px_56px_-16px_rgba(0,0,0,0.85)]"
+>
+  <div class="motif-komdigi flex items-center justify-between gap-3 bg-biru-900 py-3 pr-2 pl-4 text-white">
+    <h2 id="judul-aksesibilitas" class="flex items-center gap-2.5 font-bold">
+      <Ikon nama="aksesibilitas" class="size-5 text-biru-300" />
+      Mode Aksesibilitas
+    </h2>
+    <button type="button" popovertarget="aksesibilitas" popovertargetaction="hide" class="flex size-9 items-center justify-center rounded transition hover:rotate-90 hover:bg-white/10" aria-label="Tutup panel aksesibilitas">
+      <Ikon nama="silang" class="size-5" />
+    </button>
+  </div>
+
+  <div class="space-y-4 p-4">
+    <div data-muncul style="--i: 0" class="flex items-center justify-between gap-3">
+      <span id="label-ukuran-teks" class="font-semibold">Ukuran Teks</span>
+      <div class:list={['flex items-center rounded p-1', bidang]} role="group" aria-labelledby="label-ukuran-teks">
+        <button type="button" data-ubah-skala="-10" class={tombolSkala} aria-label="Perkecil teks">
+          <span class="text-xs">A</span>&minus;
+        </button>
+        <output data-skala aria-live="polite" class="w-13 text-center text-sm font-bold tabular-nums">100%</output>
+        <button type="button" data-ubah-skala="10" class={tombolSkala} aria-label="Perbesar teks">
+          <span class="text-base">A</span>+
+        </button>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-2 gap-2">
+      {opsi.map((o, i) => (
+        <button
+          type="button"
+          data-opsi={o.kunci}
+          data-suara={o.kunci === 'baca-klik' ? '' : undefined}
+          data-muncul
+          style={`--i: ${i + 1}`}
+          aria-pressed="false"
+          class:list={[
+            'group relative flex min-h-22 flex-col items-start justify-between gap-3 rounded p-3 text-left text-sm leading-snug font-semibold transition duration-200 hover:bg-biru-100 active:scale-[0.97] dark:hover:bg-white/10',
+            'aria-pressed:bg-biru-600 aria-pressed:text-white aria-pressed:shadow-[0_10px_20px_-10px_rgba(11,78,162,0.9)] dark:aria-pressed:bg-biru-600',
+            bidang,
+          ]}
+        >
+          <Ikon nama={o.ikon} class="size-6 text-biru-600 transition duration-200 group-aria-pressed:text-white dark:text-biru-300" />
+          {o.label}
+          <Ikon nama="centang" class="absolute top-3 right-3 size-4 scale-50 opacity-0 transition duration-200 group-aria-pressed:scale-100 group-aria-pressed:opacity-100" />
+        </button>
+      ))}
+    </div>
+
+    <div data-suara data-muncul style="--i: 7" class="space-y-2">
+      <div class="flex gap-2">
+        <button type="button" data-baca-halaman class="flex flex-1 items-center justify-center gap-2 rounded bg-biru-600 px-3 py-2.5 text-sm font-semibold text-white transition hover:bg-biru-700 active:scale-[0.98]">
+          <Ikon nama="putar" isi class="size-4 [[data-bicara]_&]:hidden" />
+          <span class="gelombang hidden h-4 items-end gap-0.5 [[data-bicara]_&]:flex" aria-hidden="true"><span></span><span></span><span></span></span>
+          Baca Halaman
+        </button>
+        <button type="button" data-berhenti disabled class:list={['flex size-10.5 shrink-0 items-center justify-center rounded transition hover:bg-biru-100 active:scale-95 disabled:pointer-events-none disabled:opacity-40 dark:hover:bg-white/10', bidang]} aria-label="Berhenti membaca" title="Berhenti">
+          <Ikon nama="henti" isi class="size-4" />
+        </button>
+      </div>
+      <p class="text-xs leading-relaxed text-teks-lembut">
+        Saat &ldquo;Baca dengan Klik&rdquo; aktif, ketuk teks mana pun untuk mendengarkannya.
+      </p>
+    </div>
+  </div>
+
+  <div class="border-t border-garis px-2 py-2">
+    <button type="button" data-reset class="group flex w-full items-center justify-center gap-2 rounded px-3 py-2 text-sm font-semibold text-biru-700 transition hover:bg-langit disabled:pointer-events-none disabled:text-teks-lembut disabled:opacity-60 dark:text-biru-300 dark:hover:bg-white/5">
+      <Ikon nama="ulang" class="size-4 transition duration-500 group-hover:-rotate-180" />
+      Reset Pengaturan
+    </button>
+  </div>
+</div>
+
+<style>
+  /* Isi panel naik berurutan setelah panel terbuka; "Stop Animasi" di global.css ikut mematikannya. */
+  @media (prefers-reduced-motion: no-preference) {
+    #aksesibilitas:popover-open [data-muncul] {
+      animation: sorot-masuk 420ms cubic-bezier(0.16, 1, 0.3, 1) calc(80ms + var(--i) * 35ms) both;
+    }
+
+    .gelombang span {
+      animation: gelombang 900ms ease-in-out infinite;
+    }
+
+    .gelombang span:nth-child(2) { animation-delay: -300ms; }
+    .gelombang span:nth-child(3) { animation-delay: -600ms; }
+  }
+
+  /* Tiga batang sedang berbicara; tanpa gerak tetap terlihat sebagai tanda diam bertingkat. */
+  .gelombang span {
+    width: 3px;
+    height: 100%;
+    background: currentColor;
+    transform-origin: bottom;
+  }
+
+  .gelombang span:nth-child(1) { transform: scaleY(0.5); }
+  .gelombang span:nth-child(3) { transform: scaleY(0.7); }
+
+  @keyframes gelombang {
+    0%, 100% { transform: scaleY(0.35); }
+    50% { transform: scaleY(1); }
+  }
+</style>
+
+<script>
+  // Pilihan disimpan di kunci `aksesibilitas`; skrip di <head> Base memasangnya sebelum halaman dilukis.
+  const akar = document.documentElement;
+  const panel = document.getElementById('aksesibilitas')!;
+  const pemicu = document.querySelector<HTMLButtonElement>('[data-pemicu-aksesibilitas]')!;
+  const lencana = pemicu.querySelector<HTMLElement>('[data-jumlah]')!;
+  const labelSkala = panel.querySelector('[data-skala]')!;
+  const [kecilkan, besarkan] = panel.querySelectorAll<HTMLButtonElement>('[data-ubah-skala]');
+  const tombolOpsi = [...panel.querySelectorAll<HTMLButtonElement>('[data-opsi]')];
+  const tombolReset = panel.querySelector<HTMLButtonElement>('[data-reset]')!;
+  const tombolBerhenti = panel.querySelector<HTMLButtonElement>('[data-berhenti]')!;
+  const suara = 'speechSynthesis' in window ? speechSynthesis : null;
+  let simpan: Record<string, number | boolean> = {};
+
+  const segarkan = () => {
+    const skala = Number(simpan.skala) || 100;
+    akar.style.fontSize = skala === 100 ? '' : `${skala}%`;
+    labelSkala.textContent = `${skala}%`;
+    kecilkan.disabled = skala <= 80;
+    besarkan.disabled = skala >= 150;
+
+    let jumlah = skala === 100 ? 0 : 1;
+    tombolOpsi.forEach((b) => {
+      const aktif = Boolean(simpan[b.dataset.opsi!]);
+      akar.toggleAttribute(`data-${b.dataset.opsi}`, aktif);
+      b.setAttribute('aria-pressed', String(aktif));
+      jumlah += Number(aktif);
+    });
+
+    lencana.hidden = jumlah === 0;
+    lencana.textContent = String(jumlah);
+    pemicu.setAttribute('aria-label', jumlah ? `Mode aksesibilitas, ${jumlah} pengaturan aktif` : 'Mode aksesibilitas');
+    tombolReset.disabled = jumlah === 0;
+  };
+
+  const ubah = (baru: typeof simpan) => {
+    simpan = baru;
+    try {
+      localStorage.setItem('aksesibilitas', JSON.stringify(simpan));
+    } catch {}
+    segarkan();
+  };
+
+  const muat = () => {
+    try {
+      simpan = JSON.parse(localStorage.getItem('aksesibilitas') ?? '{}');
+    } catch {
+      simpan = {};
+    }
+    segarkan();
+  };
+
+  muat();
+  // Kembali lewat tombol Back memulihkan halaman dari cache; pilihan bisa sudah diganti di halaman lain.
+  addEventListener('pageshow', (e) => e.persisted && muat());
+
+  [kecilkan, besarkan].forEach((b) =>
+    b.addEventListener('click', () => {
+      const skala = (Number(simpan.skala) || 100) + Number(b.dataset.ubahSkala);
+      ubah({ ...simpan, skala: Math.min(150, Math.max(80, skala)) });
+    }),
+  );
+
+  tombolOpsi.forEach((b) => b.addEventListener('click', () => ubah({ ...simpan, [b.dataset.opsi!]: !simpan[b.dataset.opsi!] })));
+
+  // Pembaca suara bawaan peramban; tanpa dukungan, kontrol suara disembunyikan.
+  if (!suara) panel.querySelectorAll<HTMLElement>('[data-suara]').forEach((el) => (el.hidden = true));
+
+  const tandaiBicara = (aktif: boolean) => {
+    panel.toggleAttribute('data-bicara', aktif);
+    tombolBerhenti.disabled = !aktif;
+  };
+
+  const hentikan = () => {
+    suara?.cancel();
+    tandaiBicara(false);
+  };
+
+  // Hanya ucapan terakhir dari bacaan terbaru yang menutup tanda bicara; sisa bacaan lama yang dibatalkan diabaikan.
+  let terakhir: SpeechSynthesisUtterance | null = null;
+
+  const baca = (teks: string) => {
+    if (!suara) return;
+    suara.cancel();
+    const logat = suara.getVoices().find((v) => /^id[-_]/i.test(v.lang)) ?? null;
+    // Chrome memutus ucapan panjang di tengah jalan, jadi teks dipecah per kalimat lalu diantrekan.
+    const kalimat = teks.split(/(?<=[.!?])\s+|\n+/).filter((k) => k.trim());
+    for (const k of kalimat) {
+      const ucapan = new SpeechSynthesisUtterance(k);
+      ucapan.lang = 'id-ID';
+      ucapan.voice = logat;
+      ucapan.onend = ucapan.onerror = () => ucapan === terakhir && tandaiBicara(false);
+      suara.speak(ucapan);
+      terakhir = ucapan;
+    }
+    tandaiBicara(kalimat.length > 0);
+  };
+
+  tombolReset.addEventListener('click', () => {
+    hentikan();
+    ubah({});
+  });
+
+  panel.querySelector('[data-baca-halaman]')!.addEventListener('click', () => baca(document.getElementById('konten')!.innerText));
+  tombolBerhenti.addEventListener('click', hentikan);
+  addEventListener('pagehide', hentikan);
+
+  // Selektor ini sama dengan sorotan hover `data-baca-klik` di global.css.
+  document.addEventListener('click', (e) => {
+    if (!simpan['baca-klik'] || panel.contains(e.target as Node)) return;
+    const el = (e.target as Element).closest<HTMLElement>('p, h1, h2, h3, h4, h5, h6, li, dt, dd, td, th, figcaption, blockquote, label, a, button');
+    const teks = el?.innerText.trim() || el?.getAttribute('aria-label');
+    if (teks) baca(teks);
+  });
+</script>

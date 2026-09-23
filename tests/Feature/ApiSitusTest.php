@@ -181,6 +181,20 @@ class ApiSitusTest extends TestCase
     $this->getJson('/api/pengaturan')->assertOk()->assertJsonPath('pengaturan', []);
   }
 
+  public function test_dokumen_menyertakan_tanggal_dan_ukuran_berkas(): void
+  {
+    Storage::fake('public');
+
+    $dokumen = Dokumen::latest()->latest('id')->first();
+    $this->getJson('/api/dokumen')->assertOk()
+      ->assertJsonPath('data.0.id', $dokumen->id)
+      ->assertJsonPath('data.0.tanggal', $dokumen->created_at->toIso8601String())
+      ->assertJsonPath('data.0.ukuran', null);
+
+    Storage::disk('public')->put($dokumen->file, 'isi berkas');
+    $this->getJson('/api/dokumen')->assertJsonPath('data.0.ukuran', 10);
+  }
+
   public function test_unduhan_menghitung_hanya_bila_berkas_ada(): void
   {
     Storage::fake('public');
@@ -189,12 +203,36 @@ class ApiSitusTest extends TestCase
     $awal = $dokumen->total_unduhan;
 
     // Berkas belum ada: harus 404 dan penghitung tidak bergerak.
-    $this->get('/download/' . $dokumen->id)->assertNotFound();
+    $this->get('/download/' . $dokumen->slug)->assertNotFound();
     $this->assertSame($awal, $dokumen->fresh()->total_unduhan);
 
     Storage::disk('public')->put($dokumen->file, 'isi berkas');
 
-    $this->get('/download/' . $dokumen->id)->assertOk();
+    $this->get('/download/' . $dokumen->slug)->assertOk();
     $this->assertSame($awal + 1, $dokumen->fresh()->total_unduhan);
+  }
+
+  public function test_unduhan_memakai_slug_judul_bukan_id(): void
+  {
+    Storage::fake('public');
+
+    $asli = Dokumen::first();
+    $kembar = $asli->replicate(['slug']);
+    $kembar->save();
+    $this->assertSame(str($asli->judul)->slug() . '-2', $kembar->slug);
+
+    $this->getJson('/api/dokumen')->assertJsonPath('data.0.unduh', '/download/' . $kembar->slug);
+    $this->get('/download/' . $kembar->id)->assertNotFound();
+
+    Storage::disk('public')->put($kembar->file, 'isi berkas');
+    $this->get('/download/' . $kembar->slug)
+      ->assertOk()
+      ->assertDownload($kembar->slug . '.' . pathinfo($kembar->file, PATHINFO_EXTENSION));
+
+    // Judul diubah: slug ikut berganti; tidak bentrok dengan slug miliknya sendiri saat disimpan ulang.
+    $kembar->update(['judul' => 'Rencana Strategis 2025–2029']);
+    $this->assertSame('rencana-strategis-2025-2029', $kembar->slug);
+    $kembar->update(['deskripsi' => 'baru']);
+    $this->assertSame('rencana-strategis-2025-2029', $kembar->fresh()->slug);
   }
 }

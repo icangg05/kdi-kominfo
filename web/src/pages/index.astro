@@ -1,9 +1,11 @@
 ---
+import DialogDokumen from '../components/DialogDokumen.astro';
+import DialogGambar from '../components/DialogGambar.astro';
 import Ikon from '../components/Ikon.astro';
 import JudulBagian from '../components/JudulBagian.astro';
 import KartuBerita from '../components/KartuBerita.astro';
 import Base from '../layouts/Base.astro';
-import { api, cadanganGambar, GAMBAR_DEFAULT, tanggalPanjang, type Berita, type Dokumen, type Halaman, type Kategori, asalSitus } from '../lib/api';
+import { api, cadanganGambar, GAMBAR_DEFAULT, rincianDokumen, tanggalPanjang, type Berita, type Dokumen, type Halaman, type Kategori, asalSitus } from '../lib/api';
 import { bidangDinas, layananUtama, tautanTerkait } from '../lib/konten';
 import { layanan } from '../lib/layanan';
 
@@ -315,12 +317,12 @@ const darurat = layanan['telpon-darurat-112'];
       <JudulBagian id="judul-galeri" judul="Kegiatan dan Informasi Publik" tautan={{ label: 'Lihat lainnya', href: '/galeri' }} />
 
       <div class="grid gap-4 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]">
-        <ul class="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:gap-4">
+        <ul class="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:gap-4" data-perbesar>
           {data.galeri.slice(0, 5).map((g) => (
             <li>
               <figure class="group relative aspect-4/3 overflow-hidden rounded bg-biru-900">
-                <img src={g.gambar ?? GAMBAR_DEFAULT} alt={g.judul} loading="lazy" onerror={cadanganGambar} class="absolute inset-0 size-full object-cover transition duration-500 group-hover:scale-105" />
-                <figcaption class="absolute inset-x-0 bottom-0 bg-linear-to-t from-biru-950 via-biru-950/70 to-transparent p-3 pt-10 text-white">
+                <img src={g.gambar ?? GAMBAR_DEFAULT} alt={g.judul} data-judul={g.judul} data-tanggal={tanggalPanjang(g.tanggal)} loading="lazy" onerror={cadanganGambar} class="absolute inset-0 size-full object-cover transition duration-500 group-hover:scale-105 focus-visible:-outline-offset-2" />
+                <figcaption class="pointer-events-none absolute inset-x-0 bottom-0 bg-linear-to-t from-biru-950 via-biru-950/70 to-transparent p-3 pt-10 text-white">
                   <p class="line-clamp-2 text-xs leading-snug font-semibold tracking-wide uppercase">{g.judul}</p>
                   <p class="mt-1 text-[11px] text-biru-200">{tanggalPanjang(g.tanggal)}</p>
                 </figcaption>
@@ -408,10 +410,17 @@ const darurat = layanan['telpon-darurat-112'];
                 <h3 class="mt-4 line-clamp-2 font-semibold leading-snug text-biru-950 dark:text-white">{d.judul}</h3>
                 {d.kategori && <p class="mt-1 text-xs font-semibold text-biru-600 dark:text-biru-300">{d.kategori.nama}</p>}
                 <p class="mt-2 line-clamp-2 text-sm text-teks-lembut">{d.deskripsi}</p>
-                <a href={d.unduh} class="mt-auto inline-flex items-center gap-2 pt-4 text-sm font-semibold text-biru-600 after:absolute after:inset-0 hover:text-biru-800 dark:text-biru-300 dark:hover:text-white">
-                  <Ikon nama="unduh" class="size-4" />
-                  Unduh dokumen
-                </a>
+                <!-- Seluruh kartu membuka rincian; tautan unduh diangkat di atas bidang klik itu. -->
+                <div class="mt-auto flex items-center justify-between gap-3 pt-4 text-sm font-semibold">
+                  <button type="button" data-dokumen={rincianDokumen(d)} class="inline-flex items-center gap-2 text-biru-600 after:absolute after:inset-0 hover:text-biru-800 dark:text-biru-300 dark:hover:text-white">
+                    <Ikon nama="mata" class="size-4" />
+                    Lihat rincian
+                  </button>
+                  <a href={d.unduh} class="relative z-10 inline-flex items-center gap-1.5 rounded px-2 py-1 -mr-2 text-teks-lembut transition hover:bg-biru-50 hover:text-biru-800 dark:hover:bg-white/5 dark:hover:text-white">
+                    <Ikon nama="unduh" class="size-4" />
+                    Unduh
+                  </a>
+                </div>
               </li>
             ))}
           </ul>
@@ -476,6 +485,9 @@ const darurat = layanan['telpon-darurat-112'];
       ))}
     </ul>
   </nav>
+
+  <DialogGambar />
+  <DialogDokumen />
 </Base>
 
 <style>
@@ -587,6 +599,8 @@ const darurat = layanan['telpon-darurat-112'];
 
 <script>
   const kurangiGerak = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  // "Stop Animasi" di panel aksesibilitas bisa dinyalakan kapan saja, jadi diperiksa setiap kali dipakai.
+  const diam = () => kurangiGerak || document.documentElement.hasAttribute('data-henti-animasi');
 
   // Sorotan: tombol nomor memilih slide; bergilir tiap 7 detik (tetap jalan saat kursor di atasnya) kecuali fokus keyboard atau gerak dikurangi.
   const sorotan = document.querySelector<HTMLElement>('[data-sorotan]');
@@ -607,7 +621,7 @@ const darurat = layanan['telpon-darurat-112'];
 
     const jalan = () => {
       clearInterval(giliran);
-      if (!kurangiGerak && slide.length > 1) giliran = setInterval(() => tampil(aktif + 1), 7000);
+      if (!kurangiGerak && slide.length > 1) giliran = setInterval(() => diam() || tampil(aktif + 1), 7000);
     };
 
     tombol.forEach((t, i) => t.addEventListener('click', () => { tampil(i); jalan(); }));
@@ -621,7 +635,7 @@ const darurat = layanan['telpon-darurat-112'];
     const jalur = wadah.querySelector<HTMLElement>('[data-jalur]');
     wadah.querySelectorAll<HTMLButtonElement>('[data-arah]').forEach((b) =>
       b.addEventListener('click', () =>
-        jalur?.scrollBy({ left: Number(b.dataset.arah) * jalur.clientWidth * 0.9, behavior: kurangiGerak ? 'auto' : 'smooth' }),
+        jalur?.scrollBy({ left: Number(b.dataset.arah) * jalur.clientWidth * 0.9, behavior: diam() ? 'auto' : 'smooth' }),
       ),
     );
   });

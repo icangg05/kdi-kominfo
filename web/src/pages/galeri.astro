@@ -1,4 +1,5 @@
 ---
+import DialogGambar from '../components/DialogGambar.astro';
 import JudulHalaman from '../components/JudulHalaman.astro';
 import KosongAda from '../components/KosongAda.astro';
 import Paginasi from '../components/Paginasi.astro';
@@ -24,11 +25,11 @@ const daftar = await api<Halaman<Foto>>(`/galeri${query({ page })}`, Astro.reque
 
     {daftar.data.length > 0 ? (
       <>
-        <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3" data-perbesar>
           {daftar.data.map((f) => (
             <figure class="kartu-timbul group overflow-hidden">
               <div class="relative aspect-4/3 overflow-hidden bg-biru-100 dark:bg-biru-900">
-                <img src={f.gambar ?? GAMBAR_DEFAULT} alt={f.judul} loading="lazy" onerror={cadanganGambar} class="size-full object-cover transition duration-500 group-hover:scale-105" />
+                <img src={f.gambar ?? GAMBAR_DEFAULT} alt={f.judul} data-judul={f.judul} data-tanggal={tanggalPanjang(f.tanggal)} loading="lazy" onerror={cadanganGambar} class="size-full object-cover transition duration-500 group-hover:scale-105 focus-visible:-outline-offset-2" />
               </div>
               <figcaption class="p-4">
                 <p class="font-semibold leading-snug text-biru-950 dark:text-white">{f.judul}</p>
@@ -43,4 +44,6 @@ const daftar = await api<Halaman<Foto>>(`/galeri${query({ page })}`, Astro.reque
       <KosongAda pesan="Belum ada foto di galeri." />
     )}
   </div>
+
+  <DialogGambar />
 </Base>

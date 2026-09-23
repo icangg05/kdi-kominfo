@@ -24,8 +24,8 @@ class Profil extends EditProfile
                     ->description('Email dipakai untuk masuk ke panel admin.')
                     ->columns(2)
                     ->schema([
-                        $this->getNameFormComponent(),
-                        $this->getEmailFormComponent(),
+                        $this->getNameFormComponent()->placeholder('Nama lengkap'),
+                        $this->getEmailFormComponent()->placeholder('nama@kendarikota.go.id'),
                     ]),
                 Section::make('Ganti kata sandi')
                     ->description('Isi ketiganya untuk mengganti kata sandi. Kosongkan bila tidak ingin mengganti.')
@@ -35,14 +35,17 @@ class Profil extends EditProfile
                         // Tetap wajib juga saat email diganti.
                         $this->getCurrentPasswordFormComponent()
                             ->label('Kata sandi lama')
+                            ->placeholder('Masukkan kata sandi saat ini')
                             ->belowContent(null)
                             ->visible()
                             ->required(fn (Get $get): bool => filled($get('password')) || filled($get('passwordConfirmation'))
                                 || $get('email') !== $this->getUser()->getAttributeValue('email'))
                             ->columnSpanFull(),
                         $this->getPasswordFormComponent()
+                            ->placeholder('Minimal 8 karakter')
                             ->required(fn (Get $get): bool => filled($get('passwordConfirmation'))),
                         $this->getPasswordConfirmationFormComponent()
+                            ->placeholder('Ulangi kata sandi baru')
                             ->visible()
                             ->required(fn (Get $get): bool => filled($get('password'))),
                     ]),

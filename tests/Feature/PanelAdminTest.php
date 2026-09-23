@@ -2,8 +2,12 @@
 
 namespace Tests\Feature;
 
+use App\Filament\Pages\Auth\Masuk;
+use App\Filament\Widgets\RingkasanStats;
+use App\Models\Dokumen;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Livewire\Livewire;
 use Tests\TestCase;
 
 /**
@@ -82,5 +86,40 @@ class PanelAdminTest extends TestCase
       'email'    => env('ADMIN_EMAIL', 'diskominfokendari@gmail.com'),
       'password' => 'jelas-salah',
     ]));
+  }
+
+  public function test_login_dibatasi_empat_percobaan_per_menit(): void
+  {
+    $this->seed();
+    $masuk = Livewire::test(Masuk::class)->fillForm(['email' => 'bukan@admin.test', 'password' => 'jelas-salah']);
+
+    foreach (range(1, 4) as $_) {
+      $masuk->call('authenticate')->assertHasFormErrors(['email'])->assertNotNotified();
+    }
+
+    // Percobaan kelima tidak lagi dicek ke database, hanya notifikasi "terlalu banyak percobaan".
+    $masuk->call('authenticate')->assertNotified();
+  }
+
+  public function test_menu_memakai_istilah_dashboard(): void
+  {
+    $this->seed();
+    // Terjemahan bawaan Filament berbahasa Indonesia menyebutnya "Dasbor".
+    app()->setLocale('id');
+
+    $this->actingAs(User::first())->get('/admin')
+      ->assertOk()
+      ->assertSee('Dashboard')
+      ->assertDontSee('Dasbor');
+  }
+
+  public function test_angka_dashboard_memakai_pemisah_ribuan(): void
+  {
+    $this->seed();
+    app()->setLocale('id');
+    Dokumen::query()->update(['total_unduhan' => 0]);
+    Dokumen::first()->forceFill(['total_unduhan' => 12345])->save();
+
+    Livewire::test(RingkasanStats::class)->assertSee('12.345 kali diunduh');
   }
 }

@@ -331,6 +331,7 @@ The admin follows this system too, without a Vite theme build.
   - kartu-timbul shadows on sections, tables, stats and resource forms;
   - uppercase table headers;
   - stats with a 3px blue top bar.
+  - the Struktur Organisasi form (Isi Halaman) drawn as a tree: Pimpinan as a biru-50 fieldset, units as cards, sub units as flat gray-50 rows, joined by 1px branch lines, each level tagged by a chip that fades from solid biru to outlined.
 - **Dashboard.** It opens with the `SambutanAdmin` band: the network background, a WITA greeting and shortcuts to create berita, dokumen, foto and video.
 - **Clock script.** `filament.admin.skrip-jam` runs once at `BODY_END` on every panel page, including login.
 

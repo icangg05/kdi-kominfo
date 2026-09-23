@@ -24,14 +24,15 @@ Route::prefix('api')->name('api.')->group(function () {
   Route::get('/profil-dinas/{halaman}', [SiteController::class, 'profilDinas']);
 });
 
-Route::get('/download/{dokumen}', function (Dokumen $dokumen) {
+// Alamat memakai slug judul supaya id dokumen tidak terlihat.
+Route::get('/download/{dokumen:slug}', function (Dokumen $dokumen) {
   // Berkas dicek lebih dulu: kalau hilang, jangan hitung sebagai unduhan
   // dan balas 404, bukan 500.
   abort_unless(Storage::disk('public')->exists($dokumen->file), 404);
 
   $dokumen->increment('total_unduhan');
 
-  $nama = str($dokumen->judul)->slug() . '.' . pathinfo($dokumen->file, PATHINFO_EXTENSION);
+  $nama = $dokumen->slug . '.' . pathinfo($dokumen->file, PATHINFO_EXTENSION);
 
   return Storage::disk('public')->download($dokumen->file, $nama);
 })->name('download');

@@ -16,11 +16,15 @@ use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
 use Filament\Schemas\Components\Actions;
+use Filament\Schemas\Components\Fieldset;
 use Filament\Schemas\Components\Group;
 use Filament\Schemas\Components\Tabs;
 use Filament\Schemas\Components\Tabs\Tab;
 use Filament\Schemas\Schema;
+use Filament\Support\Enums\Alignment;
 use Filament\Support\Icons\Heroicon;
+use Illuminate\Support\Arr;
+use Illuminate\Support\HtmlString;
 
 /**
  * Mengelola isi halaman statis (beranda, tentang kami, tupoksi, struktur organisasi)
@@ -43,8 +47,10 @@ class HalamanProfil extends Page
     /** Jenis yang tersimpan sebagai daftar [{id, value}] — sisanya HTML biasa. */
     private const DAFTAR = ['tagline-sambutan', 'misi', 'fungsi', 'foto-diskominfo'];
 
-    /** Jumlah tingkat di bawah pimpinan yang bisa disusun di bagan. */
-    private const TINGKAT_MAKS = 5;
+    /** Jumlah tingkat di bawah pimpinan: unit lalu sub unit (pimpinan => unit => sub unit). */
+    private const TINGKAT_MAKS = 2;
+
+    private const FOTO_KANTOR_MAKS = 3;
 
     public ?array $data = [];
 
@@ -86,12 +92,20 @@ class HalamanProfil extends Page
                             ->label('Foto kantor')
                             ->image()
                             ->multiple()
+                            ->maxFiles(self::FOTO_KANTOR_MAKS)
                             ->reorderable()
+                            // Tanpa ini Filament menampilkan foto terbalik dari urutan simpan (terbaru di depan),
+                            // jadi urutan hasil seret di admin berkebalikan dengan halaman depan.
+                            ->appendFiles()
+                            // Pratinjau berjajar, bukan satu foto per baris.
+                            ->panelLayout('grid')
+                            ->imagePreviewHeight('200')
+                            ->extraAttributes(['class' => 'kdi-foto-tambahan'])
                             ->disk('public')
                             ->directory('foto-diskominfo')
                             ->maxSize(config('app.upload.gambar_maks_kb'))
                             ->saveUploadedFileUsing(KompresGambar::simpan(...))
-                            ->helperText('Maksimal ' . (config('app.upload.gambar_maks_kb') / 1024) . ' MB per foto.'),
+                            ->helperText('Maksimal ' . self::FOTO_KANTOR_MAKS . ' foto, ' . (config('app.upload.gambar_maks_kb') / 1024) . ' MB per foto. Foto pertama tampil paling besar; seret untuk mengubah urutan.'),
                     ]),
                     Tab::make('Tupoksi')->schema([
                         RichEditor::make('tugas')->label('Tugas')->required(),
@@ -103,15 +117,20 @@ class HalamanProfil extends Page
                     ]),
                     Tab::make('Struktur Organisasi')->schema([
                         // Semua repeater di sini mulai kosong: item kosong yang wajib diisi akan menggagalkan simpan tab lain.
+                        // Tampil sebagai pohon: garis cabang dan chip tingkat ada di gaya.blade.php (.kdi-bagan-*).
                         Group::make([
-                            TextInput::make('nama')->label('Pimpinan')->placeholder('Kepala Dinas')->maxLength(100),
-                            static::pejabat(),
-                            static::anak(1)->columnSpanFull(),
-                        ])->columns(2)->statePath('bagan_organisasi'),
+                            Fieldset::make('Pimpinan')
+                                ->schema([
+                                    TextInput::make('nama')->label('Nama jabatan')->placeholder('Kepala Dinas')->maxLength(100),
+                                    static::pejabat(),
+                                ])
+                                ->extraAttributes(['class' => 'kdi-bagan-akar']),
+                            static::anak(1),
+                        ])->statePath('bagan_organisasi'),
                         FileUpload::make('struktur_organisasi')
-                            ->label('Gambar bagan resmi (opsional)')
-                            ->helperText('Ditautkan di bawah bagan, misalnya hasil pindai SK. Tampil sebagai pengganti bila bagan di atas kosong. Maksimal ' . (config('app.upload.gambar_maks_kb') / 1024) . ' MB.')
-                            ->image()
+                            ->label('Bagan resmi (opsional)')
+                            ->helperText('Gambar atau PDF, misalnya hasil pindai SK. Ditautkan di bawah bagan; gambar tampil sebagai pengganti bila bagan di atas kosong. Maksimal ' . (config('app.upload.gambar_maks_kb') / 1024) . ' MB, gambar otomatis dikompres.')
+                            ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/webp', 'application/pdf'])
                             ->disk('public')
                             ->directory('struktur-organisasi')
                             ->maxSize(config('app.upload.gambar_maks_kb'))
@@ -145,12 +164,18 @@ class HalamanProfil extends Page
 
     /**
      * Unit di bawah pimpinan, tiap unit bisa punya sub unit lagi.
-     * ponytail: skema Filament disusun di depan jadi kedalaman dibatasi TINGKAT_MAKS; naikkan bila bagan butuh lebih dalam.
+     * Kedalaman dibatasi TINGKAT_MAKS; tingkat terakhir tidak punya repeater sub unit lagi.
      */
     private static function anak(int $tingkat): Repeater
     {
         $isi = [
-            TextInput::make('nama')->label('Nama unit/jabatan')->required()->maxLength(100),
+            // live saat blur supaya judul kartu ikut berganti dari "Belum dinamai".
+            TextInput::make('nama')
+                ->label('Nama unit/jabatan')
+                ->placeholder($tingkat === 1 ? 'Sekretariat' : 'Sub Bagian Umum')
+                ->required()
+                ->maxLength(100)
+                ->live(onBlur: true),
             static::pejabat(),
         ];
 
@@ -159,9 +184,8 @@ class HalamanProfil extends Page
             $isi[] = Select::make('posisi')
                 ->label('Letak di bagan')
                 ->options([
-                    'lini' => 'Sejajar di bawah pimpinan (bidang)',
-                    'staf' => 'Samping garis pimpinan (sekretariat)',
-                    'bawah' => 'Paling bawah (UPTD)',
+                    'lini' => 'Sejajar di bawah pimpinan',
+                    'staf' => 'Samping garis pimpinan',
                 ])
                 ->default('lini')
                 ->selectablePlaceholder(false);
@@ -173,13 +197,35 @@ class HalamanProfil extends Page
 
         return Repeater::make('anak')
             ->label($tingkat === 1 ? 'Unit di bawah pimpinan' : 'Sub unit')
+            // Judul diganti chip tingkat di tiap item dan garis cabang dari induknya.
+            ->hiddenLabel()
             ->schema($isi)
             ->columns($tingkat === 1 ? 3 : 2)
-            ->itemLabel(fn (array $state): ?string => $state['nama'] ?? null)
+            ->itemLabel(fn (array $state): HtmlString => static::judulSimpul($tingkat, $state))
+            // Nama panjang dibungkus, bukan dipotong: di ponsel chip tingkat menyisakan sedikit ruang.
+            ->truncateItemLabel(false)
+            ->extraAttributes(['class' => "kdi-bagan-tingkat kdi-bagan-tingkat-{$tingkat}"])
             ->collapsible()
             ->reorderable()
             ->defaultItems(0)
-            ->addActionLabel($tingkat === 1 ? 'Tambah unit' : 'Tambah sub unit');
+            ->addActionLabel($tingkat === 1 ? 'Tambah unit' : 'Tambah sub unit')
+            ->addActionAlignment(Alignment::Start)
+            // Tombol tambah makin ringan di tingkat yang lebih dalam.
+            ->addAction(fn (Action $action): Action => $action->icon(Heroicon::Plus)->when($tingkat > 1, fn (Action $a) => $a->link()));
+    }
+
+    /** Judul item repeater: chip tingkat, nama unit, dan jumlah sub unit (berguna saat kartu dilipat). */
+    private static function judulSimpul(int $tingkat, array $state): HtmlString
+    {
+        $nama = filled($state['nama'] ?? null)
+            ? e($state['nama'])
+            : '<span class="kdi-bagan-kosong">Belum dinamai</span>';
+        $jumlah = count($state['anak'] ?? []);
+
+        return new HtmlString(
+            "<span class=\"kdi-bagan-chip kdi-bagan-chip-{$tingkat}\">" . ($tingkat === 1 ? 'Unit' : 'Sub unit') . '</span> ' . $nama
+            . ($jumlah ? "<span class=\"kdi-bagan-jumlah\">{$jumlah} sub unit</span>" : ''),
+        );
     }
 
     /** Disimpan sebagai id supaya nama di bagan ikut berubah bila data pegawai diedit. */
@@ -188,7 +234,19 @@ class HalamanProfil extends Page
         return Select::make('pegawai_id')
             ->label('Pejabat (opsional)')
             ->options(fn () => once(fn () => Pegawai::orderBy('nama')->pluck('nama', 'id')->all()))
-            ->searchable();
+            ->searchable()
+            // Satu pegawai untuk satu jabatan: yang sudah dipilih di kotak lain tidak bisa dipilih lagi,
+            // dan aturan `in` bawaan Select menolaknya saat simpan.
+            ->disableOptionWhen(fn (string $value, mixed $state, self $livewire): bool => static::jumlahPejabat($livewire, $value) > (int) ($value === (string) $state))
+            ->validationMessages(['in' => 'Pegawai ini sudah menjabat di kotak lain. Satu pegawai hanya untuk satu jabatan.']);
+    }
+
+    /** Berapa kotak di seluruh bagan (pimpinan, unit, sub unit) yang memilih pegawai ini sebagai pejabat. */
+    private static function jumlahPejabat(self $livewire, string $pegawaiId): int
+    {
+        return collect(Arr::dot($livewire->data['bagan_organisasi'] ?? []))
+            ->filter(fn ($id, string $kunci): bool => str_ends_with(".{$kunci}", '.pegawai_id') && (string) $id === $pegawaiId)
+            ->count();
     }
 
     private static function kunci(string $jenis): string

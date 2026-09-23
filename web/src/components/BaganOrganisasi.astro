@@ -105,21 +105,26 @@ const susunan = [...di('staf'), ...lini, ...di('bawah')];
     color: var(--color-biru-100);
   }
 
+  /*
+   * Rel (::before) dan siku (::after) sama-sama milik <li>. Bila siku menempel di kotak, browser membulatkan
+   * posisinya ke piksel lain dari rel (terutama pada skala layar 125%/150%), jadi garis tampak bengkok 1px.
+   * <li> dibuat grid satu kolom supaya siku bisa ditaruh di area kotak (baris 1; garis akhir wajib ditulis, sebab auto pada elemen absolut berarti tepi padding) dan berhenti tepat di tengahnya.
+   */
   .cabang > li,
   .anak > li {
     position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    /* <li> lini ikut setinggi baris terpanjang; sisa tinggi jangan dibagi ke kotak. */
+    align-content: start;
   }
 
   .cabang > li::before,
   .anak > li::before,
-  li > .kotak::before {
+  .cabang > li::after,
+  .anak > li::after {
     content: '';
     position: absolute;
-  }
-
-  /* Siku diukur dari tepi dalam border 1px kotak kecil; digeser 1px supaya menyambung dengan rel. */
-  li > .kecil::before {
-    margin: -1px 1px 0 0;
   }
 
   /*
@@ -131,19 +136,25 @@ const susunan = [...di('staf'), ...lini, ...di('bawah')];
   .kotak,
   .cabang::before,
   .cabang > li::before,
-  .anak > li::before {
+  .anak > li::before,
+  .cabang > li::after,
+  .anak > li::after {
     transition: filter 250ms ease, opacity 250ms ease, box-shadow 250ms ease;
   }
 
   .bagan:has(li > .kotak:hover) .kotak,
   .bagan:has(li > .kotak:hover) li::before,
+  .bagan:has(li > .kotak:hover) li::after,
   .bagan:has(li > .kotak:hover) .cabang::before {
     filter: blur(2px);
     opacity: 0.35;
   }
 
+  /* Siku unit yang ditunjuk ikut tajam bersama kotaknya. */
   .bagan li:has(> .kotak:hover) .kotak,
-  .bagan li:has(> .kotak:hover) li::before {
+  .bagan ul > li:has(> .kotak:hover)::after,
+  .bagan li:has(> .kotak:hover) li::before,
+  .bagan li:has(> .kotak:hover) li::after {
     filter: none;
     opacity: 1;
   }
@@ -156,7 +167,9 @@ const susunan = [...di('staf'), ...lini, ...di('bawah')];
     .kotak,
     .cabang::before,
     .cabang > li::before,
-    .anak > li::before {
+    .anak > li::before,
+    .cabang > li::after,
+    .anak > li::after {
       transition: none;
     }
   }
@@ -181,10 +194,12 @@ const susunan = [...di('staf'), ...lini, ...di('bawah')];
     }
 
     /* Siku dari rel ke tengah kotak. */
-    li > .kotak::before {
+    .cabang > li::after,
+    .anak > li::after {
+      grid-area: 1 / 1 / 2 / 2;
       top: calc(-1 * var(--atas));
       bottom: 50%;
-      right: 100%;
+      left: calc(-1 * var(--jorok));
       width: var(--jorok);
       border-left: 2px solid var(--garis-bagan);
       border-bottom: 2px solid var(--garis-bagan);
@@ -216,6 +231,18 @@ const susunan = [...di('staf'), ...lini, ...di('bawah')];
       padding-top: var(--atas);
     }
 
+    /*
+     * Kolom 1fr dibagi tak rata (mis. 383,328 / 383,328 / 383,344px), jadi tengah kolom tengah bisa meleset
+     * 1/128px dari batang dan dibulatkan ke piksel lain. Lebar kolom dibulatkan ke kelipatan 2px lalu grid
+     * diletakkan di tengah, sehingga tengah tiap garis jatuh tepat di angka yang sama dengan batang.
+     */
+    @supports (width: round(down, 100%, 2px)) {
+      .cabang {
+        grid-template-columns: repeat(var(--kolom), round(down, 100% / var(--kolom), 2px));
+        justify-content: center;
+      }
+    }
+
     /* Batang dari pimpinan ke baris pertama; bila ada unit bawah, terus sampai unit bawah terakhir di balik kotaknya. */
     .cabang::before {
       content: '';
@@ -244,10 +271,11 @@ const susunan = [...di('staf'), ...lini, ...di('bawah')];
       border-left: 2px solid var(--garis-bagan);
     }
 
-    .staf > .kotak::before {
+    .staf::after {
+      grid-area: 1 / 1 / 2 / 2;
       top: 0;
       bottom: 50%;
-      right: 100%;
+      left: calc(-1 * var(--cabang-kanan));
       width: var(--cabang-kanan);
       border-left: 2px solid var(--garis-bagan);
       border-bottom: 2px solid var(--garis-bagan);
@@ -277,8 +305,8 @@ const susunan = [...di('staf'), ...lini, ...di('bawah')];
       right: calc(50% - 1px);
     }
 
-    .lini > .kotak::before {
-      top: calc(-1 * var(--atas));
+    .lini::after {
+      top: 0;
       left: calc(50% - 1px);
       height: var(--atas);
       border-left: 2px solid var(--garis-bagan);
@@ -316,10 +344,11 @@ const susunan = [...di('staf'), ...lini, ...di('bawah')];
       border-left: 2px solid var(--garis-bagan);
     }
 
-    .anak > li > .kotak::before {
+    .anak > li::after {
+      grid-area: 1 / 1 / 2 / 2;
       top: -0.5rem;
       bottom: 50%;
-      right: 100%;
+      left: calc(-1 * var(--jorok));
       width: var(--jorok);
       border-left: 2px solid var(--garis-bagan);
       border-bottom: 2px solid var(--garis-bagan);

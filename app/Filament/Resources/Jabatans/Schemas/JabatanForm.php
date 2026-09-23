@@ -11,7 +11,11 @@ class JabatanForm
     {
         return $schema
             ->components([
-                TextInput::make('nama')->required()->maxLength(255)->unique(ignoreRecord: true),
+                TextInput::make('nama')
+                    ->placeholder('Contoh: Pranata Komputer Ahli Muda')
+                    ->required()
+                    ->maxLength(255)
+                    ->unique(ignoreRecord: true),
             ]);
     }
 }

@@ -129,7 +129,10 @@ class SiteController
       'kategori' => $d->kategori?->only(['nama', 'slug']),
       'totalUnduhan' => $d->total_unduhan,
       'ekstensi' => pathinfo((string) $d->file, PATHINFO_EXTENSION),
-      'unduh' => "/download/{$d->id}",
+      'tanggal' => $d->created_at?->toIso8601String(),
+      // Byte; null bila berkas hilang dari penyimpanan, supaya satu berkas rusak tidak menggagalkan daftar.
+      'ukuran' => rescue(fn () => Storage::disk('public')->size($d->file), null, false),
+      'unduh' => "/download/{$d->slug}",
     ]);
   }
 

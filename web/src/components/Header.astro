@@ -317,7 +317,7 @@ const awal = waktuWita();
 
     // Tema baru menyebar melingkar dari tombol; tanpa View Transition API atau saat gerak dikurangi, langsung berganti.
     tombolTema.addEventListener('click', () => {
-      if (!document.startViewTransition || matchMedia('(prefers-reduced-motion: reduce)').matches) return gantiTema();
+      if (!document.startViewTransition || matchMedia('(prefers-reduced-motion: reduce)').matches || akar.hasAttribute('data-henti-animasi')) return gantiTema();
       // Klik lewat keyboard saat animasi berjalan diabaikan; mouse dan sentuh sudah diblok CSS data-ganti-tema.
       if ('gantiTema' in akar.dataset) return;
 
