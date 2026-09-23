@@ -122,18 +122,22 @@ class SiteController
       ->latest('id')
       ->paginate(perPage: 6, page: $request->integer('page', 1));
 
-    return $this->paginated($data, fn (Dokumen $d) => [
-      'id' => $d->id,
-      'judul' => $d->judul,
-      'deskripsi' => $d->deskripsi,
-      'kategori' => $d->kategori?->only(['nama', 'slug']),
-      'totalUnduhan' => $d->total_unduhan,
-      'ekstensi' => pathinfo((string) $d->file, PATHINFO_EXTENSION),
-      'tanggal' => $d->created_at?->toIso8601String(),
-      // Byte; null bila berkas hilang dari penyimpanan, supaya satu berkas rusak tidak menggagalkan daftar.
-      'ukuran' => rescue(fn () => Storage::disk('public')->size($d->file), null, false),
-      'unduh' => "/download/{$d->slug}",
-    ]);
+    return $this->paginated($data, function (Dokumen $d) {
+      $ada = $d->file && Storage::disk('public')->exists($d->file);
+
+      return [
+        'id' => $d->id,
+        'judul' => $d->judul,
+        'deskripsi' => $d->deskripsi,
+        'kategori' => $d->kategori?->only(['nama', 'slug']),
+        'totalUnduhan' => $d->total_unduhan,
+        'ekstensi' => pathinfo((string) $d->file, PATHINFO_EXTENSION),
+        'tanggal' => $d->created_at?->toIso8601String(),
+        // Byte dan alamat unduhan; null bila berkas tidak tercatat atau hilang dari penyimpanan.
+        'ukuran' => $ada ? Storage::disk('public')->size($d->file) : null,
+        'unduh' => $ada ? "/download/{$d->slug}" : null,
+      ];
+    });
   }
 
   public function pegawai(Request $request): array

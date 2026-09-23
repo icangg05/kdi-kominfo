@@ -416,7 +416,7 @@ const darurat = layanan['telpon-darurat-112'];
                     <Ikon nama="mata" class="size-4" />
                     Lihat rincian
                   </button>
-                  <a href={d.unduh} class="relative z-10 inline-flex items-center gap-1.5 rounded px-2 py-1 -mr-2 text-teks-lembut transition hover:bg-biru-50 hover:text-biru-800 dark:hover:bg-white/5 dark:hover:text-white">
+                  <a href={d.unduh} aria-disabled={!d.unduh} class="relative z-10 inline-flex items-center gap-1.5 rounded px-2 py-1 -mr-2 text-teks-lembut transition hover:bg-biru-50 hover:text-biru-800 aria-disabled:pointer-events-none aria-disabled:opacity-40 dark:hover:bg-white/5 dark:hover:text-white">
                     <Ikon nama="unduh" class="size-4" />
                     Unduh
                   </a>

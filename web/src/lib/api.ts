@@ -22,7 +22,8 @@ export type Dokumen = {
   tanggal: string | null;
   /** Byte; null bila berkasnya hilang dari penyimpanan. */
   ukuran: number | null;
-  unduh: string;
+  /** Null bila berkasnya tidak ada; tombol unduh dinonaktifkan. */
+  unduh: string | null;
 };
 
 export type Halaman<T> = { data: T[]; meta: { page: number; lastPage: number; total: number } };

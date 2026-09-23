@@ -43,7 +43,7 @@ import Ikon from './Ikon.astro';
       </div>
     </dl>
 
-    <a href="#" class="mt-6 inline-flex items-center gap-2 rounded bg-biru-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-biru-700" data-unduh>
+    <a href="#" class="mt-6 inline-flex items-center gap-2 rounded bg-biru-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-biru-700 aria-disabled:pointer-events-none aria-disabled:opacity-40" data-unduh>
       <Ikon nama="unduh" class="size-4" />
       Unduh dokumen
     </a>
@@ -55,9 +55,13 @@ import Ikon from './Ikon.astro';
 
   document.querySelectorAll<HTMLElement>('[data-dokumen]').forEach((tombol) =>
     tombol.addEventListener('click', () => {
-      const d: Record<string, string> = JSON.parse(tombol.dataset.dokumen!);
+      const d: Record<string, string | null> = JSON.parse(tombol.dataset.dokumen!);
       dialogDokumen.querySelectorAll<HTMLElement>('[data-isi]').forEach((el) => (el.textContent = d[el.dataset.isi!] ?? ''));
-      dialogDokumen.querySelector<HTMLAnchorElement>('[data-unduh]')!.href = d.unduh;
+      // Berkas tidak ada (unduh null): tautan tanpa href dan dinonaktifkan.
+      const unduh = dialogDokumen.querySelector<HTMLAnchorElement>('[data-unduh]')!;
+      if (d.unduh) unduh.href = d.unduh;
+      else unduh.removeAttribute('href');
+      unduh.setAttribute('aria-disabled', String(!d.unduh));
       dialogDokumen.showModal();
     }),
   );

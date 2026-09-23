@@ -93,7 +93,8 @@ const dasar = Object.fromEntries(
                   <div class="flex flex-wrap gap-2">
                     <a
                       href={d.unduh}
-                      class="inline-flex items-center gap-2 rounded bg-biru-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-biru-700"
+                      aria-disabled={!d.unduh}
+                      class="inline-flex items-center gap-2 rounded bg-biru-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-biru-700 aria-disabled:pointer-events-none aria-disabled:opacity-40"
                     >
                       <Ikon nama="unduh" class="size-4" />
                       Unduh {d.ekstensi.toUpperCase()}
