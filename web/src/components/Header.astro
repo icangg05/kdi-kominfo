@@ -206,12 +206,27 @@ const awal = waktuWita();
         )}
       </div>
     ))}
-    {admin && (
-      <a href="/admin" class="ml-auto flex items-center gap-2 pl-4 text-[13px] font-semibold tracking-wide text-biru-600 uppercase transition-colors hover:text-biru-800 dark:text-biru-300 dark:hover:text-white">
-        <Ikon nama="orang" class="size-4" />
-        Halaman Admin
-      </a>
-    )}
+    <div class="ml-auto flex items-center pl-4">
+      {admin && (
+        <a href="/admin" class="flex items-center gap-2 text-[13px] font-semibold tracking-wide text-biru-600 uppercase transition-colors hover:text-biru-800 dark:text-biru-300 dark:hover:text-white">
+          <Ikon nama="orang" class="size-4" />
+          Halaman Admin
+        </a>
+      )}
+      <!-- Hanya saat melekat: tombol tema di bilah informasi sudah tergulir keluar layar. `invisible` mengeluarkannya dari urutan Tab. -->
+      <button
+        type="button"
+        class:list={[
+          'invisible flex size-9 max-w-0 items-center justify-center overflow-hidden rounded text-biru-950 opacity-0 transition-all duration-300 hover:bg-langit hover:text-biru-600 dark:text-biru-100 dark:hover:bg-white/10 dark:hover:text-white group-data-melekat/nav:visible group-data-melekat/nav:max-w-9 group-data-melekat/nav:opacity-100',
+          admin && 'group-data-melekat/nav:ml-3',
+        ]}
+        data-tombol-tema
+      >
+        <Ikon nama="bulan" class="size-4.5 shrink-0 dark:hidden" />
+        <Ikon nama="matahari" class="hidden size-4.5 shrink-0 dark:block" />
+        <span class="sr-only"><span class="dark:hidden">Mode gelap</span><span class="hidden dark:inline">Mode terang</span></span>
+      </button>
+    </div>
   </div>
 </nav>
 
@@ -302,20 +317,20 @@ const awal = waktuWita();
   }
 
   // Tema: bawaan terang; disimpan di kunci `theme` milik Filament supaya admin ikut. Atribut awal dipasang skrip di <head> Base.
-  const tombolTema = document.querySelector<HTMLButtonElement>('[data-tombol-tema]');
+  // Ada dua tombol: di bilah informasi dan di nav yang melekat.
   const akar = document.documentElement;
 
-  if (tombolTema) {
-    const gantiTema = () => {
-      const gelap = akar.dataset.tema !== 'gelap';
-      if (gelap) akar.dataset.tema = 'gelap';
-      else delete akar.dataset.tema;
-      try {
-        localStorage.setItem('theme', gelap ? 'dark' : 'light');
-      } catch {}
-    };
+  const gantiTema = () => {
+    const gelap = akar.dataset.tema !== 'gelap';
+    if (gelap) akar.dataset.tema = 'gelap';
+    else delete akar.dataset.tema;
+    try {
+      localStorage.setItem('theme', gelap ? 'dark' : 'light');
+    } catch {}
+  };
 
-    // Tema baru menyebar melingkar dari tombol; tanpa View Transition API atau saat gerak dikurangi, langsung berganti.
+  document.querySelectorAll<HTMLButtonElement>('[data-tombol-tema]').forEach((tombolTema) => {
+    // Tema baru menyebar melingkar dari tombol yang diklik; tanpa View Transition API atau saat gerak dikurangi, langsung berganti.
     tombolTema.addEventListener('click', () => {
       if (!document.startViewTransition || matchMedia('(prefers-reduced-motion: reduce)').matches || akar.hasAttribute('data-henti-animasi')) return gantiTema();
       // Klik lewat keyboard saat animasi berjalan diabaikan; mouse dan sentuh sudah diblok CSS data-ganti-tema.
@@ -336,7 +351,7 @@ const awal = waktuWita();
         );
       });
     });
-  }
+  });
 
   const jam = document.querySelector('[data-jam]');
   const sapaan = document.querySelector('[data-sapaan]');
