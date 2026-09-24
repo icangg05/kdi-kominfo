@@ -94,7 +94,7 @@ const tombolSkala = 'flex size-9 items-center justify-center rounded font-bold t
         </button>
       </div>
       <p class="text-xs leading-relaxed text-teks-lembut">
-        Saat &ldquo;Baca dengan Klik&rdquo; aktif, ketuk teks mana pun untuk mendengarkannya. Ketuk tautan sekali lagi untuk membukanya.
+        Saat &ldquo;Baca dengan Klik&rdquo; aktif, ketuk teks mana pun untuk mendengarkannya. Ketuk tautan atau tombol sekali lagi untuk membukanya.
       </p>
     </div>
   </div>
@@ -246,22 +246,24 @@ const tombolSkala = 'flex size-9 items-center justify-center rounded font-bold t
   tombolBerhenti.addEventListener('click', hentikan);
   addEventListener('pagehide', hentikan);
 
-  // Tautan: klik pertama hanya membacanya, klik kedua pada tautan yang sama baru membukanya.
-  let tautanDibaca: Element | null = null;
+  // Tautan, tombol, dan gambar yang bisa diperbesar (pembuka modal): klik pertama hanya membacanya,
+  // klik kedua pada kontrol yang sama baru menjalankannya.
+  let kontrolDibaca: Element | null = null;
 
   // Selektor ini sama dengan sorotan hover `data-baca-klik` di global.css.
-  // Fase capture supaya penahan tautan jalan sebelum handler klik lain (mis. menu seluler di Header).
+  // Fase capture supaya penahan kontrol jalan sebelum handler klik lain (mis. menu seluler di Header).
   document.addEventListener(
     'click',
     (e) => {
       if (!simpan['baca-klik'] || panel.contains(e.target as Node)) return;
-      const el = (e.target as Element).closest<HTMLElement>('p, h1, h2, h3, h4, h5, h6, li, dt, dd, td, th, figcaption, blockquote, label, a, button');
-      const teks = el?.innerText.trim() || el?.getAttribute('aria-label');
+      const target = e.target as Element;
+      const el = target.closest<HTMLElement>('p, h1, h2, h3, h4, h5, h6, li, dt, dd, td, th, figcaption, blockquote, label, a, button');
+      const kontrol = target.closest('a[href], button, [data-perbesar] img');
+      const teks = el?.innerText.trim() || el?.getAttribute('aria-label') || kontrol?.getAttribute('alt');
       if (!teks) return;
-      const tautan = (e.target as Element).closest('a[href]');
-      if (tautan && tautan === tautanDibaca) return;
-      tautanDibaca = tautan;
-      if (tautan) {
+      if (kontrol && kontrol === kontrolDibaca) return;
+      kontrolDibaca = kontrol;
+      if (kontrol) {
         e.preventDefault();
         e.stopPropagation();
       }

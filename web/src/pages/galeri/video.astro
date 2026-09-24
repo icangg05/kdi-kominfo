@@ -27,25 +27,25 @@ const daftar = await api<Halaman<Video>>(`/video${query({ page })}`, Astro.reque
       <>
         <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {daftar.data.map((v) => (
-            <article class="kartu-timbul group overflow-hidden">
-              <div class="relative aspect-video overflow-hidden bg-biru-900" data-video-wadah>
-                <!-- Tanpa JavaScript tautan membuka YouTube; dengan JavaScript video diputar di dialog. -->
-                <a href={v.tautan} target="_blank" rel="noopener noreferrer" class="absolute inset-0 block" data-video={v.youtubeId ?? undefined} data-judul={v.judul} data-tanggal={tanggalPanjang(v.tanggal)}>
-                  {v.youtubeId && (
-                    <img src={`https://i.ytimg.com/vi/${v.youtubeId}/hqdefault.jpg`} alt="" loading="lazy" class="size-full object-cover transition duration-500 group-hover:scale-105" />
-                  )}
-                  <span class="absolute inset-0 flex items-center justify-center bg-biru-950/35 transition group-hover:bg-biru-950/15">
-                    <span class="flex size-14 items-center justify-center rounded bg-white text-biru-700 shadow-[0_10px_24px_-8px_rgba(7,31,61,0.6)] transition group-hover:scale-105">
-                      <Ikon nama="putar" class="size-6" />
-                    </span>
-                  </span>
-                  <span class="sr-only">Putar video {v.judul}</span>
-                </a>
+            <article class="group relative aspect-video overflow-hidden rounded bg-biru-900 bayangan-kartu">
+              {v.youtubeId && (
+                <img src={`https://i.ytimg.com/vi/${v.youtubeId}/hqdefault.jpg`} alt="" loading="lazy" class="absolute inset-0 size-full object-cover transition duration-500 group-hover:scale-105" />
+              )}
+              <!-- Scrim sama dengan kartu foto: pekat di area teks supaya terbaca di thumbnail terang. -->
+              <div class="absolute inset-x-0 bottom-0 flex items-center gap-3 bg-linear-to-t from-biru-950 via-biru-950/85 via-55% to-transparent p-4 pt-16 text-white">
+                <span class="flex size-10 shrink-0 items-center justify-center rounded bg-white text-biru-700 transition group-hover:scale-110">
+                  <Ikon nama="putar" class="size-5" />
+                </span>
+                <div class="min-w-0">
+                  <h2 class="line-clamp-2 text-sm leading-snug font-semibold tracking-wide uppercase">{v.judul}</h2>
+                  <p class="mt-1 text-xs text-biru-200">{tanggalPanjang(v.tanggal)}</p>
+                </div>
               </div>
-              <div class="p-4">
-                <h2 class="font-semibold leading-snug text-biru-950 dark:text-white">{v.judul}</h2>
-                <p class="mt-1 text-xs text-teks-lembut">{tanggalPanjang(v.tanggal)}</p>
-              </div>
+              <!-- Tautan menutup seluruh kartu dan ditaruh paling akhir supaya klik dan cincin fokusnya di atas keterangan.
+                   Tanpa JavaScript tautan membuka YouTube; dengan JavaScript video diputar di dialog. -->
+              <a href={v.tautan} target="_blank" rel="noopener noreferrer" class="absolute inset-0 focus-visible:-outline-offset-2" data-video={v.youtubeId ?? undefined} data-judul={v.judul} data-tanggal={tanggalPanjang(v.tanggal)}>
+                <span class="sr-only">Putar video {v.judul}</span>
+              </a>
             </article>
           ))}
         </div>

@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Pegawais\Schemas;
 
+use App\Filament\Resources\Jabatans\Schemas\JabatanForm;
 use App\Support\KompresGambar;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Select;
@@ -30,9 +31,7 @@ class PegawaiForm
                     ->searchable()
                     ->preload()
                     ->required()
-                    ->createOptionForm([
-                        TextInput::make('nama')->placeholder('Contoh: Kepala Bidang Aplikasi Informatika')->required()->maxLength(255),
-                    ]),
+                    ->createOptionForm(fn (Schema $schema) => JabatanForm::configure($schema)),
                 FileUpload::make('foto')
                     ->image()
                     ->disk('public')

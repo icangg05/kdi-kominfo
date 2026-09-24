@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Filament\Resources\Jabatans\Pages\ListJabatans;
+use App\Filament\Resources\Pegawais\Pages\CreatePegawai;
 use App\Models\Jabatan;
 use App\Models\User;
 use Filament\Actions\Testing\TestAction;
@@ -34,5 +35,10 @@ class JabatanTest extends TestCase
     Livewire::test(ListJabatans::class)
       ->callAction(TestAction::make('edit')->table($lain))
       ->assertHasNoActionErrors();
+
+    // Tambah jabatan dari pilihan jabatan di form pegawai juga harus unik.
+    Livewire::test(CreatePegawai::class)
+      ->callAction(TestAction::make('createOption')->schemaComponent('jabatan_id'), data: ['nama' => 'Staf Unik'])
+      ->assertHasActionErrors(['nama' => 'unique']);
   }
 }

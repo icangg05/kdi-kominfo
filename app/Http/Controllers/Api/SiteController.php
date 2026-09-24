@@ -30,8 +30,9 @@ class SiteController
       'survei' => ($atur['survei_aktif'] ?? false) ? ($atur['survei_url'] ?? null) : null,
       // Astro meneruskan cookie pengunjung ke sini, jadi sesi admin Filament ikut terbaca.
       'admin' => auth()->check(),
-      'kategoriBerita' => KategoriBerita::orderBy('nama')->get(['nama', 'slug']),
-      'kategoriDokumen' => KategoriDokumen::orderBy('nama')->get(['nama', 'slug']),
+      // Kategori kosong disembunyikan supaya tautannya tidak membuka halaman tanpa isi.
+      'kategoriBerita' => KategoriBerita::has('berita')->orderBy('nama')->get(['nama', 'slug']),
+      'kategoriDokumen' => KategoriDokumen::has('dokumen')->orderBy('nama')->get(['nama', 'slug']),
     ];
   }
 

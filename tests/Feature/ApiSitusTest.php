@@ -4,6 +4,8 @@ namespace Tests\Feature;
 
 use App\Models\Berita;
 use App\Models\Dokumen;
+use App\Models\KategoriBerita;
+use App\Models\KategoriDokumen;
 use App\Models\Pegawai;
 use App\Models\ProfilDinas;
 use App\Models\Video;
@@ -30,6 +32,21 @@ class ApiSitusTest extends TestCase
     $this->getJson('/api/pengaturan')
       ->assertOk()
       ->assertJsonStructure(['pengaturan' => ['telp', 'email'], 'kategoriBerita', 'kategoriDokumen']);
+  }
+
+  public function test_pengaturan_hanya_menampilkan_kategori_yang_punya_data(): void
+  {
+    KategoriBerita::create(['nama' => 'Kosong Berita', 'slug' => 'kosong-berita']);
+    KategoriDokumen::create(['nama' => 'Kosong Dokumen', 'slug' => 'kosong-dokumen']);
+
+    $respons = $this->getJson('/api/pengaturan');
+    $berita = $respons->json('kategoriBerita.*.slug');
+    $dokumen = $respons->json('kategoriDokumen.*.slug');
+
+    $this->assertNotContains('kosong-berita', $berita);
+    $this->assertNotContains('kosong-dokumen', $dokumen);
+    $this->assertContains(Berita::first()->kategori->slug, $berita);
+    $this->assertContains(Dokumen::first()->kategori->slug, $dokumen);
   }
 
   public function test_tautan_survei_mengikuti_saklar_config(): void
