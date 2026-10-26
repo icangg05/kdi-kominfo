@@ -4,7 +4,7 @@ namespace App\Support;
 
 use Carbon\CarbonInterface;
 
-/** Jam dan sapaan menurut WITA, sama dengan web/src/lib/waktu.ts di situs publik. */
+/** Jam dan sapaan menurut WITA, sama dengan jam di resources/js/situs.js. */
 final class WaktuWita
 {
     public static function sekarang(): CarbonInterface

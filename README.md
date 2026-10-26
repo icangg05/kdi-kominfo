@@ -7,28 +7,30 @@ Situs publik dan panel admin Dinas Komunikasi dan Informatika Kota Kendari.
 
 ## Arsitektur
 
-Satu Caddy di depan, dua runtime di belakangnya:
+Satu Caddy di depan, satu aplikasi Laravel di belakangnya:
 
 ```
                     ┌─────────────────────────────┐
   Browser  ──────▶  │  Caddy  (:8000)             │
-                    └──────┬───────────────┬──────┘
-                           │               │
-   /admin, /api, /storage, │               │  sisanya
-   /download, /livewire*   │               │
-                           ▼               ▼
-                  ┌────────────────┐  ┌──────────────┐
-                  │ Laravel 13     │  │ Astro 7 SSR  │
-                  │ Octane +       │  │ Node         │
-                  │ FrankenPHP     │◀─┤ (ambil data  │
-                  │ Filament 5     │  │  lewat /api) │
-                  └───────┬────────┘  └──────────────┘
-                          ▼
-                     MySQL 8.4
+                    └──────────────┬──────────────┘
+                                   ▼
+                  ┌─────────────────────────────────┐
+                  │ Laravel 13 + Octane/FrankenPHP  │
+                  │  • situs publik: Livewire 4     │
+                  │  • panel admin: Filament 5      │
+                  └───────────────┬─────────────────┘
+                                  ▼
+                              MySQL 8.4
 ```
 
-Situs publik dirender Astro; Laravel hanya melayani API JSON, panel admin, dan berkas.
-Astro memanggil API lewat jaringan Docker internal (`http://app:8000`), bukan lewat internet.
+Situs publik adalah komponen Livewire halaman penuh (`app/Livewire`); tiap halaman
+mengambil data langsung dari model Eloquent, tanpa API perantara. Tautan antarhalaman
+memakai `wire:navigate`, jadi perpindahan halaman seperti SPA (tanpa muat ulang);
+`resources/js/situs.js` memasang ulang perilaku per halaman di event
+`livewire:navigated` dan memulihkan tema/aksesibilitas saat `<body>` ditukar. Daftar berita,
+dokumen, galeri, dan pegawai memakai Livewire untuk pencarian langsung, filter
+kategori, dan paginasi tanpa memuat ulang halaman, dengan parameter URL yang sama
+seperti sebelumnya (`?search=`, `?kategori=`, `?page=`).
 
 ## Tumpukan teknologi
 
@@ -38,14 +40,10 @@ Astro memanggil API lewat jaringan Docker internal (`http://app:8000`), bukan le
 | Framework | Laravel 13 |
 | Server aplikasi | Laravel Octane di atas FrankenPHP |
 | Reverse proxy | Caddy 2 |
+| Situs publik | Livewire 4 (Alpine bawaan Livewire) |
 | Panel admin | Filament 5 |
-| Situs publik | Astro 7 (SSR, adapter Node) |
-| CSS | Tailwind CSS 4.3 |
+| CSS / skrip | Tailwind CSS 4.3 dan Vite (`resources/css/situs.css`, `resources/js/situs.js`) |
 | Basis data | MySQL 8.4 |
-
-**Catatan Livewire.** Livewire tidak dipakai di situs publik, tetapi tetap terpasang
-sebagai dependensi wajib Filament 5 (`filament/support` membutuhkan `livewire/livewire ^4.1`).
-Cakupannya hanya `/admin`.
 
 ## Menjalankan
 
@@ -66,7 +64,13 @@ Belum ada pembagian role — setiap akun yang bisa masuk punya akses penuh yang 
 jadi menambah akun kedua tidak membatasi apa pun. **Ganti `ADMIN_PASSWORD` sebelum
 naik ke server sungguhan.**
 
-Kode di-bind mount dan Astro berjalan dengan HMR, jadi perubahan langsung terlihat.
+Kode dan aset Vite dibangun ke dalam image (`docker/php/Dockerfile`, tahap `aset`), jadi
+setelah mengubah kode jalankan `docker compose up -d --build`. Untuk mengembangkan
+tampilan tanpa build ulang image, `npm install && npm run build` membangun aset ke
+`public/build`.
+
+Setelah memperbarui dari versi Astro: `docker compose up -d --build --remove-orphans`
+(menghapus kontainer `kdi-web` lama), lalu `docker compose exec app php artisan migrate`.
 
 ### Pengujian
 
@@ -85,29 +89,53 @@ menghantam basis data pengembangan.
 ```
 app/
   Filament/          Resource, halaman, dan widget panel admin
-  Http/Controllers/
-    Api/SiteController.php   Satu-satunya sumber data untuk Astro
+  Livewire/          Halaman situs publik (Beranda, Berita, Dokumen, Galeri, Profil, Layanan)
   Models/
-web/                 Situs publik Astro
-  src/pages/         Rute halaman
-  src/components/    Komponen tampilan
-  src/lib/           Klien API, navigasi, konten statis
-  src/styles/        Token tema Komdigi
+  Support/Konten.php Menu, layanan, dan konten statis situs
+  Support/Situs.php  Pembantu tampilan: URL berkas, tanggal, angka
+resources/
+  views/livewire/            View halaman situs publik
+  views/components/situs/    Header, footer, logo, ikon, kartu, isian formulir
+  views/components/layouts/  Layout situs publik
+  css/situs.css              Token tema Komdigi (Tailwind 4)
+  js/situs.js                Tema, jam WITA, menu, dialog, panel aksesibilitas
+public/img, public/fonts     Aset statis situs dan admin
 docker/
-  caddy/Caddyfile    Aturan pembagian rute
-  php/Dockerfile     Image FrankenPHP + Octane
-  node/Dockerfile    Image Astro (multi-stage)
+  caddy/Caddyfile    Aturan proxy
+  php/Dockerfile     Image FrankenPHP + Octane, dengan tahap build Vite
 ```
 
 ## Mengelola konten
 
 Semua lewat `/admin`:
 
+- **Layanan** — Pengajuan Layanan (lihat di bawah)
 - **Konten** — Berita, Kategori Berita, Galeri, Dokumen, Kategori Dokumen
 - **Profil Dinas** — Isi Halaman (sambutan, sejarah, visi, misi, tugas, fungsi,
   struktur organisasi, foto kantor), Profil Pimpinan, Pegawai, Jabatan
 - **Pengaturan** — nomor telepon, email, dan tautan media sosial yang tampil
   di bilah atas dan footer situs publik
+
+### Pengajuan layanan daring
+
+Halaman Subdomain & Hosting, Email Dinas, dan Pengajuan TTE punya formulir pengajuan
+yang sengaja minimal: perangkat daerah, nama pemohon, nomor WhatsApp, dan surat
+permohonan (PDF/Word/JPG/PNG, maks. 10 MB), ditambah keterangan opsional. Rincian
+kebutuhan (nama subdomain, daftar akun, pejabat TTE) ditulis di surat; data pribadi
+seperti KTP/NPWP tidak diunggah. Pemohon mendapat nomor pengajuan, mis.
+`TTE-20261026-K7Q2`, untuk dicek di `/layanan/cek-pengajuan` bersama nomor WhatsApp-nya
+(disimpan seragam `08…`, jadi `+62 812-…` dan `0812 …` dianggap sama).
+
+Admin memeriksa di **Layanan › Pengajuan Layanan** (angka di menu = yang menunggu),
+membuka surat langsung di peramban, menghubungi pemohon lewat tautan WhatsApp, lalu
+**Proses**, **Setujui**, atau **Tolak**. Catatan admin (wajib saat menolak) terlihat
+oleh pemohon di halaman cek status.
+
+Surat disimpan di disk privat `local` (`storage/app/private/pengajuan`), bukan di
+`public`, jadi hanya bisa dibuka admin yang login lewat
+`/admin/pengajuan-layanan/{id}/surat`. Kiriman dibatasi 5 per IP per jam, dan formulir
+punya isian perangkap bot. Petunjuk isi surat per layanan diatur di
+`PengajuanLayanan::JENIS`.
 
 ### Berita dari portal kota
 

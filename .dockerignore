@@ -2,9 +2,8 @@
 .github
 node_modules
 vendor
-web/node_modules
-web/dist
-web/.astro
+public/build
+public/hot
 storage/framework/cache/data/*
 storage/framework/sessions/*
 storage/framework/views/*

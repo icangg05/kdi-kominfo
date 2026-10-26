@@ -84,8 +84,7 @@
                 gap: 1rem;
             }
 
-            .masuk-atas img {
-                width: auto;
+            .masuk-logo {
                 height: 2.5rem;
             }
 
@@ -329,7 +328,7 @@
                     padding: 2.5rem 3.5rem;
                 }
 
-                .masuk-atas img {
+                .masuk-logo {
                     height: 3rem;
                 }
 
@@ -359,8 +358,8 @@
 
             <div class="masuk-merek-isi">
                 <div class="masuk-atas">
-                    <a href="/">
-                        <img src="/img/kominfo-logo.webp" alt="Diskominfo Kota Kendari" width="176" height="48" />
+                    <a href="/" class="masuk-logo">
+                        @include('filament.admin.logo')
                     </a>
 
                     <a href="/" class="masuk-kembali">

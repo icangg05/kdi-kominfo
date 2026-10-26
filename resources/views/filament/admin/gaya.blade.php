@@ -2,7 +2,7 @@
     /*
      * Gaya panel admin mengikuti DESIGN.md situs (Portal Biru Instansi). Warna datang dari palet primary/gray
      * di AdminPanelProvider; berkas ini hanya mengubah bentuk. CSS Filament ada di @layer, jadi aturan
-     * tanpa layer di sini menang tanpa !important. Aset /img dan /fonts disajikan situs Astro lewat Caddy.
+     * tanpa layer di sini menang tanpa !important. Aset /img dan /fonts ada di public/ Laravel, dipakai bersama situs publik.
      */
     @font-face {
         font-family: "IBM Plex Sans";
@@ -101,6 +101,55 @@
 
     .fi-topbar .fi-icon-btn {
         color: var(--primary-200);
+    }
+
+    /* Logo (filament.admin.logo): tinggi wadah 2.5rem dari brandLogoHeight; lambang mengisi penuh, tanda Komdigi sedikit lebih kecil. */
+    .kdi-logo {
+        display: flex;
+        align-items: center;
+        gap: 0.625rem;
+        height: 100%;
+        color: #fff;
+    }
+
+    .kdi-logo img {
+        width: auto;
+        height: 100%;
+    }
+
+    .kdi-logo .kdi-logo-komdigi {
+        height: 82%;
+    }
+
+    .kdi-logo-pemisah {
+        width: 1px;
+        height: 80%;
+        background: rgb(255 255 255 / 0.3);
+    }
+
+    .kdi-logo-nama {
+        display: none;
+        margin-inline-start: 0.25rem;
+        line-height: 1.2;
+        white-space: nowrap;
+    }
+
+    .kdi-logo-nama b {
+        display: block;
+        font-size: 0.9375rem;
+    }
+
+    .kdi-logo-nama small {
+        display: block;
+        margin-top: 0.125rem;
+        font-size: 0.75rem;
+        color: var(--primary-200);
+    }
+
+    @media (min-width: 640px) {
+        .kdi-logo-nama {
+            display: block;
+        }
     }
 
     .fi-topbar .fi-icon-btn:hover {

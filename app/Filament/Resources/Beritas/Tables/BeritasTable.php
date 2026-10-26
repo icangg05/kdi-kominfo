@@ -2,10 +2,12 @@
 
 namespace App\Filament\Resources\Beritas\Tables;
 
+use App\Support\Situs;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
+use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Filters\TernaryFilter;
@@ -18,6 +20,15 @@ class BeritasTable
         return $table
             ->columns([
                 TextColumn::make('no')->label('No')->rowIndex(),
+                // Rasio 16:10 seperti kartu berita di situs. Sampul kosong memakai gambar bawaan; berkas yang
+                // tercatat tapi hilang dari disk (mis. data hasil restore) ditangani onerror di <img>.
+                ImageColumn::make('thumbnail')
+                    ->label('Sampul')
+                    ->disk('public')
+                    ->imageWidth(80)
+                    ->imageHeight(50)
+                    ->defaultImageUrl(Situs::GAMBAR_DEFAULT)
+                    ->extraImgAttributes(['class' => 'rounded object-cover', 'loading' => 'lazy', 'onerror' => Situs::CADANGAN_GAMBAR]),
                 TextColumn::make('judul')->searchable()->limit(70)->tooltip(fn ($record): string => $record->judul),
                 TextColumn::make('kategori.nama')->label('Kategori')->badge()->sortable(),
                 TextColumn::make('wp_id')

@@ -192,15 +192,15 @@ A single blue family from pale biru-50 to navy biru-950 does nearly all the work
 
 **The Red Is 112 Rule.** Merah Darurat marks the 112 emergency service and nothing else: no error decoration, no badges, no highlights.
 
-**The Logo On Blue Rule.** The official logo (`web/public/img/kominfo-logo.webp`) has a white wordmark and must sit on biru-800 or darker. That is why the logo row is blue where Komdigi's header is white.
+**The Logo On Blue Rule.** The logo is a lockup of two official marks, rendered by `<x-situs.logo>`: the full-colour Lambang Kota Kendari (`public/img/lambang-kendari.webp`), a thin divider, the white Komdigi mark (`public/img/komdigi-putih.webp`, from komdigi.go.id), then "Diskominfo / Kota Kendari" as live text ("Dinas Komunikasi dan Informatika" from xl up). The white Komdigi mark must sit on biru-800 or darker. That is why the logo row is blue where Komdigi's header is white. Replaced the old Kominfo-swirl wordmark on 2026-10-26 at the owner's request.
 
 **The Gradient Legibility Rule.** Body text on a gradient panel must sit over biru-600 or darker stops (services panel biru-900 to biru-600, topic panel nila to biru-700). Never end a text-bearing gradient in biru-500 or lighter.
 
-**The Default Cover Rule.** A record without an image (news without a cover, a gallery photo whose file is missing) shows `gambar-default.webp`: the official logo on the navy network and signal-ring motif, composed to survive 16:10, 4:3 and square crops. It is also the `onerror` fallback (`GAMBAR_DEFAULT` and `cadanganGambar` in `web/src/lib/api.ts`) and the admin news table's `defaultImageUrl`. Never fall back to an empty fill with an icon.
+**The Default Cover Rule.** A record without an image (news without a cover, a gallery photo whose file is missing) shows `gambar-default.webp`: the Lambang + Komdigi lockup on the navy network motif, composed to survive 16:10, 4:3 and square crops. It is also the `onerror` fallback (`Situs::GAMBAR_DEFAULT` and `Situs::CADANGAN_GAMBAR` in `app/Support/Situs.php`) and the admin news table's `defaultImageUrl`. Never fall back to an empty fill with an icon.
 
 **The Light By Default Rule.** Both the public site and the Filament admin open in light mode regardless of the OS preference.
 - **One shared choice.** Both read Filament's own localStorage key `theme` (`light`, `dark` or `system`). They share one origin behind Caddy, so a choice made in one follows into the other.
-- **Public site.** The topbar "Mode gelap" button writes `light` or `dark`. The Base head script maps the stored value to `data-tema="gelap"` on `<html>` and re-applies it on a bfcache `pageshow`. The `dark:` variant is bound to that attribute, never to `prefers-color-scheme`.
+- **Public site.** The topbar "Mode gelap" button writes `light` or `dark`. The head script in `components/layouts/situs.blade.php` maps the stored value to `data-tema="gelap"` on `<html>` and re-applies it on a bfcache `pageshow`. The `dark:` variant is bound to that attribute, never to `prefers-color-scheme`.
 - **Admin.** It uses `defaultThemeMode(ThemeMode::Light)` and keeps Filament's switcher. The login page button dispatches Filament's `theme-changed` event instead of writing storage itself.
 
 **The Dark Mode Mapping Rule.** In dark mode:
@@ -208,8 +208,8 @@ A single blue family from pale biru-50 to navy biru-950 does nearly all the work
 - The page background is malam `#05152b` and card surfaces are malam-kartu `#0c2344`.
 - Headings on formerly white surfaces become white, biru-600 links become biru-300, and biru-50/100 fills become biru-900.
 - Blue panels, the hero, the footer and white buttons sitting on blue do not change.
-- The organisation chart (HTML, `struktur-organisasi.astro`) sits on malam-kartu; its biru-900 and biru-700 unit boxes stay, sub-unit boxes turn biru-900 with biru-100 text, connectors biru-700. The fallback image keeps its white box.
-- The sticky nav swaps the navy-wordmark logo for the original white one.
+- The organisation chart (HTML, `<x-situs.bagan>`) sits on malam-kartu; its biru-900 and biru-700 unit boxes stay, sub-unit boxes turn biru-900 with biru-100 text, connectors biru-700. The fallback image keeps its white box.
+- The sticky nav swaps the navy Komdigi mark (`komdigi-gelap.webp`) for the white one.
 
 ## Typography
 
@@ -269,7 +269,7 @@ Mostly flat, with depth carried by tonal bands (white, langit, blue, navy) and p
 
 **The Four Pixel Rule.** Every corner is Tailwind `rounded` (4px): cards, panels, buttons, inputs, chips, icon squares, avatars, slide selectors, social buttons, prose images. Komdigi's circular icon holders, pill chips and round arrow buttons become 4px squares. No `rounded-lg`, `rounded-xl` or `rounded-full` anywhere.
 
-Borders are 1px: garis on white, white at 15 to 40 percent opacity on blue. Icon holders are solid squares (48px services and bidang, 44px to 64px elsewhere). The active nav item is marked by a 3px biru-600 bar at the bottom edge. Icons are 24px outline SVG strokes (Ikon.astro), sized 14px to 40px.
+Borders are 1px: garis on white, white at 15 to 40 percent opacity on blue. Icon holders are solid squares (48px services and bidang, 44px to 64px elsewhere). The active nav item is marked by a 3px biru-600 bar at the bottom edge. Icons are 24px outline SVG strokes (`<x-situs.ikon>`), sized 14px to 40px.
 
 ## Components
 
@@ -307,7 +307,7 @@ Solid, square, confident.
 ### Navigation
 - **Topbar:** biru-950, 36px tall, clock icon, live WITA time (Asia/Makassar, `HH.MM.SS WITA`, white semibold tabular) and a time-of-day greeting; phone and email on the right. Never a date.
 - **Logo row:** biru-800, 72px (80px at lg), logo, site search (desktop), emergency button. Sticky on mobile with a menu toggle that opens a flat list with search and open submenus.
-- **Main nav (desktop):** white sticky bar, 52px, uppercase 13px semibold biru-950 items; hover and active biru-600 with a 3px underline bar; submenus as white 256px dropdowns with langit hover (Profil Dinas, Layanan, Galeri with Foto and Video). Once the logo row has scrolled away (IntersectionObserver, no scroll listener) the bar stays white, its shadow deepens, and the logo slides in on the left using `kominfo-logo-gelap.webp`, a derived variant whose white wordmark is recolored navy so it reads on white. The original white-wordmark logo is used only on blue grounds.
+- **Main nav (desktop):** white sticky bar, 52px, uppercase 13px semibold biru-950 items; hover and active biru-600 with a 3px underline bar; submenus as white 256px dropdowns with langit hover (Profil Dinas, Layanan, Galeri with Foto and Video). Once the logo row has scrolled away (IntersectionObserver, no scroll listener) the bar stays white, its shadow deepens, and the two marks (no text) slide in on the left, with `komdigi-gelap.webp`, a derived variant of the Komdigi mark recoloured biru-900 so it reads on white. The white Komdigi mark is used only on blue grounds.
 - **Footer:** biru-900 with motif, logo, description, three uppercase link columns, address and contacts row, biru-950 copyright strip.
 
 ### Section Heading (signature)
@@ -322,10 +322,10 @@ Double ring on every focusable element: 2px biru-600 outline offset 2px over a 2
 ### Admin Panel (Filament)
 The admin follows this system too, without a Vite theme build.
 - **Colours.** `AdminPanelProvider` passes the biru-* scale as `primary`. It passes a blue-tinted `gray` whose 900 and 950 steps equal malam-kartu and malam, so the admin's dark mode matches the site's.
-- **Font.** IBM Plex Sans, served from Astro's `/fonts`.
+- **Font.** IBM Plex Sans, self-hosted in `public/fonts`.
 - **Shape.** `resources/views/filament/admin/gaya.blade.php` is an unlayered `<style>` injected at `STYLES_AFTER`. It overrides only shape, because Filament's CSS is layered. It sets:
   - every radius to 4px and square avatars;
-  - a biru-800 topbar carrying the official white logo, the WITA clock and a "Lihat situs" link;
+  - a biru-800 topbar carrying the logo lockup (`filament/admin/logo.blade.php`), the WITA clock and a "Lihat situs" link;
   - a white sidebar with uppercase group labels and a 3px active bar;
   - a 3px eyebrow bar above page headings that have no breadcrumbs;
   - kartu-timbul shadows on sections, tables, stats and resource forms;
@@ -340,7 +340,7 @@ The admin follows this system too, without a Vite theme build.
 ### Do:
 - **Do** keep the Komdigi homepage module order and fill each module only with real Diskominfo data.
 - **Do** use 4px `rounded` for every corner, translating any Komdigi circle or pill into a square.
-- **Do** place the official logo on biru-800 or darker.
+- **Do** place the white Komdigi mark on biru-800 or darker.
 - **Do** show the topbar clock in WITA (Asia/Makassar) with a greeting, updating every second.
 - **Do** keep body text on gradients over biru-600 or darker stops.
 - **Do** show `gambar-default.webp` for any record without an image, never an empty fill with an icon.
@@ -356,4 +356,4 @@ The admin follows this system too, without a Vite theme build.
 - **Don't** combine `motif-komdigi` with a gradient background on the same element.
 - **Don't** use the `kisi-titik` dot grid outside the Transformasi Digital band.
 - **Don't** write em dashes, marketing tone or invented claims (testimonials, achievements, SLA figures) in public copy.
-- **Don't** put the white-wordmark logo on white or langit.
+- **Don't** put the white Komdigi mark on white or langit; use `komdigi-gelap.webp` there.

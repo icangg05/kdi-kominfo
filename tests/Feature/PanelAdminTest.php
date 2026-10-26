@@ -22,6 +22,7 @@ class PanelAdminTest extends TestCase
   {
     return [
       'dasbor' => ['/admin'],
+      'pengajuan layanan' => ['/admin/pengajuan-layanan'],
       'berita' => ['/admin/beritas'],
       'buat berita' => ['/admin/beritas/create'],
       'kategori berita' => ['/admin/kategori-beritas'],

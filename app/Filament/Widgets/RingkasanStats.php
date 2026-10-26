@@ -6,6 +6,7 @@ use App\Models\Berita;
 use App\Models\Dokumen;
 use App\Models\Galeri;
 use App\Models\Pegawai;
+use App\Models\PengajuanLayanan;
 use App\Models\Visitor;
 use Filament\Widgets\StatsOverviewWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
@@ -20,7 +21,13 @@ class RingkasanStats extends StatsOverviewWidget
         // Pemisah ribuan mengikuti locale aplikasi (id: 12.345). sum() dari MySQL bisa berupa string.
         $angka = fn (int|float|string|null $n): string => Number::format((int) $n, locale: app()->getLocale());
 
+        $menunggu = PengajuanLayanan::where('status', 'menunggu')->count();
+
         return [
+            Stat::make('Pengajuan layanan', $angka($menunggu))
+                ->description($menunggu ? 'menunggu verifikasi' : 'tidak ada yang menunggu')
+                ->color($menunggu ? 'warning' : 'gray')
+                ->url(route('filament.admin.resources.pengajuan-layanan.index')),
             Stat::make('Berita', $angka(Berita::count()))
                 ->description($angka(Berita::sum('total_lihat')) . ' kali dibaca')
                 ->color('primary'),

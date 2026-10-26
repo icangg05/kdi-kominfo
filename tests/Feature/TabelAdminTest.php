@@ -38,12 +38,16 @@ class TabelAdminTest extends TestCase
     Livewire::test($halaman)->assertTableColumnExists('no');
   }
 
-  public function test_tabel_berita_tidak_menampilkan_sampul(): void
+  /** Diminta pemilik (2026-10-26) supaya berita bisa dikenali dari sampulnya; sebelumnya kolom ini sengaja tidak ada. */
+  public function test_tabel_berita_menampilkan_sampul_dengan_cadangan(): void
   {
     $this->seed();
     $this->actingAs(User::first());
 
-    Livewire::test(ListBeritas::class)->assertTableColumnDoesNotExist('thumbnail');
+    Livewire::test(ListBeritas::class)
+      ->assertTableColumnExists('thumbnail')
+      // Berkas yang tercatat tapi hilang dari disk diganti sampul bawaan, bukan gambar rusak.
+      ->assertSeeHtml('/img/gambar-default.webp');
   }
 
   public function test_tabel_pegawai_urut_dari_data_terbaru(): void

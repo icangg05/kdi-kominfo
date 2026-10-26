@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Middleware\VisitorMiddleware;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -12,10 +11,10 @@ return Application::configure(basePath: dirname(__DIR__))
     health: '/up',
   )
   ->withMiddleware(function (Middleware $middleware): void {
-    // Caddy -> Astro -> Octane: IP asli pengunjung hanya bisa dipercaya
-    // dari dalam jaringan Docker, karena itu proxy-nya dipercaya penuh di sini.
+    // Caddy -> Octane: IP asli pengunjung hanya bisa dipercaya dari dalam
+    // jaringan Docker, karena itu proxy-nya dipercaya penuh di sini.
+    // Penghitung pengunjung (VisitorMiddleware) dipasang di grup rute situs publik, bukan global.
     $middleware->trustProxies(at: '*');
-    $middleware->append(VisitorMiddleware::class);
   })
   ->withExceptions(function (Exceptions $exceptions): void {
     //

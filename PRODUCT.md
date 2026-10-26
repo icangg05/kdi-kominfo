@@ -40,15 +40,13 @@ Fungsi yang harus tetap ada, apa pun bentuk implementasinya:
 - **Admin:** login dan pengelolaan penuh atas berita, kategori berita, dokumen, kategori dokumen, galeri, pegawai, jabatan, profil pimpinan, seluruh bagian profil dinas, serta pengaturan kontak dan tautan sosial media.
 - **Penghitung pengunjung** publik (`VisitorMiddleware`, tabel `visitors`).
 
-**Arsitektur sedang dipindah (per 2026-09-03).** Yang ada di disk sekarang:
+**Arsitektur (per 2026-10-26).**
 
-- Laravel sebagai **backend headless**: API JSON di `/api/*` (`app/Http/Controllers/Api/SiteController.php`), unduhan di `/download/{dokumen}`, dijalankan dengan Octane. Target `laravel/framework ^13`, PHP ^8.4.
+- Satu aplikasi **Laravel 13** (PHP ^8.4) di atas Octane + FrankenPHP, di belakang **Caddy** (`docker/caddy/Caddyfile`, port 8000).
+- **Situs publik** berupa komponen **Livewire 4** halaman penuh (`app/Livewire`, view di `resources/views/livewire`), Tailwind CSS 4 dibangun Vite. Situs Astro dan API JSON `/api/*` sudah dihapus.
 - **Filament 5** sebagai panel admin di `/admin` (`app/Providers/Filament/AdminPanelProvider.php`).
-- **Astro** sebagai situs publik, di-reverse-proxy oleh **Caddy** (`docker/caddy/Caddyfile`, layanan `web` pada `compose.yml`, port 8000).
+- **Pengajuan layanan daring** (subdomain & hosting, email dinas, TTE): OPD mengisi formulir dan mengunggah surat permohonan di halaman layanan; admin memverifikasi di menu Layanan › Pengajuan Layanan; pemohon memantau status di `/layanan/cek-pengajuan`.
 - MySQL 8.4 dan seluruh stack dijalankan lewat Docker Compose.
-- Livewire, Blade view publik, Tailwind/Preline, dan Vite **sudah dihapus**. Model Eloquent, migrasi, dan seeder tetap utuh — di situlah seluruh kebenaran konten berada.
-
-Konsekuensi yang berlaku sekarang: **direktori `web/` (aplikasi Astro) belum ada**, sehingga situs publik belum bisa dijalankan. Filament resources untuk model-model di atas juga belum ada, jadi kemampuan admin di daftar ini adalah kewajiban yang harus dipenuhi kembali, bukan yang sudah berjalan.
 
 Batasan yang mengikat:
 
@@ -60,7 +58,7 @@ Secara eksplisit **tidak** mengikat (dikonfirmasi pemilik, 2026-09-03): identita
 
 - Nama resmi: **Dinas Komunikasi dan Informatika Kota Kendari** (Diskominfo Kendari). Nama aplikasi terdaftar: "Dinas Kominfo Kota Kendari".
 - Nada bahasa: Indonesia formal, resmi, tanpa bahasa pemasaran.
-- Logo yang ada (`public/img/kominfo-logo.webp`) tidak dinyatakan mengikat oleh pemilik; konfirmasi ulang sebelum menggantinya, karena logo instansi pemerintah biasanya diatur di luar keputusan desain.
+- Logo: Lambang Kota Kendari berdampingan dengan tanda Komdigi (diminta pemilik, 2026-10-26), menggantikan logo Kominfo lama. Logo instansi pemerintah diatur di luar keputusan desain; konfirmasi ke pemilik sebelum mengubahnya lagi.
 
 ## Evidence on Hand
 

@@ -5,6 +5,7 @@ namespace App\Providers\Filament;
 use App\Filament\Pages\Auth\Masuk;
 use App\Filament\Pages\Auth\Profil;
 use App\Filament\Widgets\RingkasanStats;
+use App\Models\PengajuanLayanan;
 use App\Support\BackupDatabase;
 use App\Support\WaktuWita;
 use Filament\Enums\ThemeMode;
@@ -27,6 +28,7 @@ use Illuminate\Foundation\Http\Middleware\PreventRequestForgery;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 
 class AdminPanelProvider extends PanelProvider
@@ -40,8 +42,9 @@ class AdminPanelProvider extends PanelProvider
             ->login(Masuk::class)
             ->profile(Profil::class, isSimple: false)
             ->brandName('Diskominfo Kendari')
-            // Logo resmi bertulisan putih; topbar admin dibuat biru agar sesuai aturan logo di atas biru.
-            ->brandLogo('/img/kominfo-logo.webp')
+            // Lambang Kota Kendari + tanda Komdigi putih (view filament.admin.logo); topbar admin dibuat biru
+            // agar sesuai aturan logo di atas biru.
+            ->brandLogo(fn () => view('filament.admin.logo'))
             ->brandLogoHeight('2.5rem')
             ->favicon(asset('favicon.ico'))
             // Skala biru-* situs publik. Palet hasil Color::hex() hanya mengambil hue, sehingga shade 600
@@ -56,7 +59,7 @@ class AdminPanelProvider extends PanelProvider
                     600 => '#475a76', 700 => '#33465f', 800 => '#1d3558', 900 => '#0c2344', 950 => '#05152b',
                 ]),
             ])
-            // IBM Plex Sans di-host situs Astro (/fonts); @font-face ada di view gaya admin.
+            // IBM Plex Sans di-host sendiri (public/fonts); @font-face ada di view gaya admin.
             ->font('IBM Plex Sans', provider: LocalFontProvider::class)
             // Terang sebagai bawaan, bukan mengikuti sistem; pengguna tetap bisa ganti dari menu akun.
             ->defaultThemeMode(ThemeMode::Light)
@@ -66,7 +69,7 @@ class AdminPanelProvider extends PanelProvider
             ->renderHook(PanelsRenderHook::BODY_END, fn () => view('filament.admin.skrip-jam'))
             ->renderHook(PanelsRenderHook::BODY_END, fn () => view('filament.admin.modal-backup'))
             ->sidebarCollapsibleOnDesktop()
-            ->navigationGroups(['Konten', 'Profil Dinas', 'Pengaturan'])
+            ->navigationGroups(['Layanan', 'Konten', 'Profil Dinas', 'Pengaturan'])
             // Menu membuka modal konfirmasi (view modal-backup), baru tombol di dalamnya mengunduh.
             ->navigationItems([
                 NavigationItem::make('Backup Database')
@@ -74,11 +77,21 @@ class AdminPanelProvider extends PanelProvider
                     ->icon(Heroicon::OutlinedCircleStack)
                     ->group('Pengaturan'),
             ])
-            ->authenticatedRoutes(fn () => Route::get('backup-database', fn () => response()->streamDownload(
-                fn () => BackupDatabase::tulis(fopen('php://output', 'w')),
-                'backup-database-' . WaktuWita::sekarang()->format('Y-m-d-His') . '.sql',
-                ['Content-Type' => 'application/sql'],
-            ))->name('backup-database'))
+            ->authenticatedRoutes(function () {
+                Route::get('backup-database', fn () => response()->streamDownload(
+                    fn () => BackupDatabase::tulis(fopen('php://output', 'w')),
+                    'backup-database-' . WaktuWita::sekarang()->format('Y-m-d-His') . '.sql',
+                    ['Content-Type' => 'application/sql'],
+                ))->name('backup-database');
+
+                // Surat pengajuan ada di disk privat; hanya admin yang login bisa membukanya.
+                // Ditampilkan langsung (inline) supaya PDF/gambar bisa diperiksa tanpa diunduh dulu.
+                Route::get('pengajuan-layanan/{pengajuan}/surat', function (PengajuanLayanan $pengajuan) {
+                    abort_unless(Storage::disk(PengajuanLayanan::DISK)->exists($pengajuan->surat), 404);
+
+                    return Storage::disk(PengajuanLayanan::DISK)->response($pengajuan->surat, "surat-{$pengajuan->nomor}." . pathinfo($pengajuan->surat, PATHINFO_EXTENSION));
+                })->name('pengajuan-surat');
+            })
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\Filament\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\Filament\Pages')
             ->pages([

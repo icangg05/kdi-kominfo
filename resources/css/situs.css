@@ -1,0 +1,793 @@
+/* Pemindaian otomatis dimatikan: tanpa itu Tailwind ikut memindai view panel admin, tes, dan vendor. */
+@import "tailwindcss" source(none);
+
+@source "../views/components";
+@source "../views/livewire";
+@source "../views/errors";
+@source "../../app/Livewire";
+
+/* Mode gelap hanya lewat tombol (data-tema="gelap" di <html>), bukan preferensi sistem: bawaan selalu terang. */
+@custom-variant dark (&:where([data-tema="gelap"], [data-tema="gelap"] *));
+
+/* IBM Plex Sans di-host sendiri (variabel 400-700, OFL) supaya tidak menunggu Google Fonts di jaringan seluler. */
+@font-face {
+  font-family: "IBM Plex Sans";
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url("/fonts/ibm-plex-sans-latin.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: "IBM Plex Sans";
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url("/fonts/ibm-plex-sans-latin-ext.woff2") format("woff2");
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+/*
+ * Tata letak dan palet mengikuti beranda komdigi.go.id: biru instansi dominan,
+ * bidang putih dan biru muda, panel gradien biru. Semua sudut memakai `rounded`
+ * (4px), keputusan pemilik, jadi bentuk bulat Komdigi diterjemahkan ke 4px.
+ */
+@theme {
+  --font-sans: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+
+  --color-biru-50: #f2f7fd;
+  --color-biru-100: #e2edfa;
+  --color-biru-200: #c0d8f4;
+  --color-biru-300: #8bb9ea;
+  --color-biru-400: #4f95dc;
+  --color-biru-500: #2777c8;
+  --color-biru-600: #0b4ea2;
+  --color-biru-700: #0d478e;
+  --color-biru-800: #0f3c75;
+  --color-biru-900: #0b2f5c;
+  --color-biru-950: #071f3d;
+
+  /* Bidang biru muda untuk panel dan pita isi, seperti blok berita Komdigi. */
+  --color-langit: #eef4fb;
+  /* Kartu angka dan panel topik. */
+  --color-toska: #0d7f77;
+  --color-nila: #2f3f9e;
+  /* Hanya untuk layanan darurat 112. */
+  --color-darurat: #d62d20;
+
+  --color-teks: #1c2536;
+  --color-teks-lembut: #4a5568;
+  --color-garis: #dbe3ef;
+
+  /* Mode gelap: latar halaman dan permukaan kartu. Panel biru tetap memakai skala biru. */
+  --color-malam: #05152b;
+  --color-malam-kartu: #0c2344;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    scrollbar-color: #8bb9ea #f2f7fd;
+  }
+
+  /* Token netral hanya dipakai di bidang terang, jadi cukup dibalik nilainya. */
+  :root[data-tema="gelap"] {
+    color-scheme: dark;
+    scrollbar-color: #2c4f7c #05152b;
+    --color-langit: #0a1d38;
+    --color-teks: #dfe8f5;
+    --color-teks-lembut: #9fb6d4;
+    --color-garis: #1d3558;
+  }
+
+  body {
+    @apply bg-white font-sans text-teks antialiased dark:bg-malam;
+  }
+
+  ::selection {
+    background: var(--color-biru-600);
+    color: #fff;
+  }
+
+  /* Cincin ganda: garis putih di dalam, biru di luar, terlihat di bidang terang maupun biru tua. */
+  :focus-visible {
+    outline: 2px solid var(--color-biru-600);
+    outline-offset: 2px;
+    box-shadow: 0 0 0 2px #fff;
+  }
+
+  /* Isi dari RichEditor admin dirender apa adanya, jadi elemennya digayakan di sini. */
+  .prosa :where(p) {
+    @apply mb-4 leading-relaxed text-teks-lembut;
+  }
+
+  .prosa :where(h2, h3, h4) {
+    @apply mt-8 mb-3 font-semibold text-biru-900 dark:text-white;
+  }
+
+  .prosa :where(h2) { @apply text-2xl; }
+  .prosa :where(h3) { @apply text-xl; }
+  .prosa :where(h4) { @apply text-lg; }
+
+  .prosa :where(ul) { @apply mb-4 list-disc space-y-2 pl-5 text-teks-lembut; }
+  .prosa :where(ol) { @apply mb-4 list-decimal space-y-2 pl-5 text-teks-lembut; }
+  .prosa :where(a) { @apply text-biru-600 underline decoration-biru-300 underline-offset-3 hover:text-biru-800 dark:text-biru-300 dark:decoration-biru-700 dark:hover:text-white; }
+  .prosa :where(strong) { @apply font-semibold text-teks; }
+  .prosa :where(img) { @apply my-6 rounded; }
+  .prosa :where(blockquote) { @apply my-6 border-l-2 border-biru-300 pl-4 italic text-teks-lembut dark:border-biru-700; }
+  .prosa :where(table) { @apply my-6 w-full text-left text-sm; }
+  .prosa :where(th, td) { @apply border border-garis px-3 py-2; }
+}
+
+@utility wadah {
+  @apply mx-auto w-full max-w-[1280px] px-4 lg:px-8;
+}
+
+/* Pola lengkung halus untuk bidang biru tua, dipakai juga di halaman dalam. */
+@utility motif-komdigi {
+  background-image:
+    radial-gradient(circle at 88% 18%, rgba(255, 255, 255, 0.07) 0, transparent 38%),
+    radial-gradient(circle at 12% 88%, rgba(255, 255, 255, 0.05) 0, transparent 42%);
+}
+
+/* Kisi titik tipis seperti peta Komdigi di latar bagian transformasi digital. */
+@utility kisi-titik {
+  background-image: radial-gradient(rgba(139, 185, 234, 0.22) 1px, transparent 1.6px);
+  background-size: 14px 14px;
+}
+
+/* Bayangan kartu diam: garis halus di tepi plus bayangan lembut di bawah. */
+@utility bayangan-kartu {
+  @apply shadow-[0_1px_2px_rgba(7,31,61,0.06),0_10px_24px_-12px_rgba(7,31,61,0.28)] dark:shadow-[0_1px_2px_rgba(0,0,0,0.4),0_10px_24px_-12px_rgba(0,0,0,0.75)];
+}
+
+/* Kartu daftar (berita, galeri, dokumen, video): putih bertepi tipis dengan bayangan, supaya tidak menyatu dengan latar. */
+@utility kartu-timbul {
+  @apply rounded border border-garis bg-white bayangan-kartu transition dark:bg-malam-kartu;
+
+  &:hover {
+    @apply border-biru-200 shadow-[0_2px_4px_rgba(7,31,61,0.08),0_20px_40px_-18px_rgba(7,31,61,0.42)] dark:border-biru-700 dark:shadow-[0_2px_4px_rgba(0,0,0,0.45),0_20px_40px_-18px_rgba(0,0,0,0.85)];
+  }
+}
+
+@utility tanpa-scrollbar {
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+@keyframes sorot-masuk {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes latar-hanyut {
+  to { transform: scale(1.12) translate(-2%, -1%); }
+}
+
+@keyframes sorot-hitung {
+  from { transform: scaleX(0); }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  /* Judul sorotan naik pelan setiap kali slide berganti. */
+  [data-slide]:not([hidden]) {
+    animation: sorot-masuk 650ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  /* Foto latar sorotan terus mendekat dan bergeser pelan, jadi layar tidak terasa diam di antara giliran.
+     Semua foto bergerak serempak supaya saat crossfade tidak ada yang melompat. */
+  [data-sorotan] > img {
+    animation: latar-hanyut 24s ease-in-out infinite alternate;
+  }
+
+  /* Garis di tombol nomor aktif terisi selama 7 detik, sama dengan jeda giliran di skrip beranda.
+     Disembunyikan saat fokus keyboard di dalam sorotan karena giliran ikut berhenti; muncul lagi dari nol. */
+  [data-ke][aria-current='true']::after {
+    content: '';
+    position: absolute;
+    inset: auto 0 0;
+    height: 3px;
+    background: var(--color-biru-600);
+    transform-origin: left;
+    animation: sorot-hitung 7s linear both;
+  }
+
+  [data-sorotan]:has(:focus-visible) [data-ke]::after {
+    display: none;
+  }
+}
+
+/* Ganti tema: tampilan baru dibuka lewat clip-path dari skrip header, bukan crossfade bawaan. */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+/* Dialog dan popover (panel Aksesibilitas) memudar dan naik sedikit saat dibuka, kebalikannya saat ditutup.
+   display dan overlay ikut ditransisikan (allow-discrete) supaya tetap tampil sampai animasi tutup selesai. */
+.dialog-halus,
+.dialog-halus::backdrop {
+  transition:
+    opacity 300ms cubic-bezier(0.16, 1, 0.3, 1),
+    translate 300ms cubic-bezier(0.16, 1, 0.3, 1),
+    scale 300ms cubic-bezier(0.16, 1, 0.3, 1),
+    background-color 300ms ease,
+    overlay 300ms allow-discrete,
+    display 300ms allow-discrete;
+}
+
+.dialog-halus {
+  opacity: 0;
+  translate: 0 1rem;
+  scale: 0.97;
+}
+
+.dialog-halus:is([open], :popover-open) {
+  opacity: 1;
+  translate: 0 0;
+  scale: 1;
+}
+
+.dialog-halus::backdrop {
+  background-color: rgb(7 31 61 / 0);
+}
+
+.dialog-halus[open]::backdrop {
+  background-color: rgb(7 31 61 / var(--pekat, 0.7));
+}
+
+@starting-style {
+  .dialog-halus:is([open], :popover-open) {
+    opacity: 0;
+    translate: 0 1rem;
+    scale: 0.97;
+  }
+
+  .dialog-halus[open]::backdrop {
+    background-color: rgb(7 31 61 / 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dialog-halus,
+  .dialog-halus::backdrop {
+    transition: none;
+  }
+}
+
+/* Gutter selalu dipesan supaya tata letak tidak melompat saat gulir dikunci di bawah ini. */
+html {
+  scrollbar-gutter: stable;
+}
+
+/* Dialog terbuka (survei, gambar berita): halaman di belakangnya tidak ikut tergulir. */
+html:has(.dialog-halus[open]) {
+  overflow: hidden;
+}
+
+/* Menu seluler terbuka (hanya tampil di bawah lg): halaman di belakangnya tidak ikut tergulir. */
+html:has(#menu-seluler[data-terbuka]) {
+  @variant max-lg {
+    overflow: hidden;
+  }
+}
+
+/* Selama tema menyebar, tangkapan layar lama diam di atas halaman asli; gulir dan klik dikunci sampai selesai. */
+html[data-ganti-tema] {
+  overflow: hidden;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  ::before,
+  ::after {
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Panel Aksesibilitas: atribut di <html> dipasang skrip di <head> layout situs dan resources/js/situs.js. */
+html[data-kontras] { filter: contrast(1.4); }
+html[data-abu] { filter: grayscale(1); }
+html[data-kontras][data-abu] { filter: grayscale(1) contrast(1.4); }
+
+/* Garis putus-putus warna teks tautan itu sendiri, jadi selalu kontras dengan latarnya; beda dari cincin fokus yang utuh. */
+html[data-sorot-tautan] a {
+  outline: 2px dashed currentColor !important;
+  outline-offset: 3px;
+  text-decoration: underline !important;
+  text-underline-offset: 3px;
+}
+
+/* Nilai uji WCAG 1.4.12 (spasi teks). Panel sendiri dikecualikan supaya tombolnya tidak pecah baris. */
+html[data-renggang] body :not(#aksesibilitas, #aksesibilitas *) {
+  letter-spacing: 0.12em !important;
+  word-spacing: 0.16em !important;
+  line-height: 1.8 !important;
+}
+
+html[data-henti-animasi],
+html[data-henti-animasi] *,
+html[data-henti-animasi] *::before,
+html[data-henti-animasi] *::after {
+  animation: none !important;
+  transition: none !important;
+  scroll-behavior: auto !important;
+}
+
+/* Penanda bagian yang akan dibaca; selektornya sama dengan skrip aksesibilitas di resources/js/situs.js. */
+html[data-baca-klik] body :is(p, h1, h2, h3, h4, h5, h6, li, dt, dd, td, th, figcaption, blockquote, label, a, button):not(#aksesibilitas *):hover {
+  outline: 2px solid var(--color-biru-400);
+  outline-offset: 2px;
+  cursor: pointer;
+}
+
+/* ---------------------------------------------------------------------------
+ * Panel Aksesibilitas (resources/views/components/situs/aksesibilitas.blade.php)
+ * ------------------------------------------------------------------------- */
+
+/* Isi panel naik berurutan setelah panel terbuka; "Stop Animasi" di atas ikut mematikannya. */
+@media (prefers-reduced-motion: no-preference) {
+  #aksesibilitas:popover-open [data-muncul] {
+    animation: sorot-masuk 420ms cubic-bezier(0.16, 1, 0.3, 1) calc(80ms + var(--i) * 35ms) both;
+  }
+
+  .gelombang span {
+    animation: gelombang 900ms ease-in-out infinite;
+  }
+
+  .gelombang span:nth-child(2) { animation-delay: -300ms; }
+  .gelombang span:nth-child(3) { animation-delay: -600ms; }
+}
+
+/* Tiga batang sedang berbicara; tanpa gerak tetap terlihat sebagai tanda diam bertingkat. */
+.gelombang span {
+  width: 3px;
+  height: 100%;
+  background: currentColor;
+  transform-origin: bottom;
+}
+
+.gelombang span:nth-child(1) { transform: scaleY(0.5); }
+.gelombang span:nth-child(3) { transform: scaleY(0.7); }
+
+@keyframes gelombang {
+  0%, 100% { transform: scaleY(0.35); }
+  50% { transform: scaleY(1); }
+}
+
+/* ---------------------------------------------------------------------------
+ * Sambutan Kepala Dinas di beranda
+ * ------------------------------------------------------------------------- */
+
+/* Satu gerak masuk yang disetir gulir (tanpa JS). Semua memakai timeline view milik section,
+   jadi urutannya terjaga: bidang menyapu, kartu terbuka dari atas sambil foto mengendap, blok biru keluar
+   dari balik kartu, siku merapat, lalu teks sambutan dan tagline menyusul. Keyframe memakai `transform`,
+   sedangkan efek hover memakai properti `translate`/`scale`, jadi keduanya bertumpuk dan tidak saling timpa.
+   Peramban tanpa animation-timeline dan pengguna yang memilih gerak dikurangi melihat keadaan akhir yang statis. */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .sambutan {
+      view-timeline-name: --sambutan;
+    }
+
+    .sambutan-bidang,
+    .sambutan-kartu,
+    .sambutan-foto,
+    .sambutan-geser,
+    .sambutan-siku,
+    .sambutan-kutip,
+    .sambutan-teks,
+    .sambutan-tagline {
+      animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+      animation-fill-mode: both;
+      animation-timeline: --sambutan;
+    }
+
+    .sambutan-bidang {
+      transform-origin: left;
+      animation-name: sambutan-sapu;
+      animation-range: entry 0% entry 75%;
+    }
+
+    .sambutan-kartu {
+      animation-name: sambutan-buka;
+      animation-range: entry 5% entry 55%;
+    }
+
+    .sambutan-foto {
+      animation-name: sambutan-endap;
+      animation-range: entry 5% entry 70%;
+    }
+
+    .sambutan-geser {
+      animation-name: sambutan-keluar;
+      animation-range: entry 30% entry 75%;
+    }
+
+    .sambutan-siku {
+      animation-name: sambutan-rapat;
+      animation-range: entry 35% entry 80%;
+    }
+
+    .sambutan-siku-bawah {
+      animation-name: sambutan-rapat-bawah;
+    }
+
+    .sambutan-kutip {
+      animation-name: sambutan-kutip;
+      animation-range: entry 10% entry 60%;
+    }
+
+    .sambutan-teks {
+      animation-name: sambutan-naik;
+      animation-range: entry 15% entry 60%;
+    }
+
+    .sambutan-tagline {
+      animation-name: sambutan-naik;
+      animation-range: entry var(--mulai) entry var(--akhir);
+    }
+  }
+}
+
+@keyframes sambutan-sapu {
+  from { transform: scaleX(0); }
+}
+
+@keyframes sambutan-buka {
+  from { clip-path: inset(0 0 100% 0 round 4px); }
+  to { clip-path: inset(0 0 0 0 round 4px); }
+}
+
+@keyframes sambutan-endap {
+  from { transform: scale(1.18); }
+}
+
+/* Blok biru mulai tepat di balik kartu (menetralkan geser 0.75rem dari kelas translate-3), lalu keluar. */
+@keyframes sambutan-keluar {
+  from { transform: translate(-0.75rem, -0.75rem); }
+}
+
+@keyframes sambutan-rapat {
+  from { opacity: 0; transform: translate(-1rem, -1rem); }
+}
+
+@keyframes sambutan-rapat-bawah {
+  from { opacity: 0; transform: translate(1rem, 1rem); }
+}
+
+@keyframes sambutan-kutip {
+  from { opacity: 0; transform: translateY(1.5rem) scale(0.85); }
+}
+
+@keyframes sambutan-naik {
+  from { opacity: 0; transform: translateY(1rem); }
+}
+
+/* ---------------------------------------------------------------------------
+ * Bagan struktur organisasi (resources/views/components/situs/bagan.blade.php)
+ * Nama kelasnya umum, jadi semua aturan dikurung di dalam .bagan.
+ * ------------------------------------------------------------------------- */
+
+/* Garis penghubung digambar dengan pseudo-elemen, jadi bagan tetap berupa daftar bertingkat biasa untuk pembaca layar. */
+.bagan {
+  --garis-bagan: var(--color-biru-300);
+  --jorok: 1.25rem;
+  --atas: 0.5rem;
+  font-size: 0.8125rem;
+}
+
+[data-tema='gelap'] .bagan {
+  --garis-bagan: var(--color-biru-700);
+}
+
+.bagan .kotak {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 3rem;
+  padding: 0.625rem 1rem;
+  border-radius: 0.25rem;
+  font-weight: 700;
+  line-height: 1.35;
+  letter-spacing: 0.025em;
+  text-transform: uppercase;
+  text-wrap: balance;
+}
+
+/* Nama pejabat di bawah jabatan: huruf biasa supaya tidak bersaing dengan nama jabatan. */
+.bagan .pejabat {
+  margin-top: 0.25rem;
+  font-weight: 500;
+  letter-spacing: 0;
+  text-transform: none;
+  opacity: 0.85;
+}
+
+.bagan .utama {
+  background: var(--color-biru-900);
+  color: #fff;
+  font-size: 0.9375rem;
+}
+
+.bagan .tengah {
+  background: var(--color-biru-700);
+  color: #fff;
+}
+
+.bagan .kecil {
+  border: 1px solid var(--color-biru-200);
+  background: var(--color-biru-50);
+  color: var(--color-biru-950);
+  font-weight: 600;
+}
+
+[data-tema='gelap'] .bagan .kecil {
+  border-color: var(--color-biru-700);
+  background: var(--color-biru-900);
+  color: var(--color-biru-100);
+}
+
+/*
+ * Rel (::before) dan siku (::after) sama-sama milik <li>. Bila siku menempel di kotak, browser membulatkan
+ * posisinya ke piksel lain dari rel (terutama pada skala layar 125%/150%), jadi garis tampak bengkok 1px.
+ * <li> dibuat grid satu kolom supaya siku bisa ditaruh di area kotak (baris 1; garis akhir wajib ditulis, sebab auto pada elemen absolut berarti tepi padding) dan berhenti tepat di tengahnya.
+ */
+.bagan .cabang > li,
+.bagan .anak > li {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  /* <li> lini ikut setinggi baris terpanjang; sisa tinggi jangan dibagi ke kotak. */
+  align-content: start;
+}
+
+.bagan .cabang > li::before,
+.bagan .anak > li::before,
+.bagan .cabang > li::after,
+.bagan .anak > li::after {
+  content: '';
+  position: absolute;
+}
+
+/*
+ * Sorot saat hover (atau ketuk di layar sentuh): unit yang ditunjuk beserta semua turunannya tetap tajam, sisanya buram.
+ * Filter dipasang per kotak dan per garis, bukan per <li>: buram di <li> induk ikut memburamkan
+ * turunannya dan tidak bisa dibatalkan dari dalam. Aturan "tetap tajam" ditulis sesudah aturan
+ * buram dengan spesifisitas yang sama atau lebih tinggi, jadi selalu menang.
+ */
+.bagan .kotak,
+.bagan .cabang::before,
+.bagan .cabang > li::before,
+.bagan .anak > li::before,
+.bagan .cabang > li::after,
+.bagan .anak > li::after {
+  transition: filter 250ms ease, opacity 250ms ease, box-shadow 250ms ease;
+}
+
+.bagan:has(li > .kotak:hover) .kotak,
+.bagan:has(li > .kotak:hover) li::before,
+.bagan:has(li > .kotak:hover) li::after,
+.bagan:has(li > .kotak:hover) .cabang::before {
+  filter: blur(2px);
+  opacity: 0.35;
+}
+
+/* Siku unit yang ditunjuk ikut tajam bersama kotaknya. */
+.bagan li:has(> .kotak:hover) .kotak,
+.bagan ul > li:has(> .kotak:hover)::after,
+.bagan li:has(> .kotak:hover) li::before,
+.bagan li:has(> .kotak:hover) li::after {
+  filter: none;
+  opacity: 1;
+}
+
+.bagan li > .kotak:hover {
+  box-shadow: 0 0 0 3px rgb(79 149 220 / 0.45);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bagan .kotak,
+  .bagan .cabang::before,
+  .bagan .cabang > li::before,
+  .bagan .anak > li::before,
+  .bagan .cabang > li::after,
+  .bagan .anak > li::after {
+    transition: none;
+  }
+}
+
+/* Seluler: pohon menurun. Tiap simpul menggantung pada rel di sisi kiri induknya. */
+@media (width < 64rem) {
+  .bagan .cabang,
+  .bagan .anak {
+    margin-left: var(--jorok);
+  }
+
+  .bagan .cabang > li,
+  .bagan .anak > li {
+    padding: var(--atas) 0 0 var(--jorok);
+  }
+
+  /* Rel lanjut ke saudara berikutnya. */
+  .bagan .cabang > li:not(:last-child)::before,
+  .bagan .anak > li:not(:last-child)::before {
+    inset: 0 auto 0 0;
+    border-left: 2px solid var(--garis-bagan);
+  }
+
+  /* Siku dari rel ke tengah kotak. */
+  .bagan .cabang > li::after,
+  .bagan .anak > li::after {
+    grid-area: 1 / 1 / 2 / 2;
+    top: calc(-1 * var(--atas));
+    bottom: 50%;
+    left: calc(-1 * var(--jorok));
+    width: var(--jorok);
+    border-left: 2px solid var(--garis-bagan);
+    border-bottom: 2px solid var(--garis-bagan);
+  }
+}
+
+/* Layar lebar: batang tengah dari pimpinan, unit staf di kanan batang, unit lini berjajar, unit bawah di ujung batang. */
+@media (width >= 64rem) {
+  .bagan {
+    min-width: calc(var(--kolom) * 12rem);
+    --atas: 2rem;
+    --cabang-kanan: 3rem;
+  }
+
+  .bagan .kotak {
+    text-align: center;
+  }
+
+  .bagan .utama {
+    width: 20rem;
+    min-height: 3.5rem;
+    margin-inline: auto;
+  }
+
+  .bagan .cabang {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(var(--kolom), minmax(0, 1fr));
+    padding-top: var(--atas);
+  }
+
+  /*
+   * Kolom 1fr dibagi tak rata (mis. 383,328 / 383,328 / 383,344px), jadi tengah kolom tengah bisa meleset
+   * 1/128px dari batang dan dibulatkan ke piksel lain. Lebar kolom dibulatkan ke kelipatan 2px lalu grid
+   * diletakkan di tengah, sehingga tengah tiap garis jatuh tepat di angka yang sama dengan batang.
+   */
+  @supports (width: round(down, 100%, 2px)) {
+    .bagan .cabang {
+      grid-template-columns: repeat(var(--kolom), round(down, 100% / var(--kolom), 2px));
+      justify-content: center;
+    }
+  }
+
+  /* Batang dari pimpinan ke baris pertama; bila ada unit bawah, terus sampai unit bawah terakhir di balik kotaknya. */
+  .bagan .cabang::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: calc(50% - 1px);
+    height: var(--atas);
+    border-left: 2px solid var(--garis-bagan);
+  }
+
+  .bagan .cabang.ada-bawah::before {
+    height: 100%;
+  }
+
+  .bagan .staf {
+    grid-column: 1 / -1;
+    padding: 0 0 var(--atas) calc(50% - 1px + var(--cabang-kanan));
+  }
+
+  .bagan .staf > * {
+    max-width: 20rem;
+  }
+
+  .bagan .staf:not(:last-child)::before {
+    inset: 0 auto 0 calc(50% - 1px);
+    border-left: 2px solid var(--garis-bagan);
+  }
+
+  .bagan .staf::after {
+    grid-area: 1 / 1 / 2 / 2;
+    top: 0;
+    bottom: 50%;
+    left: calc(-1 * var(--cabang-kanan));
+    width: var(--cabang-kanan);
+    border-left: 2px solid var(--garis-bagan);
+    border-bottom: 2px solid var(--garis-bagan);
+  }
+
+  .bagan .lini {
+    padding: var(--atas) 0.5rem 0;
+  }
+
+  .bagan .lini > .kotak {
+    min-height: 4.75rem;
+  }
+
+  /* Palang mendatar di atas deretan lini, dari tengah unit pertama ke tengah unit terakhir. */
+  .bagan .lini::before {
+    top: 0;
+    left: 0;
+    right: 0;
+    border-top: 2px solid var(--garis-bagan);
+  }
+
+  .bagan .lini.awal::before {
+    left: calc(50% - 1px);
+  }
+
+  .bagan .lini.akhir::before {
+    right: calc(50% - 1px);
+  }
+
+  .bagan .lini::after {
+    top: 0;
+    left: calc(50% - 1px);
+    height: var(--atas);
+    border-left: 2px solid var(--garis-bagan);
+  }
+
+  .bagan .bawah {
+    grid-column: 1 / -1;
+    justify-self: center;
+    width: 20rem;
+    padding-top: var(--atas);
+  }
+
+  /* Rel di bawah unit bawah terakhir menutupi batang pimpinan, jadi batang berhenti di kotaknya. */
+  .bagan .bawah:last-child > .anak {
+    position: relative;
+    z-index: 1;
+    background: #fff;
+  }
+
+  [data-tema='gelap'] .bagan .bawah:last-child > .anak {
+    background: var(--color-malam-kartu);
+  }
+
+  /* Sub unit di semua tingkat tetap memakai rel kiri seperti di seluler. */
+  .bagan .anak {
+    margin-left: var(--jorok);
+  }
+
+  .bagan .anak > li {
+    padding: 0.5rem 0 0 var(--jorok);
+  }
+
+  .bagan .anak > li:not(:last-child)::before {
+    inset: 0 auto 0 0;
+    border-left: 2px solid var(--garis-bagan);
+  }
+
+  .bagan .anak > li::after {
+    grid-area: 1 / 1 / 2 / 2;
+    top: -0.5rem;
+    bottom: 50%;
+    left: calc(-1 * var(--jorok));
+    width: var(--jorok);
+    border-left: 2px solid var(--garis-bagan);
+    border-bottom: 2px solid var(--garis-bagan);
+  }
+}
+
+/* Elemen Alpine yang baru tampil setelah Alpine siap (mis. bilah kemajuan unggah). */
+[x-cloak] {
+  display: none !important;
+}

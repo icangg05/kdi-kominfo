@@ -56,15 +56,14 @@ class ProfilPimpinanTest extends TestCase
     $pegawai->update(['foto' => 'pegawai/p.webp']);
     ProfilPimpinan::first()->update(['pegawai_id' => $pegawai->id]);
 
-    $this->getJson('/api/beranda')->assertOk()->assertJsonPath('kadis', [
-      'nama' => $pegawai->nama,
-      'jabatan' => $pegawai->jabatan->nama,
-      'foto' => '/storage/pegawai/p.webp',
-    ]);
+    $this->get('/')->assertOk()
+      ->assertSee($pegawai->nama)
+      ->assertSee($pegawai->jabatan->nama)
+      ->assertSee('/storage/pegawai/p.webp');
 
-    $this->getJson('/api/profil-pimpinan')->assertOk()
-      ->assertJsonPath('foto', '/storage/pegawai/p.webp')
-      ->assertJsonPath('fotoTambahan', ['/storage/foto-kadis/a.webp', '/storage/foto-kadis/b.webp', '/storage/foto-kadis/c.webp']);
+    $this->get('/profil-dinas/profil-pimpinan')->assertOk()
+      ->assertSee('/storage/pegawai/p.webp')
+      ->assertSeeInOrder(['/storage/foto-kadis/a.webp', '/storage/foto-kadis/b.webp', '/storage/foto-kadis/c.webp']);
   }
 
   public function test_pratinjau_foto_pegawai_mengikuti_pilihan_dan_default_bila_kosong(): void

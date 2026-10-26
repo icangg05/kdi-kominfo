@@ -1,10 +1,11 @@
 {{--
-  Halaman galat untuk rute yang dilayani Laravel (/admin, /download, /storage).
+  Halaman galat polos untuk panel admin, unduhan, berkas, dan semua galat 5xx.
   Menimpa layout `errors::minimal` bawaan, yang di-extend view per kode milik framework
-  (401, 403, 404, 419, 429, 500, 503, ...); kode lain masuk lewat 4xx/5xx.blade.php.
+  (401, 403, 419, 429, 500, 503, ...); kode lain masuk lewat 4xx/5xx.blade.php.
+  404 di situs publik memakai layout situs lengkap (errors/404.blade.php).
   Section dari view bawaan diabaikan: judul dan pesan dipilih di sini per kode.
-  Galat di situs publik ditangani Astro (web/src/pages/404.astro dan 500.astro).
-  Berdiri sendiri tanpa build CSS; warna mengikuti token di web/src/styles/global.css.
+  Berdiri sendiri tanpa build CSS (tetap tampil walau aset Vite atau basis data bermasalah);
+  warna mengikuti token di resources/css/situs.css.
 --}}
 @php
   $kode = $exception->getStatusCode();
@@ -102,7 +103,13 @@
     }
 
     header .wadah { display: flex; align-items: center; height: 72px; }
-    header img { display: block; height: 40px; width: auto; }
+    .logo { display: flex; align-items: center; gap: 10px; color: #fff; text-decoration: none; }
+    .logo img { display: block; height: 40px; width: auto; }
+    .logo img + .pemisah + img { height: 32px; }
+    .pemisah { width: 1px; height: 32px; background: rgb(255 255 255 / 0.3); }
+    .nama { margin-left: 4px; line-height: 1.2; }
+    .nama b { display: block; font-size: 15px; }
+    .nama small { display: block; margin-top: 2px; font-size: 12px; color: #c0d8f4; }
 
     main {
       flex: 1;
@@ -140,16 +147,20 @@
 
     @media (min-width: 1024px) {
       .wadah { padding: 0 32px; }
-      header img { height: 48px; }
+      .logo img { height: 48px; }
+      .logo img + .pemisah + img, .pemisah { height: 40px; }
     }
   </style>
 </head>
 <body>
   <header>
     <div class="wadah">
-      <a href="{{ url('/') }}">
-        {{-- Logo disajikan Astro; bila gagal dimuat, sembunyikan daripada menampilkan ikon rusak. --}}
-        <img src="/img/kominfo-logo.webp" alt="Diskominfo Kota Kendari" width="176" height="48" onerror="this.remove()">
+      <a href="{{ url('/') }}" class="logo">
+        {{-- Bila gambar gagal dimuat, sembunyikan daripada menampilkan ikon rusak; nama dinas tetap terbaca. --}}
+        <img src="/img/lambang-kendari.webp" alt="Lambang Kota Kendari" width="202" height="192" onerror="this.remove()">
+        <span class="pemisah" aria-hidden="true"></span>
+        <img src="/img/komdigi-putih.webp" alt="Komdigi" width="271" height="192" onerror="this.remove()">
+        <span class="nama"><b>Diskominfo</b><small>Kota Kendari</small></span>
       </a>
     </div>
   </header>

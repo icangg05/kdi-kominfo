@@ -52,6 +52,8 @@ class AppServiceProvider extends ServiceProvider
       'livewire.temporary_file_upload.rules' => ['required', 'file', 'max:' . config('app.upload.file_maks_kb')],
       'livewire.temporary_file_upload.max_upload_time' => 30,
       'livewire.payload.max_nesting_depth' => 30,
+      // Bilah kemajuan wire:navigate di tepi atas layar: biru-400, terlihat di atas bilah informasi biru tua maupun bidang putih.
+      'livewire.navigate.progress_bar_color' => '#4f95dc',
     ]);
 
     // Sapu sisa upload PHP tiap ada aktivitas Livewire/Filament (buka form,

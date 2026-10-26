@@ -1,3 +1,14 @@
+# Aset situs publik (Tailwind + skrip) dibangun Vite di tahap terpisah; image akhir tidak membawa Node.
+FROM node:24-alpine AS aset
+WORKDIR /srv
+COPY package.json package-lock.json ./
+RUN npm ci
+COPY vite.config.js ./
+# Tailwind memindai view dan komponen Livewire untuk kelas yang dipakai (lihat @source di situs.css).
+COPY resources ./resources
+COPY app/Livewire ./app/Livewire
+RUN npm run build
+
 FROM dunglas/frankenphp:php8.4
 
 RUN install-php-extensions \
@@ -12,6 +23,7 @@ COPY composer.json composer.lock ./
 RUN composer install --no-scripts --no-autoloader --no-interaction --prefer-dist
 
 COPY . .
+COPY --from=aset /srv/public/build public/build
 
 # Rahasia tidak ikut masuk image (lihat .dockerignore); nilainya datang dari
 # env_file compose. Dotenv tetap butuh berkasnya ada, dan berkas kosong

@@ -16,10 +16,15 @@ class Berita extends Model
   }
 
 
-
   public function kategori()
   {
     return $this->belongsTo(KategoriBerita::class, 'kategori_berita_id');
+  }
+
+  /** Teks polos 160 karakter untuk kartu, sorotan, dan meta description. Entitas didekode supaya &nbsp; tidak tampil mentah. */
+  public function ringkasan(): string
+  {
+    return str(html_entity_decode(strip_tags((string) $this->konten)))->squish()->limit(160)->value();
   }
 
   protected static function booted()
