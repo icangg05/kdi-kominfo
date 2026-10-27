@@ -14,7 +14,7 @@ class ListPengajuanLayanans extends ListRecords
 
     public function getSubheading(): ?string
     {
-        return 'Pengajuan subdomain, email dinas, dan TTE yang dikirim OPD lewat situs. Buka satu pengajuan untuk melihat surat lalu setujui atau tolak.';
+        return 'Pengajuan subdomain, email dinas, dan TTE yang dikirim OPD lewat situs. Buka satu pengajuan untuk mencocokkan data dengan surat (dan KTP untuk TTE), lalu setujui atau tolak.';
     }
 
     /** Tab per status; "Perlu ditindak" (menunggu + diproses) jadi bawaan supaya antrean kerja langsung terlihat. */

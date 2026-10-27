@@ -2,14 +2,15 @@
 
 namespace App\Models;
 
+use App\Support\Situs;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 /**
  * Pengajuan layanan (subdomain, email dinas, TTE) yang dikirim OPD lewat formulir di situs publik
- * dan diverifikasi admin di panel. Formulirnya sengaja minimal: rincian kebutuhan ada di surat
- * permohonan, dan tidak ada data pribadi seperti KTP/NPWP yang diunggah. Suratnya di disk privat `local`.
+ * dan diverifikasi admin di panel. Isian khusus tiap layanan disimpan di kolom JSON `rincian`.
+ * Surat permohonan dan KTP (khusus TTE) ada di disk privat `local`.
  */
 class PengajuanLayanan extends Model
 {
@@ -27,39 +28,65 @@ class PengajuanLayanan extends Model
 
   /** Jenis berkas surat yang diterima, untuk aturan `mimes` dan atribut `accept` di formulir. */
   public const BERKAS_SURAT = ['pdf', 'doc', 'docx', 'jpg', 'jpeg', 'png'];
+  public const BERKAS_KTP = ['jpg', 'jpeg', 'png', 'pdf'];
   public const BERKAS_MAKS_KB = 10 * 1024;
+
+  public const DOMAIN = 'kendarikota.go.id';
+
+  /** Label isian `rincian`, dipakai untuk pesan galat formulir dan rincian di panel admin. */
+  public const LABEL_RINCIAN = [
+    'nik' => 'NIK',
+    'nip' => 'NIP',
+    'jabatan' => 'Jabatan',
+    'tempat_lahir' => 'Tempat lahir',
+    'tanggal_lahir' => 'Tanggal lahir',
+    'subdomain' => 'Nama subdomain',
+    'jenis_layanan' => 'Jenis layanan',
+    'ip_tujuan' => 'IP address tujuan',
+    'lokasi_server' => 'Lokasi hosting/server',
+    'deskripsi' => 'Deskripsi fungsi aplikasi/website',
+  ];
+
+  /** Pilihan "jenis layanan" pada pengajuan subdomain, mengikuti pembagian layanan SPBE. */
+  public const JENIS_LAYANAN_DOMAIN = [
+    'publik' => 'Layanan publik',
+    'administrasi' => 'Layanan administrasi pemerintahan',
+  ];
 
   /** Nomor seluler Indonesia dalam bentuk seragam 08xxxxxxxxxx (8 sampai 13 digit sesudah 0). */
   public const POLA_WHATSAPP = '/^08[1-9][0-9]{6,11}$/';
 
   /**
-   * Layanan yang bisa diajukan daring. `isi_surat` memberi tahu pemohon apa yang perlu dimuat di surat,
-   * `contoh_keterangan` mengisi placeholder keterangan tambahan.
+   * Layanan yang bisa diajukan daring. `rincian` = kunci isian khusus layanan itu (LABEL_RINCIAN),
+   * `ktp` = wajib unggah KTP, `isi_surat` memberi tahu pemohon apa yang perlu dimuat di surat.
    */
   public const JENIS = [
     'subdomain-hosting' => [
       'label' => 'Subdomain & Hosting',
       'kode' => 'DOM',
-      'isi_surat' => 'Surat ditandatangani pimpinan OPD dan memuat usulan nama subdomain, tujuan penggunaan, serta kontak teknis.',
-      'contoh_keterangan' => 'Mis. usulan dinkes.kendarikota.go.id, butuh hosting WordPress',
+      'rincian' => ['subdomain', 'jenis_layanan', 'ip_tujuan', 'lokasi_server', 'deskripsi'],
+      'ktp' => false,
+      'isi_surat' => 'Surat ditandatangani pimpinan OPD dan menyebutkan subdomain yang dimohonkan.',
     ],
     'email-dinas' => [
       'label' => 'Email Dinas',
       'kode' => 'EML',
-      'isi_surat' => 'Surat ditandatangani pimpinan OPD dan memuat daftar nama, jabatan, serta usulan alamat email.',
-      'contoh_keterangan' => 'Mis. 3 akun untuk sekretariat dan bidang',
+      'rincian' => ['nip', 'tempat_lahir', 'tanggal_lahir'],
+      'ktp' => false,
+      'isi_surat' => 'Surat ditandatangani pimpinan OPD.',
     ],
     'pengajuan-tte' => [
       'label' => 'Tanda Tangan Elektronik',
       'kode' => 'TTE',
-      'isi_surat' => 'Surat ditandatangani pimpinan OPD dan memuat nama, NIP, dan jabatan pejabat yang diajukan.',
-      'contoh_keterangan' => 'Mis. untuk penandatanganan surat keluar dan SK',
+      'rincian' => ['nik', 'nip', 'jabatan', 'tempat_lahir', 'tanggal_lahir'],
+      'ktp' => true,
+      'isi_surat' => 'Surat ditandatangani pimpinan OPD.',
     ],
   ];
 
   protected function casts(): array
   {
-    return ['diverifikasi_pada' => 'datetime'];
+    return ['rincian' => 'array', 'diverifikasi_pada' => 'datetime'];
   }
 
   protected static function booted(): void
@@ -69,7 +96,7 @@ class PengajuanLayanan extends Model
     });
 
     static::deleting(function (PengajuanLayanan $pengajuan) {
-      Storage::disk(self::DISK)->delete($pengajuan->surat);
+      Storage::disk(self::DISK)->delete(array_filter([$pengajuan->surat, $pengajuan->ktp]));
     });
   }
 
@@ -117,5 +144,13 @@ class PengajuanLayanan extends Model
   public function labelStatus(): string
   {
     return self::STATUS[$this->status] ?? $this->status;
+  }
+
+  /** Mis. "Kendari, 12 Maret 1985"; null bila pengajuan ini tidak memuat TTL. */
+  public function tempatTanggalLahir(): ?string
+  {
+    $tanggal = $this->rincian['tanggal_lahir'] ?? null;
+
+    return $tanggal ? ($this->rincian['tempat_lahir'] ?? '') . ', ' . Situs::tanggal($tanggal) : null;
   }
 }

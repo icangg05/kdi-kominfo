@@ -3,6 +3,7 @@
   `model` = properti Livewire (mis. "email" atau "rincian.subdomain"); disinkronkan saat kontrol ditinggalkan
   (wire:model.blur) supaya galat muncul per isian tanpa menunggu tombol kirim.
   `jenis`: text, email, tel, date, number, textarea, select, subdomain (teks berakhiran .kendarikota.go.id).
+  `inputmode` = papan ketik ponsel untuk isian teks, mis. "numeric" untuk NIK/NIP yang angkanya tidak boleh dibulatkan.
 --}}
 @props([
   'model',
@@ -13,6 +14,7 @@
   'placeholder' => null,
   'pilihan' => [],
   'autocomplete' => null,
+  'inputmode' => null,
 ])
 @php
   $id = 'isian-' . str_replace('.', '-', $model);
@@ -52,7 +54,7 @@
       wire:model.blur="{{ $model }}"
       placeholder="{{ $placeholder }}"
       @if ($autocomplete) autocomplete="{{ $autocomplete }}" @endif
-      @if ($jenis === 'number') min="1" inputmode="numeric" @endif
+      @if ($jenis === 'number') min="1" inputmode="numeric" @elseif ($inputmode) inputmode="{{ $inputmode }}" @endif
       @if ($jenis === 'date') max="{{ now()->toDateString() }}" @endif
       @if ($wajib) required @endif
       @if ($terkait) aria-describedby="{{ $terkait }}" @endif

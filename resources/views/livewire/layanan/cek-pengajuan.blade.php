@@ -11,15 +11,14 @@
 <div>
   <x-situs.judul-halaman
     judul="Cek Status Pengajuan"
-    keterangan="Masukkan nomor pengajuan dan nomor WhatsApp yang Anda isi saat mengajukan layanan subdomain, email dinas, atau TTE."
+    keterangan="Masukkan nomor HP yang Anda isi saat mengajukan layanan subdomain, email dinas, atau TTE. Semua pengajuan dengan nomor itu akan tampil."
     :remah="[['label' => 'Layanan'], ['label' => 'Cek Status Pengajuan']]"
   />
 
   <div class="wadah py-12">
     <div class="grid gap-8 lg:grid-cols-[minmax(0,26rem)_minmax(0,1fr)] lg:gap-12">
       <form wire:submit="cari" novalidate class="bayangan-kartu h-fit space-y-5 rounded border border-garis bg-white p-6 sm:p-8 dark:bg-malam-kartu">
-        <x-situs.isian model="nomor" label="Nomor pengajuan" placeholder="Mis. TTE-20261026-K7Q2" bantuan="Tertera di tanda terima setelah pengajuan dikirim." class="[&_input]:font-mono [&_input]:uppercase [&_input]:placeholder:normal-case" />
-        <x-situs.isian model="whatsapp" jenis="tel" label="Nomor WhatsApp pemohon" placeholder="Mis. 0812 3456 7890" bantuan="Nomor yang diisi saat mengajukan." autocomplete="tel" />
+        <x-situs.isian model="whatsapp" jenis="tel" label="Nomor HP (WhatsApp) pemohon" placeholder="Mis. 0812 3456 7890" bantuan="Nomor yang diisi saat mengajukan." autocomplete="tel" />
         <button type="submit" wire:loading.attr="disabled" wire:target="cari" class="inline-flex w-full items-center justify-center gap-2 rounded bg-biru-600 px-5 py-3 text-sm font-semibold text-white transition hover:bg-biru-700 disabled:opacity-60">
           <x-situs.ikon nama="cari" class="size-4" />
           <span wire:loading.remove wire:target="cari">Cek status</span>
@@ -35,6 +34,12 @@
 
       <div aria-live="polite">
         @if ($pengajuan)
+          @if ($daftar->count() > 1)
+            <button type="button" wire:click="kembali" class="mb-4 inline-flex items-center gap-2 text-sm font-semibold text-biru-600 hover:underline dark:text-biru-300">
+              <x-situs.ikon nama="panah-kiri" class="size-4" />
+              Semua pengajuan ({{ $daftar->count() }})
+            </button>
+          @endif
           @php
             $selesai = in_array($pengajuan->status, ['disetujui', 'ditolak'], true);
             $tahap = [
@@ -92,16 +97,35 @@
               </dl>
             </div>
           </article>
-        @elseif ($sudahCari)
+        @elseif ($daftar->isNotEmpty())
+          <p class="mb-4 text-sm text-teks-lembut">
+            {{ $daftar->count() }} pengajuan untuk nomor ini. Pilih salah satu untuk melihat tahapan dan catatan petugas.
+          </p>
+          <ul class="space-y-3">
+            @foreach ($daftar as $p)
+              <li wire:key="{{ $p->nomor }}">
+                <button type="button" wire:click="pilih(@js($p->nomor))" class="bayangan-kartu group flex w-full items-center gap-4 rounded border border-garis bg-white p-4 text-left transition hover:border-biru-400 sm:p-5 dark:bg-malam-kartu dark:hover:border-biru-600">
+                  <div class="min-w-0 flex-1">
+                    <p class="text-xs font-semibold tracking-wide text-biru-600 uppercase dark:text-biru-300">{{ $p->labelLayanan() }}</p>
+                    <p class="mt-0.5 font-mono font-bold tracking-wider text-biru-950 dark:text-white">{{ $p->nomor }}</p>
+                    <p class="mt-0.5 truncate text-sm text-teks-lembut">{{ $p->instansi }} · {{ Situs::tanggal($p->created_at) }}</p>
+                  </div>
+                  <span class="shrink-0 rounded px-2.5 py-1 text-xs font-semibold {{ $warnaStatus[$p->status] ?? '' }}">{{ $p->labelStatus() }}</span>
+                  <x-situs.ikon nama="panah-kanan" class="size-4 shrink-0 text-teks-lembut transition group-hover:translate-x-0.5 max-sm:hidden" />
+                </button>
+              </li>
+            @endforeach
+          </ul>
+        @elseif ($dicari)
           <div class="rounded border border-dashed border-biru-200 bg-biru-50/50 px-6 py-14 text-center dark:border-biru-800 dark:bg-white/5">
             <x-situs.ikon nama="silang-lingkar" class="mx-auto size-10 text-biru-300 dark:text-biru-700" />
-            <p class="mt-3 font-semibold text-biru-950 dark:text-white">Pengajuan tidak ditemukan</p>
-            <p class="mx-auto mt-1 max-w-md text-sm text-teks-lembut">Periksa kembali nomor pengajuan dan pastikan nomor WhatsApp sama dengan yang diisi saat mengajukan.</p>
+            <p class="mt-3 font-semibold text-biru-950 dark:text-white">Belum ada pengajuan dengan nomor ini</p>
+            <p class="mx-auto mt-1 max-w-md text-sm text-teks-lembut">Pastikan nomor HP sama dengan yang diisi saat mengajukan.</p>
           </div>
         @else
           <div class="rounded border border-dashed border-biru-200 bg-biru-50/50 px-6 py-14 text-center dark:border-biru-800 dark:bg-white/5">
             <x-situs.ikon nama="berkas" class="mx-auto size-10 text-biru-300 dark:text-biru-700" />
-            <p class="mx-auto mt-3 max-w-md text-sm text-teks-lembut">Status, tahapan verifikasi, dan catatan petugas akan tampil di sini.</p>
+            <p class="mx-auto mt-3 max-w-md text-sm text-teks-lembut">Daftar pengajuan Anda beserta status, tahapan verifikasi, dan catatan petugas akan tampil di sini.</p>
           </div>
         @endif
       </div>

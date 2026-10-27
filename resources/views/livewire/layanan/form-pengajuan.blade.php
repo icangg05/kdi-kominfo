@@ -1,6 +1,11 @@
 @use('App\Models\PengajuanLayanan')
 @php
-  $langkah = ['Isi data singkat pemohon', 'Unggah surat permohonan', 'Kirim dan simpan nomor pengajuan'];
+  $domain = $layanan === 'subdomain-hosting';
+  $langkah = [
+    $domain ? 'Isi data subdomain dan penanggung jawab' : 'Isi data pemohon',
+    $jenis['ktp'] ? 'Unggah KTP dan surat permohonan' : 'Unggah surat permohonan',
+    'Kirim, lalu pantau status dengan nomor HP',
+  ];
 @endphp
 
 <section id="ajukan" class="mt-16 scroll-mt-20" aria-labelledby="judul-ajukan">
@@ -10,8 +15,8 @@
         <p class="text-xs font-bold tracking-wide text-biru-300 uppercase">Pengajuan daring</p>
         <h2 id="judul-ajukan" class="mt-2 text-2xl leading-tight font-bold text-balance">Ajukan {{ $jenis['label'] }}</h2>
         <p class="mt-3 text-sm leading-relaxed text-biru-100">
-          Cukup unggah surat permohonan yang sudah ditandatangani pimpinan perangkat daerah. Tim Diskominfo
-          memverifikasi pengajuan Anda, dan hasilnya bisa dipantau dengan nomor pengajuan.
+          Lengkapi data di formulir ini dan unggah surat permohonan yang sudah ditandatangani pimpinan perangkat
+          daerah. Tim Diskominfo memverifikasi pengajuan Anda, dan hasilnya bisa dipantau dengan nomor HP yang Anda isi.
         </p>
 
         <ol class="mt-7 space-y-3 text-sm">
@@ -40,7 +45,7 @@
             <h3 class="mt-5 text-2xl font-bold text-biru-950 dark:text-white">Pengajuan terkirim</h3>
             <p class="mt-2 max-w-xl text-sm leading-relaxed text-teks-lembut">
               Pengajuan Anda sudah kami terima dan menunggu verifikasi. Petugas akan menghubungi Anda lewat WhatsApp.
-              Simpan nomor di bawah ini untuk mengecek status pengajuan kapan saja.
+              Status bisa dicek kapan saja dengan nomor HP yang Anda isi; nomor di bawah ini menandai pengajuan ini.
             </p>
 
             <div class="mt-6 flex w-full max-w-md items-center gap-3 rounded border border-biru-200 bg-langit p-4 dark:border-biru-800" x-data="{ disalin: false }">
@@ -78,18 +83,60 @@
               </div>
             @endif
 
-            <x-situs.isian model="instansi" label="Perangkat daerah" placeholder="Mis. Dinas Pendidikan Kota Kendari" autocomplete="organization" />
-            <div class="grid gap-5 sm:grid-cols-2">
-              <x-situs.isian model="nama_pemohon" label="Nama pemohon" placeholder="Nama lengkap" autocomplete="name" />
-              <x-situs.isian
-                model="whatsapp"
-                jenis="tel"
-                label="Nomor WhatsApp"
-                placeholder="Mis. 0812 3456 7890"
-                autocomplete="tel"
-                bantuan="Dipakai petugas Diskominfo untuk menghubungi Anda bila ada kekurangan berkas dan untuk mengabarkan hasil verifikasi, serta untuk cek status pengajuan."
+            @if ($domain)
+              <x-situs.isian model="instansi" label="Nama instansi/OPD" placeholder="Mis. Dinas Kesehatan Kota Kendari" autocomplete="organization" />
+              <x-situs.isian model="rincian.subdomain" jenis="subdomain" label="Nama subdomain" placeholder="Mis. dinkes" bantuan="Huruf kecil, angka, dan tanda hubung." />
+              <x-situs.isian model="rincian.jenis_layanan" jenis="select" label="Jenis layanan" :pilihan="['' => 'Pilih jenis layanan'] + PengajuanLayanan::JENIS_LAYANAN_DOMAIN" />
+              <div class="grid gap-5 sm:grid-cols-2">
+                <x-situs.isian model="rincian.ip_tujuan" label="IP address tujuan" placeholder="Mis. 103.150.12.34" :wajib="false" bantuan="Kosongkan bila server/hosting disiapkan Diskominfo." class="[&_input]:font-mono" />
+                <x-situs.isian model="rincian.lokasi_server" label="Lokasi hosting/server" placeholder="Mis. Pusat Data Diskominfo, server OPD" />
+              </div>
+              <x-situs.isian model="rincian.deskripsi" jenis="textarea" label="Deskripsi fungsi aplikasi/website" placeholder="Mis. portal informasi layanan kesehatan dan jadwal puskesmas untuk masyarakat" />
+              <x-situs.isian model="nama_pemohon" label="Nama penanggung jawab" placeholder="Nama lengkap" autocomplete="name" />
+            @else
+              <div @class(['grid gap-5', 'sm:grid-cols-2' => $layanan === 'email-dinas'])>
+                <x-situs.isian model="nama_pemohon" label="Nama lengkap" placeholder="Nama lengkap" autocomplete="name" :bantuan="$jenis['ktp'] ? 'Sesuai KTP.' : null" />
+                @if ($layanan === 'email-dinas')
+                  <x-situs.isian model="rincian.nip" label="NIP" placeholder="18 digit" inputmode="numeric" class="[&_input]:font-mono" />
+                @endif
+              </div>
+              @if ($jenis['ktp'])
+                <div class="grid gap-5 sm:grid-cols-2">
+                  <x-situs.isian model="rincian.nik" label="NIK" placeholder="16 digit" inputmode="numeric" class="[&_input]:font-mono" />
+                  <x-situs.isian model="rincian.nip" label="NIP" placeholder="18 digit" inputmode="numeric" class="[&_input]:font-mono" />
+                </div>
+              @endif
+              <div class="grid gap-5 sm:grid-cols-2">
+                <x-situs.isian model="rincian.tempat_lahir" label="Tempat lahir" placeholder="Mis. Kendari" />
+                <x-situs.isian model="rincian.tanggal_lahir" jenis="date" label="Tanggal lahir" autocomplete="bday" />
+              </div>
+              <div @class(['grid gap-5', 'sm:grid-cols-2' => $jenis['ktp']])>
+                <x-situs.isian model="instansi" label="Instansi" placeholder="Mis. Dinas Pendidikan Kota Kendari" autocomplete="organization" />
+                @if ($jenis['ktp'])
+                  <x-situs.isian model="rincian.jabatan" label="Jabatan" placeholder="Mis. Kepala Bidang Pelayanan" autocomplete="organization-title" />
+                @endif
+              </div>
+            @endif
+
+            <x-situs.isian
+              model="whatsapp"
+              jenis="tel"
+              label="Nomor HP (WhatsApp)"
+              placeholder="Mis. 0812 3456 7890"
+              autocomplete="tel"
+              bantuan="Dipakai petugas Diskominfo untuk menghubungi Anda bila ada kekurangan berkas dan untuk mengabarkan hasil verifikasi, serta untuk cek status pengajuan."
+            />
+
+            @if ($jenis['ktp'])
+              <x-situs.unggah
+                model="ktp"
+                label="KTP"
+                :berkas="$ktp"
+                :jenis="PengajuanLayanan::BERKAS_KTP"
+                bantuan="Foto atau pindaian KTP yang terbaca jelas."
+                :maks-mb="PengajuanLayanan::BERKAS_MAKS_KB / 1024"
               />
-            </div>
+            @endif
 
             <x-situs.unggah
               model="surat"
@@ -100,8 +147,6 @@
               :maks-mb="PengajuanLayanan::BERKAS_MAKS_KB / 1024"
             />
 
-            <x-situs.isian model="keterangan" jenis="textarea" label="Keterangan tambahan" :wajib="false" :placeholder="$jenis['contoh_keterangan']" />
-
             {{-- Perangkap bot: digeser keluar layar (bukan display:none, yang dilewati sebagian bot). --}}
             <div class="absolute -left-[9999px] size-px overflow-hidden" aria-hidden="true">
               <label>Situs web <input type="text" wire:model="situs_web" tabindex="-1" autocomplete="off" /></label>
@@ -109,13 +154,18 @@
 
             <div class="flex flex-col gap-3 border-t border-garis pt-6 sm:flex-row sm:items-center sm:justify-between">
               <p class="text-xs leading-relaxed text-teks-lembut">
-                Tidak perlu melampirkan KTP, NPWP, atau data pribadi lain.<br class="max-sm:hidden" />
-                Surat hanya dapat dibuka petugas yang memverifikasi pengajuan.
+                @if ($jenis['ktp'])
+                  Data, KTP, dan surat hanya dapat dibuka petugas<br class="max-sm:hidden" />
+                  yang memverifikasi pengajuan.
+                @else
+                  Tidak perlu melampirkan KTP atau NPWP.<br class="max-sm:hidden" />
+                  Surat hanya dapat dibuka petugas yang memverifikasi pengajuan.
+                @endif
               </p>
               <button
                 type="submit"
                 wire:loading.attr="disabled"
-                wire:target="kirim, surat"
+                wire:target="kirim, surat, ktp"
                 class="inline-flex shrink-0 items-center justify-center gap-2 rounded bg-biru-600 px-6 py-3.5 text-sm font-semibold text-white transition hover:bg-biru-700 active:translate-y-px disabled:cursor-wait disabled:opacity-60"
               >
                 <span wire:loading.remove wire:target="kirim" class="inline-flex items-center gap-2">

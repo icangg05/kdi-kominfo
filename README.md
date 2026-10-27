@@ -119,21 +119,28 @@ Semua lewat `/admin`:
 ### Pengajuan layanan daring
 
 Halaman Subdomain & Hosting, Email Dinas, dan Pengajuan TTE punya formulir pengajuan
-yang sengaja minimal: perangkat daerah, nama pemohon, nomor WhatsApp, dan surat
-permohonan (PDF/Word/JPG/PNG, maks. 10 MB), ditambah keterangan opsional. Rincian
-kebutuhan (nama subdomain, daftar akun, pejabat TTE) ditulis di surat; data pribadi
-seperti KTP/NPWP tidak diunggah. Pemohon mendapat nomor pengajuan, mis.
-`TTE-20261026-K7Q2`, untuk dicek di `/layanan/cek-pengajuan` bersama nomor WhatsApp-nya
-(disimpan seragam `08…`, jadi `+62 812-…` dan `0812 …` dianggap sama).
+dengan isian per layanan (disimpan di kolom JSON `rincian`, daftarnya di
+`PengajuanLayanan::JENIS`) dan surat permohonan (PDF/Word/JPG/PNG, maks. 10 MB):
+
+| Layanan | Isian |
+| --- | --- |
+| TTE | nama, NIK, NIP, instansi, jabatan, tempat/tanggal lahir, nomor HP, KTP (JPG/PNG/PDF), surat |
+| Email dinas | nama, NIP, tempat/tanggal lahir, nomor HP, instansi, surat |
+| Subdomain | nama instansi/OPD, nama subdomain, jenis layanan (publik/administrasi pemerintahan), IP tujuan (opsional), lokasi hosting/server, deskripsi fungsi, nama dan nomor HP penanggung jawab, surat |
+
+Pemohon mendapat nomor pengajuan, mis. `TTE-20261026-K7Q2`. Di `/layanan/cek-pengajuan`
+pemohon cukup memasukkan nomor HP (disimpan seragam `08…`, jadi `+62 812-…` dan `0812 …`
+dianggap sama) untuk melihat semua pengajuan dengan nomor itu, lalu memilih satu untuk
+melihat tahapan dan catatan petugas. Halaman itu tidak menampilkan NIK, NIP, TTL, atau berkas.
 
 Admin memeriksa di **Layanan › Pengajuan Layanan** (angka di menu = yang menunggu),
 membuka surat langsung di peramban, menghubungi pemohon lewat tautan WhatsApp, lalu
 **Proses**, **Setujui**, atau **Tolak**. Catatan admin (wajib saat menolak) terlihat
 oleh pemohon di halaman cek status.
 
-Surat disimpan di disk privat `local` (`storage/app/private/pengajuan`), bukan di
+Surat dan KTP disimpan di disk privat `local` (`storage/app/private/pengajuan`), bukan di
 `public`, jadi hanya bisa dibuka admin yang login lewat
-`/admin/pengajuan-layanan/{id}/surat`. Kiriman dibatasi 5 per IP per jam, dan formulir
+`/admin/pengajuan-layanan/{id}/surat` (atau `/ktp`). Kiriman dibatasi 5 per IP per jam, dan formulir
 punya isian perangkap bot. Petunjuk isi surat per layanan diatur di
 `PengajuanLayanan::JENIS`.
 

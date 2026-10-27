@@ -45,7 +45,7 @@ Fungsi yang harus tetap ada, apa pun bentuk implementasinya:
 - Satu aplikasi **Laravel 13** (PHP ^8.4) di atas Octane + FrankenPHP, di belakang **Caddy** (`docker/caddy/Caddyfile`, port 8000).
 - **Situs publik** berupa komponen **Livewire 4** halaman penuh (`app/Livewire`, view di `resources/views/livewire`), Tailwind CSS 4 dibangun Vite. Situs Astro dan API JSON `/api/*` sudah dihapus.
 - **Filament 5** sebagai panel admin di `/admin` (`app/Providers/Filament/AdminPanelProvider.php`).
-- **Pengajuan layanan daring** (subdomain & hosting, email dinas, TTE): OPD mengisi formulir dan mengunggah surat permohonan di halaman layanan; admin memverifikasi di menu Layanan › Pengajuan Layanan; pemohon memantau status di `/layanan/cek-pengajuan`.
+- **Pengajuan layanan daring** (subdomain & hosting, email dinas, TTE): OPD mengisi formulir (isian berbeda per layanan; TTE juga mengunggah KTP) dan mengunggah surat permohonan di halaman layanan; admin memverifikasi di menu Layanan › Pengajuan Layanan; pemohon memantau status di `/layanan/cek-pengajuan` cukup dengan nomor HP.
 - MySQL 8.4 dan seluruh stack dijalankan lewat Docker Compose.
 
 Batasan yang mengikat:

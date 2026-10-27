@@ -6,38 +6,43 @@ use App\Livewire\HalamanSitus;
 use App\Models\PengajuanLayanan;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\RateLimiter;
+use Livewire\Attributes\Locked;
 use Livewire\Attributes\Url;
 use Livewire\Component;
 
 /**
- * Pemohon melihat status pengajuannya. Butuh nomor pengajuan dan nomor WhatsApp yang dipakai saat mengajukan,
- * supaya nomor pengajuan yang tertebak saja tidak cukup untuk membuka data orang lain.
+ * Pemohon melihat status pengajuannya cukup dengan nomor HP yang dipakai saat mengajukan: semua pengajuan
+ * dengan nomor itu tampil sebagai daftar, lalu pemohon memilih satu untuk melihat tahapan dan catatan petugas.
+ * Yang tampil di sini sengaja tidak memuat NIK, NIP, TTL, atau berkas.
  */
 class CekPengajuan extends Component
 {
   use HalamanSitus;
 
-  /** Dibawa dari tanda terima formulir (?nomor=...); nomor WhatsApp sengaja tidak masuk URL. */
+  public string $whatsapp = '';
+
+  /**
+   * Nomor HP (bentuk 08...) yang terakhir dicari. Dikunci supaya daftar hanya bisa diganti lewat cari(),
+   * yang dibatasi per jaringan, bukan dengan mengubah properti dari peramban.
+   */
+  #[Locked]
+  public ?string $dicari = null;
+
+  /**
+   * Pengajuan yang sedang dibuka. Dari tanda terima formulir (?nomor=...) atau dari daftar; hanya dipakai bila
+   * termasuk pengajuan milik $dicari, jadi menebak nomor orang lain tidak membuka apa pun.
+   */
   #[Url(except: '')]
   public string $nomor = '';
 
-  public string $whatsapp = '';
-
-  public ?int $ditemukan = null;
-
-  public bool $sudahCari = false;
-
   protected function rules(): array
   {
-    return [
-      'nomor' => ['required', 'string', 'max:32'],
-      'whatsapp' => ['required', 'string', 'max:20'],
-    ];
+    return ['whatsapp' => ['required', 'string', 'max:20']];
   }
 
   protected function validationAttributes(): array
   {
-    return ['nomor' => 'nomor pengajuan', 'whatsapp' => 'nomor WhatsApp'];
+    return ['whatsapp' => 'nomor HP'];
   }
 
   public function cari(): void
@@ -47,24 +52,46 @@ class CekPengajuan extends Component
     $kunci = 'cek-pengajuan:' . request()->ip();
 
     if (RateLimiter::tooManyAttempts($kunci, 20)) {
-      $this->addError('nomor', 'Terlalu banyak pencarian. Tunggu sebentar lalu coba lagi.');
+      $this->addError('whatsapp', 'Terlalu banyak pencarian. Tunggu sebentar lalu coba lagi.');
 
       return;
     }
 
     RateLimiter::hit($kunci, 600);
 
+    $this->dicari = PengajuanLayanan::normalkanWhatsapp($this->whatsapp);
     $this->nomor = strtoupper(trim($this->nomor));
-    $this->ditemukan = PengajuanLayanan::where('nomor', $this->nomor)
-      ->where('whatsapp', PengajuanLayanan::normalkanWhatsapp($this->whatsapp))
-      ->value('id');
-    $this->sudahCari = true;
+
+    // Nomor bawaan tanda terima yang bukan milik nomor HP ini dibuang, supaya yang tampil daftarnya.
+    if (! $this->daftar()->contains('nomor', $this->nomor)) {
+      $this->nomor = '';
+    }
+  }
+
+  public function pilih(string $nomor): void
+  {
+    $this->nomor = $nomor;
+  }
+
+  public function kembali(): void
+  {
+    $this->nomor = '';
+  }
+
+  private function daftar()
+  {
+    return $this->dicari
+      ? PengajuanLayanan::where('whatsapp', $this->dicari)->latest('id')->get()
+      : collect();
   }
 
   public function render(): View
   {
+    $daftar = $this->daftar();
+
     return $this->halaman('livewire.layanan.cek-pengajuan', 'Cek Status Pengajuan', [
-      'pengajuan' => $this->ditemukan ? PengajuanLayanan::find($this->ditemukan) : null,
+      'daftar' => $daftar,
+      'pengajuan' => $this->nomor !== '' ? $daftar->firstWhere('nomor', $this->nomor) : null,
     ], [
       'deskripsi' => 'Lihat status pengajuan layanan subdomain, email dinas, dan TTE di Diskominfo Kota Kendari.',
       'noindex' => true,

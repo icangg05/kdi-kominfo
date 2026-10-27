@@ -84,13 +84,14 @@ class AdminPanelProvider extends PanelProvider
                     ['Content-Type' => 'application/sql'],
                 ))->name('backup-database');
 
-                // Surat pengajuan ada di disk privat; hanya admin yang login bisa membukanya.
+                // Surat dan KTP pengajuan ada di disk privat; hanya admin yang login bisa membukanya.
                 // Ditampilkan langsung (inline) supaya PDF/gambar bisa diperiksa tanpa diunduh dulu.
-                Route::get('pengajuan-layanan/{pengajuan}/surat', function (PengajuanLayanan $pengajuan) {
-                    abort_unless(Storage::disk(PengajuanLayanan::DISK)->exists($pengajuan->surat), 404);
+                Route::get('pengajuan-layanan/{pengajuan}/{berkas}', function (PengajuanLayanan $pengajuan, string $berkas) {
+                    $path = $pengajuan->{$berkas};
+                    abort_unless($path && Storage::disk(PengajuanLayanan::DISK)->exists($path), 404);
 
-                    return Storage::disk(PengajuanLayanan::DISK)->response($pengajuan->surat, "surat-{$pengajuan->nomor}." . pathinfo($pengajuan->surat, PATHINFO_EXTENSION));
-                })->name('pengajuan-surat');
+                    return Storage::disk(PengajuanLayanan::DISK)->response($path, "{$berkas}-{$pengajuan->nomor}." . pathinfo($path, PATHINFO_EXTENSION));
+                })->whereIn('berkas', ['surat', 'ktp'])->name('pengajuan-berkas');
             })
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\Filament\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\Filament\Pages')

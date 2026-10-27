@@ -125,9 +125,10 @@ final class Konten
       ],
       'syarat' => [
         'Surat permohonan resmi dari pimpinan perangkat daerah.',
-        'Deskripsi tujuan penggunaan subdomain.',
-        'Usulan nama subdomain.',
-        'Kontak teknis dari OPD.',
+        'Usulan nama subdomain dan jenis layanan (layanan publik atau administrasi pemerintahan).',
+        'IP address tujuan dan lokasi hosting/server, bila servernya sudah ada.',
+        'Deskripsi fungsi aplikasi atau website.',
+        'Nama dan nomor HP penanggung jawab dari OPD.',
       ],
       'prosedur' => [
         'OPD mengisi formulir dan mengunggah surat permohonan di halaman ini.',
@@ -155,9 +156,8 @@ final class Konten
       ],
       'syarat' => [
         'Surat permohonan dari pimpinan OPD.',
-        'Daftar nama dan jabatan yang akan dibuatkan email.',
-        'Nomor WhatsApp aktif sebagai kontak verifikasi.',
-        'Usulan format email (misalnya nama@kendarikota.go.id).',
+        'Nama, NIP, tempat dan tanggal lahir pegawai yang dibuatkan email.',
+        'Nomor HP (WhatsApp) aktif sebagai kontak verifikasi.',
       ],
       'prosedur' => [
         'OPD mengisi formulir dan mengunggah surat permohonan di halaman ini.',
@@ -184,12 +184,12 @@ final class Konten
       ],
       'syarat' => [
         'Surat permohonan dari pimpinan perangkat daerah.',
-        'Nama, NIP, dan jabatan pejabat yang mengajukan TTE dicantumkan dalam surat.',
-        'Alamat email resmi yang aktif.',
-        'Dokumen atau format TTE yang akan digunakan.',
+        'Nama, NIK, NIP, jabatan, serta tempat dan tanggal lahir pejabat yang mengajukan TTE.',
+        'Foto atau pindaian KTP yang terbaca jelas.',
+        'Nomor HP (WhatsApp) aktif sebagai kontak verifikasi.',
       ],
       'prosedur' => [
-        'OPD mengisi formulir dan mengunggah surat permohonan di halaman ini.',
+        'Pemohon mengisi formulir serta mengunggah KTP dan surat permohonan di halaman ini.',
         'Verifikasi data dan kelengkapan oleh tim TTE.',
         'Registrasi ke Balai Sertifikasi Elektronik (BSrE).',
         'Akun TTE dikirimkan ke pemohon untuk digunakan.',
