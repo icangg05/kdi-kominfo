@@ -23,9 +23,12 @@
 >
   <p id="{{ $id }}-label" class="mb-1.5 block text-sm font-semibold text-biru-950 dark:text-white">
     {{ $label }}
-    @unless ($wajib)
+    {{-- Tanda * cukup visual; pembaca layar sudah mendapat "wajib" dari atribut required/aria-required. --}}
+    @if ($wajib)
+      <span class="text-darurat dark:text-[#ff8a80]" aria-hidden="true">*</span>
+    @else
       <span class="font-normal text-teks-lembut">(opsional)</span>
-    @endunless
+    @endif
   </p>
 
   @if ($berkas)
@@ -51,6 +54,7 @@
         accept="{{ $accept }}"
         aria-labelledby="{{ $id }}-label"
         aria-describedby="{{ $id }}-bantuan"
+        @if ($wajib) aria-required="true" @endif
         @if ($galat) aria-invalid="true" @endif
         class="absolute inset-0 size-full cursor-pointer opacity-0"
       />

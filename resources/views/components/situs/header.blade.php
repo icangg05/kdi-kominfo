@@ -2,6 +2,7 @@
   Bilah informasi, bilah identitas (logo, pencarian, 112), dan navigasi utama desktop.
   `survei`: tautan survei kepuasan, null bila dimatikan di Pengaturan Situs admin.
   `admin`: pengunjung sedang login di panel admin, jadi tampilkan pintasan ke /admin.
+  Tautan memakai wire:navigate.hover: halaman tujuan sudah diambil saat kursor berhenti di atas tautan, jadi klik terasa instan.
 --}}
 @props(['telp' => null, 'email' => null, 'survei' => null, 'admin' => false])
 @use('App\Support\Konten')
@@ -54,7 +55,7 @@
 <!-- Bilah identitas: Lambang Kota Kendari dan tanda Komdigi bertulisan putih butuh latar biru. -->
 <header data-kepala class="sticky top-0 z-50 bg-biru-800 text-white shadow-[0_8px_24px_-16px_rgba(7,31,61,0.8)] lg:static lg:shadow-none">
   <div class="wadah flex h-[72px] items-center gap-6 lg:h-20">
-    <a href="/" wire:navigate class="shrink-0" aria-label="Beranda Diskominfo Kota Kendari">
+    <a href="/" wire:navigate.hover class="shrink-0" aria-label="Beranda Diskominfo Kota Kendari">
       <x-situs.logo />
     </a>
 
@@ -129,12 +130,12 @@
         <ul class="space-y-1">
           @foreach (Konten::MENU_UTAMA as $item)
             <li>
-              <a href="{{ $item['href'] }}" wire:navigate class="block rounded px-3 py-2.5 text-sm font-semibold tracking-wide uppercase hover:bg-white/10">{{ $item['label'] }}</a>
+              <a href="{{ $item['href'] }}" wire:navigate.hover class="block rounded px-3 py-2.5 text-sm font-semibold tracking-wide uppercase hover:bg-white/10">{{ $item['label'] }}</a>
               @isset($item['anak'])
                 <ul class="mb-2 ml-3 border-l border-white/20 pl-3">
                   @foreach ($item['anak'] as $anak)
                     <li>
-                      <a href="{{ $anak['href'] }}" wire:navigate class="block rounded px-3 py-2 text-sm text-biru-100 hover:bg-white/10 hover:text-white">{{ $anak['label'] }}</a>
+                      <a href="{{ $anak['href'] }}" wire:navigate.hover class="block rounded px-3 py-2 text-sm text-biru-100 hover:bg-white/10 hover:text-white">{{ $anak['label'] }}</a>
                     </li>
                   @endforeach
                 </ul>
@@ -158,7 +159,7 @@
 <nav class="group/nav sticky top-0 z-50 hidden border-b border-garis bg-white shadow-[0_6px_18px_-14px_rgba(7,31,61,0.45)] dark:bg-malam transition-shadow duration-300 data-melekat:shadow-[0_10px_28px_-14px_rgba(7,31,61,0.5)] lg:block" aria-label="Navigasi utama" data-nav>
   <div class="wadah flex h-[52px] items-stretch">
     <a
-      href="/" wire:navigate
+      href="/" wire:navigate.hover
       class="flex max-w-0 shrink-0 items-center overflow-hidden opacity-0 transition-all duration-300 group-data-melekat/nav:mr-6 group-data-melekat/nav:max-w-40 group-data-melekat/nav:opacity-100"
       tabindex="-1"
       aria-hidden="true"
@@ -168,7 +169,7 @@
     @foreach (Konten::MENU_UTAMA as $item)
       <div class="group relative flex">
         <a
-          href="{{ $item['href'] }}" wire:navigate
+          href="{{ $item['href'] }}" wire:navigate.hover
           @class([
             'relative flex items-center gap-1 px-4 text-[13px] font-semibold tracking-wide uppercase transition-colors after:absolute after:inset-x-4 after:bottom-0 after:h-[3px] after:bg-biru-600 after:transition-transform hover:text-biru-600 dark:after:bg-biru-400 dark:hover:text-white',
             $aktif($item['href']) ? 'text-biru-600 after:scale-x-100 dark:text-biru-300' : 'text-biru-950 after:scale-x-0 hover:after:scale-x-100 dark:text-biru-100',
@@ -187,7 +188,7 @@
               @foreach ($item['anak'] as $anak)
                 <li>
                   <a
-                    href="{{ $anak['href'] }}" wire:navigate
+                    href="{{ $anak['href'] }}" wire:navigate.hover
                     @class([
                       'block px-4 py-2.5 text-sm transition hover:bg-langit hover:text-biru-600 dark:hover:text-white',
                       $jalurAktif === $anak['href'] ? 'bg-langit font-semibold text-biru-600 dark:text-biru-300' : 'font-medium text-teks',

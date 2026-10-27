@@ -3,7 +3,9 @@
   `model` = properti Livewire (mis. "email" atau "rincian.subdomain"); disinkronkan saat kontrol ditinggalkan
   (wire:model.blur) supaya galat muncul per isian tanpa menunggu tombol kirim.
   `jenis`: text, email, tel, date, number, textarea, select, subdomain (teks berakhiran .kendarikota.go.id).
-  `inputmode` = papan ketik ponsel untuk isian teks, mis. "numeric" untuk NIK/NIP yang angkanya tidak boleh dibulatkan.
+  `angka` = hanya angka (NIK, NIP, nomor HP): papan ketik angka, dan huruf/spasi/tanda yang diketik atau ditempel
+  langsung dibuang oleh situs.js ([data-angka]). `digit` = jumlah angka yang pasti (NIK 16, NIP 18), `maks` = batas atas.
+  `autocapitalize` = huruf besar otomatis di papan ketik ponsel: "words" untuk nama, "sentences" untuk kalimat.
 --}}
 @props([
   'model',
@@ -14,7 +16,10 @@
   'placeholder' => null,
   'pilihan' => [],
   'autocomplete' => null,
-  'inputmode' => null,
+  'angka' => false,
+  'digit' => null,
+  'maks' => null,
+  'autocapitalize' => null,
 ])
 @php
   $id = 'isian-' . str_replace('.', '-', $model);
@@ -24,18 +29,21 @@
       ? 'border-darurat focus:border-darurat focus:ring-darurat/25'
       : 'border-biru-200 focus:border-biru-500 focus:ring-biru-200 dark:border-biru-800 dark:focus:ring-biru-800');
   $terkait = trim(($bantuan ? "{$id}-bantuan " : '') . ($galat ? "{$id}-galat" : ''));
+  $polaAngka = $digit ? '[0-9]{' . $digit . '}' : '[0-9]*';
 @endphp
 
 <div {{ $attributes->class(['min-w-0']) }}>
   <label for="{{ $id }}" class="mb-1.5 block text-sm font-semibold text-biru-950 dark:text-white">
     {{ $label }}
-    @unless ($wajib)
+    @if ($wajib)
+      <span class="text-darurat dark:text-[#ff8a80]" aria-hidden="true">*</span>
+    @else
       <span class="font-normal text-teks-lembut">(opsional)</span>
-    @endunless
+    @endif
   </label>
 
   @if ($jenis === 'textarea')
-    <textarea id="{{ $id }}" wire:model.blur="{{ $model }}" rows="4" placeholder="{{ $placeholder }}" @if ($wajib) required @endif @if ($terkait) aria-describedby="{{ $terkait }}" @endif @if ($galat) aria-invalid="true" @endif class="{{ $kontrol }} resize-y leading-relaxed"></textarea>
+    <textarea id="{{ $id }}" wire:model.blur="{{ $model }}" rows="4" placeholder="{{ $placeholder }}" @if ($autocapitalize) autocapitalize="{{ $autocapitalize }}" @endif @if ($wajib) required @endif @if ($terkait) aria-describedby="{{ $terkait }}" @endif @if ($galat) aria-invalid="true" @endif class="{{ $kontrol }} resize-y leading-relaxed"></textarea>
   @elseif ($jenis === 'select')
     <select id="{{ $id }}" wire:model.live="{{ $model }}" @if ($wajib) required @endif @if ($terkait) aria-describedby="{{ $terkait }}" @endif @if ($galat) aria-invalid="true" @endif class="{{ $kontrol }}">
       @foreach ($pilihan as $nilai => $teks)
@@ -54,7 +62,9 @@
       wire:model.blur="{{ $model }}"
       placeholder="{{ $placeholder }}"
       @if ($autocomplete) autocomplete="{{ $autocomplete }}" @endif
-      @if ($jenis === 'number') min="1" inputmode="numeric" @elseif ($inputmode) inputmode="{{ $inputmode }}" @endif
+      @if ($jenis === 'number') min="1" inputmode="numeric" @elseif ($angka) inputmode="numeric" pattern="{{ $polaAngka }}" data-angka @endif
+      @if ($digit) minlength="{{ $digit }}" maxlength="{{ $digit }}" @elseif ($maks) maxlength="{{ $maks }}" @endif
+      @if ($autocapitalize) autocapitalize="{{ $autocapitalize }}" @endif
       @if ($jenis === 'date') max="{{ now()->toDateString() }}" @endif
       @if ($wajib) required @endif
       @if ($terkait) aria-describedby="{{ $terkait }}" @endif

@@ -8,6 +8,7 @@ use App\Livewire\Layanan\CekPengajuan;
 use App\Livewire\Layanan\FormPengajuan;
 use App\Models\PengajuanLayanan;
 use App\Models\User;
+use App\Support\Situs;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\RateLimiter;
@@ -57,8 +58,11 @@ class PengajuanLayananTest extends TestCase
     ],
   ];
 
-  /** Formulir yang siap dikirim: data pemohon, rincian layanan, surat, dan KTP untuk TTE. */
-  private function formulirLengkap(string $layanan, string $whatsapp = '+62 812-3456-7890'): Testable
+  /**
+   * Formulir yang siap dikirim: data pemohon, rincian layanan, surat, dan KTP untuk TTE.
+   * `$tunggu` memajukan jam melewati FormPengajuan::DETIK_MINIMUM, seperti manusia yang mengisi formulir.
+   */
+  private function formulirLengkap(string $layanan, string $whatsapp = '6281234567890', bool $tunggu = true): Testable
   {
     $form = Livewire::test(FormPengajuan::class, ['layanan' => $layanan])
       ->set('instansi', 'Dinas Kesehatan Kota Kendari')
@@ -70,7 +74,15 @@ class PengajuanLayananTest extends TestCase
       $form->set("rincian.{$kunci}", $nilai);
     }
 
-    return $layanan === 'pengajuan-tte' ? $form->set('ktp', $this->pdf('ktp.pdf')) : $form;
+    if ($layanan === 'pengajuan-tte') {
+      $form->set('ktp', $this->pdf('ktp.pdf'));
+    }
+
+    if ($tunggu) {
+      $this->travel(FormPengajuan::DETIK_MINIMUM)->seconds();
+    }
+
+    return $form;
   }
 
   public static function layananDaring(): array
@@ -111,17 +123,33 @@ class PengajuanLayananTest extends TestCase
       ->assertSeeInOrder(['Nama lengkap', 'NIK', 'NIP', 'Tempat lahir', 'Tanggal lahir', 'Instansi', 'Jabatan', 'Nomor HP (WhatsApp)', 'KTP', 'Surat permohonan'])
       ->assertSee('Dipakai petugas Diskominfo untuk menghubungi Anda')
       ->assertSee('id="unggah-ktp"', false)
+      ->assertSee('Isian bertanda')
+      // Tidak ada lagi isian perangkap tersembunyi yang bisa terisi autofill peramban.
+      ->assertDontSee('situs_web', false)
+      ->assertSeeInOrder(['NIK', 'aria-hidden="true">*</span>', 'id="isian-rincian-nik"'], false)
+      ->assertSeeInOrder(['id="unggah-ktp-label"', 'aria-hidden="true">*</span>', 'aria-required="true"'], false)
+      // NIK 16 dan NIP 18 angka, nomor HP angka saja; huruf awal nama dkk. kapital di papan ketik ponsel.
+      ->assertSeeInOrder(['id="isian-rincian-nik"', 'inputmode="numeric" pattern="[0-9]{16}" data-angka', 'minlength="16" maxlength="16"'], false)
+      ->assertSeeInOrder(['id="isian-rincian-nip"', 'inputmode="numeric" pattern="[0-9]{18}" data-angka', 'minlength="18" maxlength="18"'], false)
+      ->assertSeeInOrder(['id="isian-whatsapp"', 'inputmode="numeric" pattern="[0-9]*" data-angka', 'maxlength="15"'], false)
+      ->assertSeeInOrder(['id="isian-rincian-jabatan"', 'autocapitalize="words"'], false)
       ->assertDontSee('Nama subdomain');
 
     $this->get('/layanan/email-dinas')
       ->assertOk()
       ->assertSeeInOrder(['Nama lengkap', 'NIP', 'Tempat lahir', 'Tanggal lahir', 'Instansi', 'Nomor HP (WhatsApp)', 'Surat permohonan'])
+      ->assertSeeInOrder(['id="isian-rincian-nip"', 'inputmode="numeric" pattern="[0-9]{18}" data-angka', 'minlength="18" maxlength="18"'], false)
+      ->assertSeeInOrder(['id="isian-whatsapp"', 'data-angka', 'maxlength="15"'], false)
       ->assertDontSee('id="isian-rincian-nik"', false)
       ->assertDontSee('id="unggah-ktp"', false);
 
     $this->get('/layanan/subdomain-hosting')
       ->assertOk()
       ->assertSeeInOrder(['Nama instansi/OPD', 'Nama subdomain', '.kendarikota.go.id', 'Jenis layanan', 'Layanan publik', 'Layanan administrasi pemerintahan', 'IP address tujuan', 'Lokasi hosting/server', 'Deskripsi fungsi aplikasi/website', 'Surat permohonan'])
+      // IP tujuan satu-satunya isian opsional: tanpa tanda *.
+      ->assertSeeInOrder(['IP address tujuan', '(opsional)', 'id="isian-rincian-ip_tujuan"'], false)
+      ->assertSeeInOrder(['id="isian-rincian-deskripsi"', 'autocapitalize="sentences"'], false)
+      ->assertSeeInOrder(['id="isian-whatsapp"', 'data-angka', 'maxlength="15"'], false)
       ->assertDontSee('id="isian-rincian-nip"', false)
       ->assertDontSee('id="unggah-ktp"', false);
 
@@ -185,15 +213,54 @@ class PengajuanLayananTest extends TestCase
       ->assertHasErrors(['rincian.subdomain' => 'regex', 'rincian.ip_tujuan' => 'ip', 'rincian.jenis_layanan' => 'in']);
   }
 
-  public function test_nomor_hp_harus_nomor_seluler(): void
+  public function test_nomor_hp_hanya_angka_dan_nomor_seluler(): void
   {
-    foreach (['12345', '021 1234 5678', 'nomor saya'] as $salah) {
+    // Spasi, tanda hubung, dan "+" ditolak (di peramban sudah dibuang saat diketik atau ditempel).
+    foreach (['0812 3456 7890', '0812-3456-7890', '+6281234567890', 'nomor saya'] as $salah) {
+      $this->formulirLengkap('email-dinas')->set('whatsapp', $salah)->call('kirim')->assertHasErrors(['whatsapp' => 'regex']);
+    }
+
+    // Angka saja tapi bukan nomor seluler.
+    foreach (['12345', '02112345678'] as $salah) {
       $this->formulirLengkap('email-dinas')->set('whatsapp', $salah)->call('kirim')->assertHasErrors('whatsapp');
     }
 
-    foreach (['0812 3456 7890', '62812-3456-7890', '8123456789'] as $benar) {
+    foreach (['081234567890', '6281234567890', '8123456789'] as $benar) {
       $this->formulirLengkap('email-dinas')->set('whatsapp', $benar)->assertHasNoErrors('whatsapp');
     }
+  }
+
+  public function test_nama_tempat_instansi_dan_jabatan_diawali_huruf_kapital(): void
+  {
+    // Dirapikan begitu isian ditinggalkan; singkatan dan kata tugas di tengah tetap seperti diketik.
+    $this->formulirLengkap('pengajuan-tte')
+      ->set('nama_pemohon', '  budi   santoso ')
+      ->assertSet('nama_pemohon', 'Budi Santoso')
+      ->set('instansi', 'dinas pemberdayaan perempuan dan perlindungan anak')
+      ->set('rincian.tempat_lahir', 'kendari')
+      ->set('rincian.jabatan', 'kepala UPTD puskesmas')
+      ->call('kirim')
+      ->assertHasNoErrors();
+
+    $tte = PengajuanLayanan::sole();
+    $this->assertSame('Budi Santoso', $tte->nama_pemohon);
+    $this->assertSame('Dinas Pemberdayaan Perempuan dan Perlindungan Anak', $tte->instansi);
+    $this->assertSame('Kendari', $tte->rincian['tempat_lahir']);
+    $this->assertSame('Kepala UPTD Puskesmas', $tte->rincian['jabatan']);
+
+    // Lokasi hosting dan deskripsi berupa kalimat: cukup huruf pertamanya.
+    $this->formulirLengkap('subdomain-hosting', '089999999999')
+      ->set('nama_pemohon', 'andi')
+      ->set('instansi', 'dinas kesehatan')
+      ->set('rincian.lokasi_server', 'pusat data diskominfo')
+      ->set('rincian.deskripsi', "portal informasi.\nuntuk masyarakat")
+      ->call('kirim')
+      ->assertHasNoErrors();
+
+    $domain = PengajuanLayanan::where('layanan', 'subdomain-hosting')->sole();
+    $this->assertSame(['Andi', 'Dinas Kesehatan'], [$domain->nama_pemohon, $domain->instansi]);
+    $this->assertSame('Pusat data diskominfo', $domain->rincian['lokasi_server']);
+    $this->assertSame("Portal informasi.\nuntuk masyarakat", $domain->rincian['deskripsi']);
   }
 
   public function test_surat_dan_ktp_hanya_menerima_dokumen_atau_gambar(): void
@@ -205,11 +272,31 @@ class PengajuanLayananTest extends TestCase
       ->assertHasErrors(['surat' => 'mimes', 'ktp' => 'mimes']);
   }
 
-  public function test_perangkap_bot_tidak_menyimpan_apa_pun(): void
+  public function test_kiriman_terlalu_cepat_dianggap_bot(): void
   {
-    $this->formulirLengkap('email-dinas')->set('situs_web', 'http://spam.example')->call('kirim')->assertHasErrors('surat');
-
+    $form = $this->formulirLengkap('email-dinas', tunggu: false)->call('kirim')->assertHasErrors('surat');
     $this->assertSame(0, PengajuanLayanan::count());
+
+    // Formulir yang sama tetap bisa dikirim setelah jeda wajar, tanpa muat ulang.
+    $this->travel(FormPengajuan::DETIK_MINIMUM)->seconds();
+    $form->call('kirim')->assertHasNoErrors();
+    $this->assertSame(1, PengajuanLayanan::count());
+  }
+
+  public function test_foto_ktp_dikompres_jadi_webp_dan_surat_pdf_utuh(): void
+  {
+    $this->formulirLengkap('pengajuan-tte')
+      ->set('ktp', UploadedFile::fake()->image('ktp.jpg', 3000, 2000))
+      ->call('kirim')
+      ->assertHasNoErrors();
+
+    $pengajuan = PengajuanLayanan::sole();
+    $this->assertStringEndsWith('.webp', $pengajuan->ktp);
+    [$lebar] = getimagesizefromstring(Storage::disk('local')->get($pengajuan->ktp));
+    $this->assertSame(config('app.upload.kompres_gambar.lebar_maks'), $lebar);
+
+    $this->assertStringEndsWith('.pdf', $pengajuan->surat);
+    $this->assertStringStartsWith('%PDF-1.4', Storage::disk('local')->get($pengajuan->surat));
   }
 
   public function test_pengajuan_dibatasi_per_jaringan(): void
@@ -226,33 +313,46 @@ class PengajuanLayananTest extends TestCase
   {
     $this->formulirLengkap('pengajuan-tte')->call('kirim');
     $this->formulirLengkap('email-dinas')->call('kirim');
-    $this->formulirLengkap('subdomain-hosting', '0899 9999 9999')->call('kirim');
+    $this->formulirLengkap('subdomain-hosting', '089999999999')->call('kirim');
     [$tte, $email, $orangLain] = PengajuanLayanan::orderBy('id')->get();
 
     Livewire::test(CekPengajuan::class)
-      ->set('whatsapp', '0811 1111 1111')
+      ->set('whatsapp', '081111111111')
       ->call('cari')
       ->assertSee('Belum ada pengajuan dengan nomor ini')
       ->assertDontSee($tte->nomor);
 
-    // Cara ketik nomor berbeda dengan saat mengajukan tetap cocok; hanya pengajuan nomor itu yang tampil.
+    // Isian hanya angka; spasi, tanda hubung, dan "+" ditolak (di peramban sudah dibuang saat diketik).
+    foreach (['0812-3456-7890', '+6281234567890', '0812 abc'] as $salah) {
+      Livewire::test(CekPengajuan::class)->set('whatsapp', $salah)->call('cari')->assertHasErrors(['whatsapp' => 'regex'])->assertSet('dicari', null);
+    }
+
+    // Awalan 62 tetap cocok dengan 08 saat mengajukan; hanya pengajuan nomor itu yang tampil.
     $cek = Livewire::test(CekPengajuan::class)
-      ->set('whatsapp', '0812-3456-7890')
+      ->set('whatsapp', '6281234567890')
       ->call('cari')
       ->assertSee('2 pengajuan untuk nomor ini')
       ->assertSeeInOrder([$email->nomor, $tte->nomor])
+      ->assertSee('aria-label="Lihat tahapan pengajuan ' . $tte->nomor . '"', false)
+      // Tanggal dan jam pengajuan, bukan hanya tanggal.
+      ->assertSee(Situs::tanggalJam($tte->created_at))
       ->assertDontSee($orangLain->nomor)
-      ->assertDontSee('Catatan petugas');
+      ->assertDontSee('<dialog', false);
 
+    // Tahapan dibuka di dialog; daftar ringkas tetap ada di belakangnya.
     $cek->call('pilih', $tte->nomor)
       ->assertSet('nomor', $tte->nomor)
-      ->assertSee('Menunggu verifikasi')
-      ->assertSee('Semua pengajuan (2)')
+      ->assertSeeHtml('<dialog')
+      ->assertSeeHtml('wire:key="dialog-' . $tte->nomor . '"')
+      ->assertSeeInOrder(['Pengajuan diterima', 'Diverifikasi petugas', 'Pengajuan disetujui'])
+      ->assertSeeInOrder([$email->nomor, $tte->nomor])
       // Data pribadi dari formulir tidak ikut tampil di halaman publik.
       ->assertDontSee(self::RINCIAN['pengajuan-tte']['nik']);
 
+    $cek->call('tutup')->assertSet('nomor', '')->assertDontSee('<dialog', false)->assertSee('2 pengajuan untuk nomor ini');
+
     // Menebak nomor pengajuan orang lain tidak membuka apa pun, dan nomor HP yang dicari tidak bisa ditukar dari peramban.
-    $cek->call('pilih', $orangLain->nomor)->assertDontSee($orangLain->nomor)->assertSee('2 pengajuan untuk nomor ini');
+    $cek->call('pilih', $orangLain->nomor)->assertDontSee($orangLain->nomor)->assertDontSee('<dialog', false);
     $this->expectException(\Livewire\Features\SupportLockedProperties\CannotUpdateLockedPropertyException::class);
     $cek->set('dicari', $orangLain->whatsapp);
   }
@@ -268,12 +368,13 @@ class PengajuanLayananTest extends TestCase
       ->set('whatsapp', '081234567890')
       ->call('cari')
       ->assertSet('nomor', $tte->nomor)
-      ->assertSee('Semua pengajuan (2)');
+      ->assertSee('2 pengajuan untuk nomor ini')
+      ->assertSeeHtml('wire:key="dialog-' . $tte->nomor . '"');
 
     // Nomor di URL yang bukan milik nomor HP itu dibuang, jadi yang tampil daftar (kosong).
     Livewire::withQueryParams(['nomor' => $tte->nomor])
       ->test(CekPengajuan::class)
-      ->set('whatsapp', '0899 9999 9999')
+      ->set('whatsapp', '089999999999')
       ->call('cari')
       ->assertSet('nomor', '')
       ->assertDontSee($tte->nomor);
@@ -281,7 +382,9 @@ class PengajuanLayananTest extends TestCase
     // Placeholder membantu pemohon mengenali format; halaman pribadi tidak diindeks.
     $this->get('/layanan/cek-pengajuan')
       ->assertOk()
-      ->assertSee('placeholder="Mis. 0812 3456 7890"', false)
+      ->assertSee('placeholder="Mis. 081234567890"', false)
+      ->assertSee('inputmode="numeric" pattern="[0-9]*" data-angka', false)
+      ->assertSee('maxlength="15"', false)
       ->assertDontSee('id="isian-nomor"', false)
       ->assertSee('noindex', false);
   }

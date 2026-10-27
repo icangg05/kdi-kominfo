@@ -33,6 +33,12 @@ final class Situs
     return $tanggal ? Carbon::parse($tanggal)->locale('id')->translatedFormat('j F Y') : '';
   }
 
+  /** Mis. 27 Oktober 2026, 16.37 WITA; untuk waktu kejadian seperti pengajuan masuk atau diputuskan. */
+  public static function tanggalJam(CarbonInterface $waktu): string
+  {
+    return self::tanggal($waktu) . ', ' . $waktu->copy()->timezone('Asia/Makassar')->format('H.i') . ' WITA';
+  }
+
   /** Pemisah ribuan Indonesia: 12.345. */
   public static function angka(int|float|string|null $n): string
   {

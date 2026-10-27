@@ -83,37 +83,39 @@
               </div>
             @endif
 
+            <p class="text-xs text-teks-lembut">Isian bertanda <span class="text-darurat dark:text-[#ff8a80]">*</span> wajib diisi.</p>
+
             @if ($domain)
-              <x-situs.isian model="instansi" label="Nama instansi/OPD" placeholder="Mis. Dinas Kesehatan Kota Kendari" autocomplete="organization" />
+              <x-situs.isian model="instansi" label="Nama instansi/OPD" placeholder="Mis. Dinas Kesehatan Kota Kendari" autocomplete="organization" autocapitalize="words" />
               <x-situs.isian model="rincian.subdomain" jenis="subdomain" label="Nama subdomain" placeholder="Mis. dinkes" bantuan="Huruf kecil, angka, dan tanda hubung." />
               <x-situs.isian model="rincian.jenis_layanan" jenis="select" label="Jenis layanan" :pilihan="['' => 'Pilih jenis layanan'] + PengajuanLayanan::JENIS_LAYANAN_DOMAIN" />
               <div class="grid gap-5 sm:grid-cols-2">
                 <x-situs.isian model="rincian.ip_tujuan" label="IP address tujuan" placeholder="Mis. 103.150.12.34" :wajib="false" bantuan="Kosongkan bila server/hosting disiapkan Diskominfo." class="[&_input]:font-mono" />
-                <x-situs.isian model="rincian.lokasi_server" label="Lokasi hosting/server" placeholder="Mis. Pusat Data Diskominfo, server OPD" />
+                <x-situs.isian model="rincian.lokasi_server" label="Lokasi hosting/server" placeholder="Mis. Pusat Data Diskominfo, server OPD" autocapitalize="sentences" />
               </div>
-              <x-situs.isian model="rincian.deskripsi" jenis="textarea" label="Deskripsi fungsi aplikasi/website" placeholder="Mis. portal informasi layanan kesehatan dan jadwal puskesmas untuk masyarakat" />
-              <x-situs.isian model="nama_pemohon" label="Nama penanggung jawab" placeholder="Nama lengkap" autocomplete="name" />
+              <x-situs.isian model="rincian.deskripsi" jenis="textarea" label="Deskripsi fungsi aplikasi/website" placeholder="Mis. Portal informasi layanan kesehatan dan jadwal puskesmas untuk masyarakat" autocapitalize="sentences" />
+              <x-situs.isian model="nama_pemohon" label="Nama penanggung jawab" placeholder="Nama lengkap" autocomplete="name" autocapitalize="words" />
             @else
               <div @class(['grid gap-5', 'sm:grid-cols-2' => $layanan === 'email-dinas'])>
-                <x-situs.isian model="nama_pemohon" label="Nama lengkap" placeholder="Nama lengkap" autocomplete="name" :bantuan="$jenis['ktp'] ? 'Sesuai KTP.' : null" />
+                <x-situs.isian model="nama_pemohon" label="Nama lengkap" placeholder="Nama lengkap" autocomplete="name" autocapitalize="words" :bantuan="$jenis['ktp'] ? 'Sesuai KTP.' : null" />
                 @if ($layanan === 'email-dinas')
-                  <x-situs.isian model="rincian.nip" label="NIP" placeholder="18 digit" inputmode="numeric" class="[&_input]:font-mono" />
+                  <x-situs.isian model="rincian.nip" label="NIP" placeholder="18 digit" :angka="true" :digit="18" class="[&_input]:font-mono" />
                 @endif
               </div>
               @if ($jenis['ktp'])
                 <div class="grid gap-5 sm:grid-cols-2">
-                  <x-situs.isian model="rincian.nik" label="NIK" placeholder="16 digit" inputmode="numeric" class="[&_input]:font-mono" />
-                  <x-situs.isian model="rincian.nip" label="NIP" placeholder="18 digit" inputmode="numeric" class="[&_input]:font-mono" />
+                  <x-situs.isian model="rincian.nik" label="NIK" placeholder="16 digit" :angka="true" :digit="16" class="[&_input]:font-mono" />
+                  <x-situs.isian model="rincian.nip" label="NIP" placeholder="18 digit" :angka="true" :digit="18" class="[&_input]:font-mono" />
                 </div>
               @endif
               <div class="grid gap-5 sm:grid-cols-2">
-                <x-situs.isian model="rincian.tempat_lahir" label="Tempat lahir" placeholder="Mis. Kendari" />
+                <x-situs.isian model="rincian.tempat_lahir" label="Tempat lahir" placeholder="Mis. Kendari" autocapitalize="words" />
                 <x-situs.isian model="rincian.tanggal_lahir" jenis="date" label="Tanggal lahir" autocomplete="bday" />
               </div>
               <div @class(['grid gap-5', 'sm:grid-cols-2' => $jenis['ktp']])>
-                <x-situs.isian model="instansi" label="Instansi" placeholder="Mis. Dinas Pendidikan Kota Kendari" autocomplete="organization" />
+                <x-situs.isian model="instansi" label="Instansi" placeholder="Mis. Dinas Pendidikan Kota Kendari" autocomplete="organization" autocapitalize="words" />
                 @if ($jenis['ktp'])
-                  <x-situs.isian model="rincian.jabatan" label="Jabatan" placeholder="Mis. Kepala Bidang Pelayanan" autocomplete="organization-title" />
+                  <x-situs.isian model="rincian.jabatan" label="Jabatan" placeholder="Mis. Kepala Bidang Pelayanan" autocomplete="organization-title" autocapitalize="words" />
                 @endif
               </div>
             @endif
@@ -121,8 +123,10 @@
             <x-situs.isian
               model="whatsapp"
               jenis="tel"
+              :angka="true"
+              :maks="15"
               label="Nomor HP (WhatsApp)"
-              placeholder="Mis. 0812 3456 7890"
+              placeholder="Mis. 081234567890"
               autocomplete="tel"
               bantuan="Dipakai petugas Diskominfo untuk menghubungi Anda bila ada kekurangan berkas dan untuk mengabarkan hasil verifikasi, serta untuk cek status pengajuan."
             />
@@ -146,11 +150,6 @@
               :bantuan="$jenis['isi_surat']"
               :maks-mb="PengajuanLayanan::BERKAS_MAKS_KB / 1024"
             />
-
-            {{-- Perangkap bot: digeser keluar layar (bukan display:none, yang dilewati sebagian bot). --}}
-            <div class="absolute -left-[9999px] size-px overflow-hidden" aria-hidden="true">
-              <label>Situs web <input type="text" wire:model="situs_web" tabindex="-1" autocomplete="off" /></label>
-            </div>
 
             <div class="flex flex-col gap-3 border-t border-garis pt-6 sm:flex-row sm:items-center sm:justify-between">
               <p class="text-xs leading-relaxed text-teks-lembut">

@@ -12,7 +12,7 @@ use Livewire\Component;
 
 /**
  * Pemohon melihat status pengajuannya cukup dengan nomor HP yang dipakai saat mengajukan: semua pengajuan
- * dengan nomor itu tampil sebagai daftar, lalu pemohon memilih satu untuk melihat tahapan dan catatan petugas.
+ * dengan nomor itu tampil sebagai daftar ringkas, dan tahapan serta catatan petugas satu pengajuan dibuka di dialog.
  * Yang tampil di sini sengaja tidak memuat NIK, NIP, TTL, atau berkas.
  */
 class CekPengajuan extends Component
@@ -29,15 +29,20 @@ class CekPengajuan extends Component
   public ?string $dicari = null;
 
   /**
-   * Pengajuan yang sedang dibuka. Dari tanda terima formulir (?nomor=...) atau dari daftar; hanya dipakai bila
-   * termasuk pengajuan milik $dicari, jadi menebak nomor orang lain tidak membuka apa pun.
+   * Pengajuan yang dialog tahapannya sedang terbuka. Dari tanda terima formulir (?nomor=...) atau tombol di daftar;
+   * hanya dipakai bila termasuk pengajuan milik $dicari, jadi menebak nomor orang lain tidak membuka apa pun.
    */
   #[Url(except: '')]
   public string $nomor = '';
 
   protected function rules(): array
   {
-    return ['whatsapp' => ['required', 'string', 'max:20']];
+    return ['whatsapp' => ['required', 'string', 'max:20', 'regex:/^[0-9]+$/']];
+  }
+
+  protected function messages(): array
+  {
+    return ['whatsapp.regex' => 'Nomor HP hanya boleh berisi angka, mis. 081234567890.'];
   }
 
   protected function validationAttributes(): array
@@ -73,7 +78,7 @@ class CekPengajuan extends Component
     $this->nomor = $nomor;
   }
 
-  public function kembali(): void
+  public function tutup(): void
   {
     $this->nomor = '';
   }

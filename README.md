@@ -140,8 +140,8 @@ oleh pemohon di halaman cek status.
 
 Surat dan KTP disimpan di disk privat `local` (`storage/app/private/pengajuan`), bukan di
 `public`, jadi hanya bisa dibuka admin yang login lewat
-`/admin/pengajuan-layanan/{id}/surat` (atau `/ktp`). Kiriman dibatasi 5 per IP per jam, dan formulir
-punya isian perangkap bot. Petunjuk isi surat per layanan diatur di
+`/admin/pengajuan-layanan/{id}/surat` (atau `/ktp`). Kiriman dibatasi 5 per IP per jam, dan
+kiriman yang lebih cepat dari 3 detik sejak formulir dimuat dianggap bot (bukan isian perangkap tersembunyi, yang ikut terisi autofill peramban). Foto KTP dan pindaian surat dikompres ke WebP. Petunjuk isi surat per layanan diatur di
 `PengajuanLayanan::JENIS`.
 
 ### Berita dari portal kota

@@ -4,6 +4,7 @@ namespace App\Support;
 
 use Filament\Forms\Components\BaseFileUpload;
 use GdImage;
+use Illuminate\Contracts\Filesystem\Filesystem;
 use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
 
 /** Kompres gambar upload ke WebP; pengaturannya di config('app.upload.kompres_gambar'). */
@@ -14,10 +15,20 @@ final class KompresGambar
     /** Pengganti penyimpanan bawaan Filament: ->saveUploadedFileUsing(KompresGambar::simpan(...)). */
     public static function simpan(BaseFileUpload $component, TemporaryUploadedFile $file): ?string
     {
+        return self::simpanWebp($file, $component->getDisk(), $component->getDirectory(), $component->getVisibility())
+            ?? $component->saveUploadedFile($file);
+    }
+
+    /**
+     * Simpan upload sebagai WebP terkompres di $direktori. Null kalau berkasnya bukan gambar yang bisa
+     * dikompres (PDF, GIF, rusak) atau kompres dimatikan; pemanggil lalu menyimpan berkas aslinya.
+     */
+    public static function simpanWebp(TemporaryUploadedFile $file, Filesystem $disk, ?string $direktori, ?string $visibility = null): ?string
+    {
         $atur = config('app.upload.kompres_gambar');
 
         if (! $atur['aktif'] || ! in_array($file->getMimeType(), self::MIME, true)) {
-            return $component->saveUploadedFile($file);
+            return null;
         }
 
         $asli = $file->get();
@@ -25,11 +36,11 @@ final class KompresGambar
 
         // Gambar yang sudah hemat bisa malah membengkak setelah di-encode ulang.
         if ($webp === null || strlen($webp) >= strlen($asli)) {
-            return $component->saveUploadedFile($file);
+            return null;
         }
 
-        $path = trim($component->getDirectory() . '/' . NamaBerkas::acak('webp'), '/');
-        $component->getDisk()->put($path, $webp, $component->getVisibility());
+        $path = trim($direktori . '/' . NamaBerkas::acak('webp'), '/');
+        $disk->put($path, $webp, $visibility ? ['visibility' => $visibility] : []);
 
         return $path;
     }

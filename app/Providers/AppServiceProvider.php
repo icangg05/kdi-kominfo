@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Support\KompresGambar;
 use App\Support\NamaBerkas;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\RichEditor;
@@ -31,8 +32,15 @@ class AppServiceProvider extends ServiceProvider
     FileUpload::configureUsing(fn (FileUpload $upload) => $upload->getUploadedFileNameForStorageUsing(
       fn (TemporaryUploadedFile $file) => NamaBerkas::acak($file->getClientOriginalExtension()),
     ));
+    // Gambar yang ditempel di isi editor (berita, profil) dikompres ke WebP seperti sampul;
+    // lampiran lain disimpan apa adanya.
     RichEditor::configureUsing(fn (RichEditor $editor) => $editor->saveUploadedFileAttachmentUsing(
-      fn (RichEditor $component, TemporaryUploadedFile $file) => $file->storeAs(
+      fn (RichEditor $component, TemporaryUploadedFile $file) => KompresGambar::simpanWebp(
+        $file,
+        $component->getFileAttachmentsDisk(),
+        $component->getFileAttachmentsDirectory(),
+        $component->getFileAttachmentsVisibility(),
+      ) ?? $file->storeAs(
         $component->getFileAttachmentsDirectory(),
         NamaBerkas::acak($file->guessExtension()),
         $component->getFileAttachmentsDiskName(),

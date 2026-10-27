@@ -132,6 +132,24 @@ document.addEventListener('submit', (e) => {
   window.Livewire.navigate(`${form.getAttribute('action')}${query ? `?${query}` : ''}`);
 });
 
+/* --- Isian hanya angka [data-angka]: NIK, NIP, nomor HP --------------- */
+
+// Huruf, spasi, dan tanda dibuang begitu diketik. Tempel ditangani sendiri: maxlength memotong teks tempelan
+// sebelum spasinya sempat dibuang, jadi "1985 0312 2010 01 1 002" akan kehilangan digit terakhir.
+document.addEventListener('input', (e) => {
+  const isian = e.target.closest?.('input[data-angka]');
+  if (isian && /\D/.test(isian.value)) isian.value = isian.value.replace(/\D/g, '');
+});
+
+document.addEventListener('paste', (e) => {
+  const isian = e.target.closest?.('input[data-angka]');
+  if (!isian) return;
+  e.preventDefault();
+  isian.setRangeText(e.clipboardData.getData('text').replace(/\D/g, ''), isian.selectionStart, isian.selectionEnd, 'end');
+  if (isian.maxLength > 0) isian.value = isian.value.slice(0, isian.maxLength);
+  isian.dispatchEvent(new Event('input', { bubbles: true }));
+});
+
 /* --- Dialog gambar: semua gambar di dalam [data-perbesar] -------------- */
 
 let gambarDibuka = null;
