@@ -33,6 +33,10 @@ return [
         'local' => [
             'driver' => 'local',
             'root' => storage_path('app/private'),
+            // Folder dibuat 755 seperti di disk public (bawaannya 700), supaya isinya bisa dilihat dari
+            // pengelola berkas di server walau dibuat container sebagai root. Tetap tidak bisa dibuka lewat web:
+            // berkas di sini hanya disajikan rute admin atau URL bertanda tangan.
+            'directory_visibility' => 'public',
             'serve' => true,
             'throw' => false,
             'report' => false,

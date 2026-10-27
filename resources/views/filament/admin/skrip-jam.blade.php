@@ -1,4 +1,5 @@
-<script>
+{{-- data-navigate-once: dalam mode SPA isi <body> ditukar tiap pindah halaman, jadi tanpa ini interval jam bertumpuk. --}}
+<script data-navigate-once>
     // Jam WITA untuk semua halaman panel (topbar dan halaman login). Sama dengan waktu.ts di situs publik.
     (() => {
         const jam = document.querySelectorAll('[data-jam]');

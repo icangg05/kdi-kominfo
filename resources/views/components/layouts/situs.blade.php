@@ -2,6 +2,7 @@
   Tata letak situs publik. Dipakai komponen Livewire halaman (->layout('components.layouts.situs', [...]))
   dan halaman galat (<x-layouts.situs>).
   `gambar`: pratinjau saat tautan dibagikan; path relatif dijadikan absolut. `terbit`: ISO, hanya untuk jenis article.
+  `pembuka`: tampilkan layar pembuka (x-situs.pembuka), hanya untuk beranda.
 --}}
 @props([
   'judul',
@@ -10,6 +11,7 @@
   'jenis' => 'website',
   'terbit' => null,
   'noindex' => false,
+  'pembuka' => false,
 ])
 @use('App\Models\ProfilDinas')
 @use('App\Support\Situs')
@@ -42,6 +44,8 @@
       <meta name="robots" content="noindex" />
     @endif
     <meta name="theme-color" content="#0b2f5c" />
+    <!-- Situs selalu terang. `only` juga menolak penggelapan otomatis peramban (Chrome, Samsung Internet, dll.). -->
+    <meta name="color-scheme" content="only light" />
 
     <meta property="og:site_name" content="Diskominfo Kota Kendari" />
     <meta property="og:locale" content="id_ID" />
@@ -65,8 +69,7 @@
     {{ $head ?? '' }}
     <link rel="preload" href="/fonts/ibm-plex-sans-latin.woff2" as="font" type="font/woff2" crossorigin />
     <!--
-      Tema dan pilihan panel Aksesibilitas dipasang sebelum halaman dilukis supaya tidak berkedip. Kunci `theme`
-      sama dengan panel Filament (satu origin), jadi pilihan di situs dan di admin saling mengikuti. Tanpa pilihan: terang.
+      Pilihan panel Aksesibilitas dipasang sebelum halaman dilukis supaya tidak berkedip.
       Disimpan di window karena wire:navigate menyalin atribut <html> dari halaman tujuan (yang polos), jadi
       resources/js/situs.js memanggilnya lagi setiap kali halaman ditukar. Skrip ini sendiri tidak dijalankan ulang.
     -->
@@ -74,24 +77,19 @@
       window.terapkanPreferensi = () => {
         const akar = document.documentElement;
         try {
-          const t = localStorage.getItem('theme');
-          const gelap = t === 'dark' || (t === 'system' && matchMedia('(prefers-color-scheme: dark)').matches);
-          if (gelap) akar.dataset.tema = 'gelap';
-          else delete akar.dataset.tema;
-        } catch {}
-        try {
           const a = JSON.parse(localStorage.getItem('aksesibilitas') || '{}');
           for (const k in a) if (k !== 'skala') akar.toggleAttribute('data-' + k, Boolean(a[k]));
           akar.style.fontSize = a.skala && a.skala !== 100 ? a.skala + '%' : '';
         } catch {}
       };
       terapkanPreferensi();
-      // Kembali dari admin lewat tombol Back memulihkan halaman dari cache; tema bisa sudah diganti di sana.
-      addEventListener('pageshow', (e) => e.persisted && terapkanPreferensi());
     </script>
     @vite(['resources/css/situs.css', 'resources/js/situs.js'])
   </head>
   <body class="flex min-h-screen flex-col">
+    @if ($pembuka)
+      <x-situs.pembuka :alamat="$atur['alamat'] ?? null" />
+    @endif
     <a href="#konten" class="sr-only focus:not-sr-only focus:absolute focus:z-50 focus:m-3 focus:rounded focus:bg-white focus:px-4 focus:py-2 focus:text-biru-700">
       Lewati ke konten utama
     </a>

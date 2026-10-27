@@ -1,6 +1,6 @@
 /*
  * Perilaku peramban situs publik. Livewire menyuntikkan skripnya sendiri (beserta Alpine);
- * berkas ini hanya untuk hal yang tidak butuh server: tema, jam, menu, dialog, aksesibilitas.
+ * berkas ini hanya untuk hal yang tidak butuh server: layar pembuka, jam, menu, dialog, aksesibilitas.
  *
  * Situs berpindah halaman lewat wire:navigate: <body> ditukar tanpa memuat ulang dokumen dan modul ini
  * hanya berjalan sekali. Karena itu ada dua jenis pemasangan:
@@ -58,42 +58,18 @@ setTimeout(() => {
   setInterval(tik, 1000);
 }, 1000 - (Date.now() % 1000));
 
-/* --- Tema terang/gelap ------------------------------------------------ */
+/* --- Layar pembuka beranda --------------------------------------------- */
 
-// Bawaan terang; disimpan di kunci `theme` milik Filament supaya admin ikut.
-const gantiTema = () => {
-  const gelap = akar.dataset.tema !== 'gelap';
-  if (gelap) akar.dataset.tema = 'gelap';
-  else delete akar.dataset.tema;
-  try {
-    localStorage.setItem('theme', gelap ? 'dark' : 'light');
-  } catch {}
+// Gerak dan akhirnya ada di CSS (components/situs/pembuka). Di sini: klik, tombol apa pun, atau gulir mengangkat tirai
+// lebih cepat, lalu atributnya dilepas begitu tirai selesai supaya layar tidak muncul lagi di potret halaman.
+const lewatiPembuka = () => {
+  if (akar.dataset.pembuka === '') akar.dataset.pembuka = 'lewati';
 };
 
-// Ada dua tombol: di bilah informasi dan di nav yang melekat.
-document.addEventListener('click', (e) => {
-  const tombolTema = e.target.closest('[data-tombol-tema]');
-  if (!tombolTema) return;
+['pointerdown', 'keydown', 'wheel', 'touchstart'].forEach((jenis) => addEventListener(jenis, lewatiPembuka, { passive: true }));
 
-  // Tema baru menyebar melingkar dari tombol yang diklik; tanpa View Transition API atau saat gerak dikurangi, langsung berganti.
-  if (!document.startViewTransition || diam()) return gantiTema();
-  // Klik lewat keyboard saat animasi berjalan diabaikan; mouse dan sentuh sudah diblok CSS data-ganti-tema.
-  if ('gantiTema' in akar.dataset) return;
-
-  const r = tombolTema.getBoundingClientRect();
-  const x = r.left + r.width / 2;
-  const y = r.top + r.height / 2;
-  const jari = Math.hypot(Math.max(x, innerWidth - x), Math.max(y, innerHeight - y));
-
-  akar.dataset.gantiTema = '';
-  const transisi = document.startViewTransition(gantiTema);
-  transisi.finished.finally(() => delete akar.dataset.gantiTema);
-  transisi.ready.then(() => {
-    akar.animate(
-      { clipPath: [`circle(0 at ${x}px ${y}px)`, `circle(${jari}px at ${x}px ${y}px)`] },
-      { duration: 550, easing: 'cubic-bezier(0.4, 0, 0.2, 1)', pseudoElement: '::view-transition-new(root)' },
-    );
-  });
+document.addEventListener('animationend', (e) => {
+  if (e.target.matches?.('[data-layar-pembuka]')) delete akar.dataset.pembuka;
 });
 
 /* --- Menu seluler ------------------------------------------------------ */
@@ -341,8 +317,9 @@ document.addEventListener('livewire:navigating', (e) => {
   kontrolDibaca = null;
   pembersih.forEach((fn) => fn());
   pembersih = [];
+  delete akar.dataset.pembuka;
 
-  // Atribut <html> ikut diganti dengan milik halaman tujuan; pasang lagi tema dan aksesibilitas sebelum dilukis.
+  // Atribut <html> ikut diganti dengan milik halaman tujuan; pasang lagi pilihan aksesibilitas sebelum dilukis.
   e.detail?.onSwap?.(() => window.terapkanPreferensi?.());
 });
 

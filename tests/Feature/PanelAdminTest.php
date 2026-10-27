@@ -123,4 +123,19 @@ class PanelAdminTest extends TestCase
 
     Livewire::test(RingkasanStats::class)->assertSee('12.345 kali diunduh');
   }
+
+  public function test_panel_selalu_terang_dan_berpindah_halaman_tanpa_muat_ulang(): void
+  {
+    $this->seed();
+
+    $this->actingAs(User::first())->get('/admin')
+      ->assertOk()
+      // Filament menulis pilihan terang ini sendiri bila mode gelap dimatikan.
+      ->assertSee("localStorage.setItem('filament:theme:mode', 'light')", false)
+      ->assertSee('href="' . route('filament.admin.resources.beritas.index') . '" wire:navigate', false)
+      // Pemicu modal backup dan unduhannya bukan halaman panel, jadi tidak lewat wire:navigate.
+      ->assertDontSee('href="#backup-database" wire:navigate', false)
+      ->assertDontSee('href="' . route('filament.admin.backup-database') . '" wire:navigate', false);
+  }
 }
+

@@ -8,7 +8,6 @@ use App\Filament\Widgets\RingkasanStats;
 use App\Models\PengajuanLayanan;
 use App\Support\BackupDatabase;
 use App\Support\WaktuWita;
-use Filament\Enums\ThemeMode;
 use Filament\FontProviders\LocalFontProvider;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
@@ -61,8 +60,12 @@ class AdminPanelProvider extends PanelProvider
             ])
             // IBM Plex Sans di-host sendiri (public/fonts); @font-face ada di view gaya admin.
             ->font('IBM Plex Sans', provider: LocalFontProvider::class)
-            // Terang sebagai bawaan, bukan mengikuti sistem; pengguna tetap bisa ganti dari menu akun.
-            ->defaultThemeMode(ThemeMode::Light)
+            // Selalu terang, sama dengan situs publik: pengalih tema di menu akun ikut hilang.
+            ->darkMode(false)
+            // Pindah halaman lewat wire:navigate, tanpa memuat ulang dokumen. Unduhan backup dan tautan
+            // pemicu modalnya dikecualikan: keduanya bukan halaman panel.
+            ->spa()
+            ->spaUrlExceptions(fn (): array => ['#backup-database', route('filament.admin.backup-database')])
             ->maxContentWidth(Width::Full)
             ->renderHook(PanelsRenderHook::STYLES_AFTER, fn () => view('filament.admin.gaya'))
             ->renderHook(PanelsRenderHook::GLOBAL_SEARCH_BEFORE, fn () => view('filament.admin.bilah-atas'))

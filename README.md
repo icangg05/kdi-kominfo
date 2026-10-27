@@ -27,7 +27,8 @@ Situs publik adalah komponen Livewire halaman penuh (`app/Livewire`); tiap halam
 mengambil data langsung dari model Eloquent, tanpa API perantara. Tautan antarhalaman
 memakai `wire:navigate`, jadi perpindahan halaman seperti SPA (tanpa muat ulang);
 `resources/js/situs.js` memasang ulang perilaku per halaman di event
-`livewire:navigated` dan memulihkan tema/aksesibilitas saat `<body>` ditukar. Daftar berita,
+`livewire:navigated` dan memulihkan pilihan aksesibilitas saat `<body>` ditukar. Situs dan panel
+admin selalu bertema terang. Panel admin juga berpindah halaman lewat `wire:navigate` (mode SPA Filament). Daftar berita,
 dokumen, galeri, dan pegawai memakai Livewire untuk pencarian langsung, filter
 kategori, dan paginasi tanpa memuat ulang halaman, dengan parameter URL yang sama
 seperti sebelumnya (`?search=`, `?kategori=`, `?page=`).
@@ -98,7 +99,7 @@ resources/
   views/components/situs/    Header, footer, logo, ikon, kartu, isian formulir
   views/components/layouts/  Layout situs publik
   css/situs.css              Token tema Komdigi (Tailwind 4)
-  js/situs.js                Tema, jam WITA, menu, dialog, panel aksesibilitas
+  js/situs.js                Layar pembuka beranda, jam WITA, menu, dialog, panel aksesibilitas
 public/img, public/fonts     Aset statis situs dan admin
 docker/
   caddy/Caddyfile    Aturan proxy
@@ -114,7 +115,8 @@ Semua lewat `/admin`:
 - **Profil Dinas** — Isi Halaman (sambutan, sejarah, visi, misi, tugas, fungsi,
   struktur organisasi, foto kantor), Profil Pimpinan, Pegawai, Jabatan
 - **Pengaturan** — nomor telepon, email, dan tautan media sosial yang tampil
-  di bilah atas dan footer situs publik
+  di bilah atas dan footer situs publik; tautan survei kepuasan; notifikasi Telegram
+  untuk pengajuan layanan baru (lihat di bawah)
 
 ### Pengajuan layanan daring
 
@@ -143,6 +145,25 @@ Surat dan KTP disimpan di disk privat `local` (`storage/app/private/pengajuan`),
 `/admin/pengajuan-layanan/{id}/surat` (atau `/ktp`). Kiriman dibatasi 5 per IP per jam, dan
 kiriman yang lebih cepat dari 3 detik sejak formulir dimuat dianggap bot (bukan isian perangkap tersembunyi, yang ikut terisi autofill peramban). Foto KTP dan pindaian surat dikompres ke WebP. Petunjuk isi surat per layanan diatur di
 `PengajuanLayanan::JENIS`.
+
+#### Notifikasi Telegram
+
+Setiap pengajuan baru bisa diberitahukan ke chat, grup, atau channel Telegram. Isinya layanan,
+nomor, instansi, nama pemohon, jabatan (TTE), subdomain dan jenis layanannya, berkas yang dilampirkan,
+waktu masuk, dan jumlah pengajuan yang perlu ditindak. Nomor HP, NIK, NIP, dan tanggal lahir tidak ikut.
+Di bawah pesan ada tombol **Periksa pengajuan** yang membuka rincian pengajuan itu di panel.
+Telegram hanya menerima tombol ke alamat berdomain, jadi bila `APP_URL` masih `localhost` atau
+alamat IP, tautannya ditulis sebagai teks di akhir pesan.
+
+1. Buat bot lewat [@BotFather](https://t.me/BotFather) dan salin tokennya.
+2. Tambahkan bot ke channel sebagai admin yang boleh mengirim pesan (untuk grup, cukup sebagai anggota).
+3. Di **Pengaturan › Pengaturan Situs › Notifikasi Telegram**, nyalakan sakelarnya. Isi token dan
+   ID chat: `@namachannel` untuk channel publik, atau ID angka berawalan `-100` untuk channel
+   privat dan grup. Tekan **Kirim pesan uji**, lalu **Simpan perubahan**.
+
+Token disimpan terenkripsi dengan `APP_KEY`, jadi isi ulang tokennya bila `APP_KEY` diganti.
+Pesan dikirim sesudah balasan ke pemohon terkirim (`defer()`). Bila Telegram gagal, pengajuan
+tetap tersimpan dan galatnya dicatat di log.
 
 ### Berita dari portal kota
 

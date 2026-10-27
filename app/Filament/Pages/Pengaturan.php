@@ -3,6 +3,7 @@
 namespace App\Filament\Pages;
 
 use App\Models\ProfilDinas;
+use App\Support\Telegram;
 use BackedEnum;
 use Filament\Actions\Action;
 use Filament\Forms\Components\TextInput;
@@ -30,13 +31,16 @@ class Pengaturan extends Page
     protected static ?string $navigationLabel = 'Pengaturan Situs';
 
     /** Urutan kunci di dalam kolom `konten` milik baris `pengaturan`. */
-    private const KUNCI = ['telp', 'email', 'alamat', 'fb', 'ig', 'tt', 'yt', 'survei_aktif', 'survei_url'];
+    private const KUNCI = ['telp', 'email', 'alamat', 'fb', 'ig', 'tt', 'yt', 'survei_aktif', 'survei_url', 'telegram_aktif', 'telegram_token', 'telegram_chat_id'];
 
     public ?array $data = [];
 
     public function mount(): void
     {
-        $this->form->fill(ProfilDinas::pengaturan());
+        $atur = ProfilDinas::pengaturan();
+        $atur['telegram_token'] = Telegram::buka($atur['telegram_token'] ?? null);
+
+        $this->form->fill($atur);
     }
 
     public function form(Schema $schema): Schema
@@ -81,6 +85,36 @@ class Pengaturan extends Page
                             ->required(fn (Get $get): bool => (bool) $get('survei_aktif'))
                             ->prefixIcon(Heroicon::OutlinedLink),
                     ]),
+                    Tab::make('Notifikasi Telegram')->columns(2)->schema([
+                        Text::make('Setiap pengajuan layanan baru diberitahukan ke chat, grup, atau channel Telegram ini. Buat bot lewat @BotFather, lalu tambahkan bot itu sebagai admin channel (atau anggota grup) yang boleh mengirim pesan.')->columnSpanFull(),
+                        Toggle::make('telegram_aktif')
+                            ->label('Kirim notifikasi pengajuan ke Telegram')
+                            ->live()
+                            ->columnSpanFull(),
+                        TextInput::make('telegram_token')
+                            ->label('Token bot')
+                            ->placeholder('Contoh: 123456789:AAHk3...')
+                            ->helperText('Diberikan @BotFather saat bot dibuat. Disimpan terenkripsi.')
+                            ->password()
+                            ->revealable()
+                            ->regex('/^\d+:[\w-]{30,}$/')
+                            ->validationMessages(['regex' => 'Format token bot tidak sesuai, mis. 123456789:AAHk3... dari @BotFather.'])
+                            ->required(fn (Get $get): bool => (bool) $get('telegram_aktif')),
+                        TextInput::make('telegram_chat_id')
+                            ->label('ID chat atau channel')
+                            ->placeholder('Contoh: -1001234567890 atau @namachannel')
+                            ->helperText('Channel publik boleh memakai @nama; channel privat dan grup memakai ID angka (berawalan -100).')
+                            ->regex('/^(-?\d+|@\w{5,})$/')
+                            ->validationMessages(['regex' => 'Isi ID angka (mis. -1001234567890) atau nama channel berawalan @.'])
+                            ->required(fn (Get $get): bool => (bool) $get('telegram_aktif')),
+                        Actions::make([
+                            Action::make('ujiTelegram')
+                                ->label('Kirim pesan uji')
+                                ->icon(Heroicon::OutlinedPaperAirplane)
+                                ->color('gray')
+                                ->action(fn () => $this->ujiTelegram()),
+                        ])->columnSpanFull(),
+                    ]),
                 ]),
                 Actions::make([
                     Action::make('save')->label('Simpan perubahan')->submit('save'),
@@ -92,6 +126,7 @@ class Pengaturan extends Page
     public function save(): void
     {
         $nilai = $this->form->getState();
+        $nilai['telegram_token'] = Telegram::kunci($nilai['telegram_token'] ?? null);
 
         $baris = ProfilDinas::firstOrNew(['jenis' => 'pengaturan']);
         $baris->konten = array_map(
@@ -101,5 +136,24 @@ class Pengaturan extends Page
         $baris->save();
 
         Notification::make()->title('Pengaturan tersimpan')->success()->send();
+    }
+
+    /** Mencoba token dan ID chat yang sedang diisi, sebelum disimpan. */
+    private function ujiTelegram(): void
+    {
+        $token = trim((string) ($this->data['telegram_token'] ?? ''));
+        $chat = trim((string) ($this->data['telegram_chat_id'] ?? ''));
+
+        if ($token === '' || $chat === '') {
+            Notification::make()->title('Isi token bot dan ID chat lebih dulu')->warning()->send();
+
+            return;
+        }
+
+        $galat = Telegram::kirim($token, $chat, Telegram::pesanUji());
+
+        $galat
+            ? Notification::make()->title('Pesan uji gagal terkirim')->body($galat)->danger()->persistent()->send()
+            : Notification::make()->title('Pesan uji terkirim')->body('Periksa chat Telegram tujuan. Jangan lupa simpan perubahan.')->success()->send();
     }
 }

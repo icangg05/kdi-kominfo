@@ -6,7 +6,11 @@
 @source "../views/errors";
 @source "../../app/Livewire";
 
-/* Mode gelap hanya lewat tombol (data-tema="gelap" di <html>), bukan preferensi sistem: bawaan selalu terang. */
+/*
+ * Situs selalu terang (lihat meta color-scheme di layout). Tombol mode gelap sudah dicabut dan tidak ada yang memasang
+ * data-tema="gelap" lagi, jadi varian dark: dan token gelap di bawah tidak pernah aktif. Varian sengaja tetap diikat ke
+ * atribut itu, bukan ke prefers-color-scheme bawaan Tailwind, supaya perangkat bermode gelap tetap mendapat tampilan terang.
+ */
 @custom-variant dark (&:where([data-tema="gelap"], [data-tema="gelap"] *));
 
 /* IBM Plex Sans di-host sendiri (variabel 400-700, OFL) supaya tidak menunggu Google Fonts di jaringan seluler. */
@@ -201,13 +205,6 @@
   }
 }
 
-/* Ganti tema: tampilan baru dibuka lewat clip-path dari skrip header, bukan crossfade bawaan. */
-::view-transition-old(root),
-::view-transition-new(root) {
-  animation: none;
-  mix-blend-mode: normal;
-}
-
 /* Dialog dan popover (panel Aksesibilitas) memudar dan naik sedikit saat dibuka, kebalikannya saat ditutup.
    display dan overlay ikut ditransisikan (allow-discrete) supaya tetap tampil sampai animasi tutup selesai. */
 .dialog-halus,
@@ -275,12 +272,6 @@ html:has(#menu-seluler[data-terbuka]) {
   @variant max-lg {
     overflow: hidden;
   }
-}
-
-/* Selama tema menyebar, tangkapan layar lama diam di atas halaman asli; gulir dan klik dikunci sampai selesai. */
-html[data-ganti-tema] {
-  overflow: hidden;
-  pointer-events: none;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -469,6 +460,121 @@ html[data-baca-klik] body :is(p, h1, h2, h3, h4, h5, h6, li, dt, dd, td, th, fig
 
 @keyframes sambutan-naik {
   from { opacity: 0; transform: translateY(1rem); }
+}
+
+/* ---------------------------------------------------------------------------
+ * Layar pembuka beranda (resources/views/components/situs/pembuka.blade.php)
+ * ------------------------------------------------------------------------- */
+
+/* Tampil hanya bila skrip di komponennya memasang data-pembuka di <html>. Gerak dikurangi dan "Stop Animasi" di panel
+   Aksesibilitas melewatinya sama sekali: layar ini hiasan, bukan informasi. Tirai keluar berjalan sendiri sesudah
+   jeda, jadi layar tetap terangkat walau situs.js gagal dimuat. */
+.layar-pembuka {
+  display: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html[data-pembuka]:not([data-henti-animasi]) .layar-pembuka {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    display: grid;
+    place-items: center;
+    padding: 1.5rem;
+    animation: pembuka-tirai 550ms cubic-bezier(0.7, 0, 0.25, 1) 2100ms both;
+  }
+
+  /* Dilewati (klik, tombol, gulir): tirai langsung terangkat, lebih cepat. */
+  html[data-pembuka='lewati'] .layar-pembuka {
+    animation: pembuka-tirai-cepat 400ms cubic-bezier(0.7, 0, 0.25, 1) both;
+  }
+
+  .layar-pembuka :is(.pembuka-kerek, .pembuka-pemisah, .pembuka-naik, .pembuka-nama, .pembuka-garis, .pembuka-alamat) {
+    animation: 700ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  /* Lambang muncul dari bawah ke atas seperti bendera dikerek; tanda Komdigi menyusul sesudah garis pemisah. */
+  .layar-pembuka .pembuka-kerek {
+    animation-name: pembuka-kerek;
+    animation-delay: 100ms;
+  }
+
+  .layar-pembuka .pembuka-kerek-kedua {
+    animation-delay: 400ms;
+  }
+
+  .layar-pembuka .pembuka-pemisah {
+    animation-name: pembuka-pemisah;
+    animation-duration: 500ms;
+    animation-delay: 350ms;
+  }
+
+  .layar-pembuka .pembuka-naik {
+    animation-name: pembuka-naik;
+    animation-duration: 500ms;
+    animation-delay: 600ms;
+  }
+
+  /* Nama dinas menajam dari kabur, seperti cetakan yang baru jelas. */
+  .layar-pembuka .pembuka-nama {
+    animation-name: pembuka-nama;
+    animation-duration: 600ms;
+    animation-delay: 700ms;
+  }
+
+  /* Garis kop ditarik dari tengah ke dua sisi: garis tebal dulu, garis tipis menyusul. */
+  .layar-pembuka .pembuka-garis {
+    animation-name: pembuka-garis;
+    animation-duration: 600ms;
+    animation-delay: 950ms;
+  }
+
+  .layar-pembuka .pembuka-garis-tipis {
+    animation-delay: 1050ms;
+  }
+
+  .layar-pembuka .pembuka-alamat {
+    animation-name: pembuka-alamat;
+    animation-duration: 500ms;
+    animation-delay: 1200ms;
+  }
+}
+
+/* Dua nama untuk gerak yang sama: mengganti nama memulai ulang animasi tanpa jeda, sedangkan mengubah jeda pada
+   animasi yang sedang berjalan hanya menggeser waktunya (bisa langsung melompat ke akhir). */
+@keyframes pembuka-tirai {
+  from { clip-path: inset(0); }
+  to { clip-path: inset(0 0 100% 0); visibility: hidden; }
+}
+
+@keyframes pembuka-tirai-cepat {
+  from { clip-path: inset(0); }
+  to { clip-path: inset(0 0 100% 0); visibility: hidden; }
+}
+
+@keyframes pembuka-kerek {
+  from { clip-path: inset(100% 0 0 0); transform: translateY(0.75rem); }
+  to { clip-path: inset(0); transform: none; }
+}
+
+@keyframes pembuka-pemisah {
+  from { transform: scaleY(0); }
+}
+
+@keyframes pembuka-naik {
+  from { opacity: 0; transform: translateY(0.5rem); }
+}
+
+@keyframes pembuka-nama {
+  from { opacity: 0; filter: blur(6px); transform: translateY(0.5rem); }
+}
+
+@keyframes pembuka-garis {
+  from { transform: scaleX(0); }
+}
+
+@keyframes pembuka-alamat {
+  from { opacity: 0; }
 }
 
 /* ---------------------------------------------------------------------------

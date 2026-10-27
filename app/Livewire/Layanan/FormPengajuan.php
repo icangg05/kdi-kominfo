@@ -5,6 +5,7 @@ namespace App\Livewire\Layanan;
 use App\Models\PengajuanLayanan;
 use App\Support\KompresGambar;
 use App\Support\NamaBerkas;
+use App\Support\Telegram;
 use App\Support\Teks;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\RateLimiter;
@@ -16,10 +17,13 @@ use Livewire\Component;
 use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
 use Livewire\WithFileUploads;
 
+use function Illuminate\Support\defer;
+
 /**
  * Formulir pengajuan layanan (subdomain, email dinas, TTE): data pemohon, isian khusus layanan
  * (`rincian`, lihat PengajuanLayanan::JENIS), surat permohonan, dan KTP untuk TTE.
- * Hasilnya masuk ke tabel pengajuan_layanan dengan status "menunggu" dan diverifikasi admin di panel.
+ * Hasilnya masuk ke tabel pengajuan_layanan dengan status "menunggu" dan diverifikasi admin di panel;
+ * admin diberi tahu lewat Telegram bila diaktifkan di Pengaturan Situs.
  */
 class FormPengajuan extends Component
 {
@@ -191,6 +195,9 @@ class FormPengajuan extends Component
       'surat' => $this->simpanBerkas($this->surat),
       'ktp' => $this->ktp ? $this->simpanBerkas($this->ktp) : null,
     ]);
+
+    // Dikirim sesudah balasan sampai ke pemohon, jadi lambat atau gagalnya Telegram tidak menahan formulir.
+    defer(fn () => Telegram::pengajuanBaru($pengajuan));
 
     $this->reset(['instansi', 'nama_pemohon', 'whatsapp', 'surat', 'ktp']);
     $this->rincian = array_fill_keys(array_keys($this->rincian), '');

@@ -38,16 +38,6 @@
           {{ $email }}
         </a>
       @endif
-      <button
-        type="button"
-        class="-mr-2 flex h-9 items-center gap-2 rounded px-3 transition hover:bg-white/10 hover:text-white sm:px-2"
-        data-tombol-tema
-      >
-        <x-situs.ikon nama="bulan" class="size-4 dark:hidden" />
-        <x-situs.ikon nama="matahari" class="hidden size-4 dark:block" />
-        <!-- Label menyebut aksi berikutnya; di ponsel hanya ikon, label tetap terbaca pembaca layar. -->
-        <span class="sr-only sm:not-sr-only"><span class="dark:hidden">Mode gelap</span><span class="hidden dark:inline">Mode terang</span></span>
-      </button>
     </div>
   </div>
 </div>
@@ -203,27 +193,14 @@
         @endisset
       </div>
     @endforeach
-    <div class="ml-auto flex items-center pl-4">
-      @if ($admin)
+    @if ($admin)
+      <div class="ml-auto flex items-center pl-4">
         <a href="/admin" class="flex items-center gap-2 text-[13px] font-semibold tracking-wide text-biru-600 uppercase transition-colors hover:text-biru-800 dark:text-biru-300 dark:hover:text-white">
           <x-situs.ikon nama="orang" class="size-4" />
           Halaman Admin
         </a>
-      @endif
-      <!-- Hanya saat melekat: tombol tema di bilah informasi sudah tergulir keluar layar. `invisible` mengeluarkannya dari urutan Tab. -->
-      <button
-        type="button"
-        @class([
-          'invisible flex size-9 max-w-0 items-center justify-center overflow-hidden rounded text-biru-950 opacity-0 transition-all duration-300 hover:bg-langit hover:text-biru-600 dark:text-biru-100 dark:hover:bg-white/10 dark:hover:text-white group-data-melekat/nav:visible group-data-melekat/nav:max-w-9 group-data-melekat/nav:opacity-100',
-          'group-data-melekat/nav:ml-3' => $admin,
-        ])
-        data-tombol-tema
-      >
-        <x-situs.ikon nama="bulan" class="size-4.5 shrink-0 dark:hidden" />
-        <x-situs.ikon nama="matahari" class="hidden size-4.5 shrink-0 dark:block" />
-        <span class="sr-only"><span class="dark:hidden">Mode gelap</span><span class="hidden dark:inline">Mode terang</span></span>
-      </button>
-    </div>
+      </div>
+    @endif
   </div>
 </nav>
 

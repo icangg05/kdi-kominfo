@@ -4,6 +4,11 @@
      * di AdminPanelProvider; berkas ini hanya mengubah bentuk. CSS Filament ada di @layer, jadi aturan
      * tanpa layer di sini menang tanpa !important. Aset /img dan /fonts ada di public/ Laravel, dipakai bersama situs publik.
      */
+
+    /* Panel selalu terang (darkMode(false)); `only` juga menolak penggelapan otomatis peramban, sama dengan situs. */
+    :root {
+        color-scheme: only light;
+    }
     @font-face {
         font-family: "IBM Plex Sans";
         font-style: normal;

@@ -152,7 +152,7 @@ The public site reads as a sibling of komdigi.go.id: an institutional portal whe
 
 Density is portal-grade. The homepage stacks full-width bands in Komdigi's order: blue news highlight carousel, the Kepala Dinas greeting with the admin-managed taglines, gradient services panel, public document search split panel, the dark Transformasi Digital profile band, gallery with a teal statistics card, a horizontal news carousel on the sky band, then a two-column zone of latest documents with a sidebar (Pilih Topik Berita, Kendari Siaga 112), related links, footer. Komdigi's content is never copied; every module is filled only with real Diskominfo data from the API or the organisation's own static facts.
 
-Komdigi's circles and pills are deliberately translated to 4px squares. Motion is quiet: a highlight title rising in on slide change, gentle card lifts on hover, and one scroll-driven entrance on the Kepala Dinas greeting, all neutralised under reduced motion.
+Komdigi's circles and pills are deliberately translated to 4px squares. Motion is quiet: an opening letterhead splash on the homepage, a highlight title rising in on slide change, gentle card lifts on hover, and one scroll-driven entrance on the Kepala Dinas greeting, all neutralised under reduced motion.
 
 **Key Characteristics:**
 - Blue-dominant: navy and institutional blue bands alternate with white and langit (#eef4fb) reading bands.
@@ -198,18 +198,10 @@ A single blue family from pale biru-50 to navy biru-950 does nearly all the work
 
 **The Default Cover Rule.** A record without an image (news without a cover, a gallery photo whose file is missing) shows `gambar-default.webp`: the Lambang + Komdigi lockup on the navy network motif, composed to survive 16:10, 4:3 and square crops. It is also the `onerror` fallback (`Situs::GAMBAR_DEFAULT` and `Situs::CADANGAN_GAMBAR` in `app/Support/Situs.php`) and the admin news table's `defaultImageUrl`. Never fall back to an empty fill with an icon.
 
-**The Light By Default Rule.** Both the public site and the Filament admin open in light mode regardless of the OS preference.
-- **One shared choice.** Both read Filament's own localStorage key `theme` (`light`, `dark` or `system`). They share one origin behind Caddy, so a choice made in one follows into the other.
-- **Public site.** The topbar "Mode gelap" button writes `light` or `dark`. The head script in `components/layouts/situs.blade.php` maps the stored value to `data-tema="gelap"` on `<html>` and re-applies it on a bfcache `pageshow`. The `dark:` variant is bound to that attribute, never to `prefers-color-scheme`.
-- **Admin.** It uses `defaultThemeMode(ThemeMode::Light)` and keeps Filament's switcher. The login page button dispatches Filament's `theme-changed` event instead of writing storage itself.
-
-**The Dark Mode Mapping Rule.** In dark mode:
-- The neutral tokens flip in place: langit `#0a1d38`, teks `#dfe8f5`, teks-lembut `#9fb6d4`, garis `#1d3558`.
-- The page background is malam `#05152b` and card surfaces are malam-kartu `#0c2344`.
-- Headings on formerly white surfaces become white, biru-600 links become biru-300, and biru-50/100 fills become biru-900.
-- Blue panels, the hero, the footer and white buttons sitting on blue do not change.
-- The organisation chart (HTML, `<x-situs.bagan>`) sits on malam-kartu; its biru-900 and biru-700 unit boxes stay, sub-unit boxes turn biru-900 with biru-100 text, connectors biru-700. The fallback image keeps its white box.
-- The sticky nav swaps the navy Komdigi mark (`komdigi-gelap.webp`) for the white one.
+**The Light Only Rule.** Both the public site and the Filament admin are always light (owner's decision, 2026-10-28). Neither has a theme switch, and neither follows the OS preference.
+- **Public site.** The layout and the error page carry `<meta name="color-scheme" content="only light">`. The `only` keyword also refuses the browser's automatic darkening (Chrome, Samsung Internet).
+- **Admin.** `AdminPanelProvider` uses `darkMode(false)`. This removes Filament's switcher and pins its storage key to `light`. `gaya.blade.php` sets `:root { color-scheme: only light }`, because Filament declares a color scheme only for `.dark`.
+- **Dormant dark styles.** The `dark:` classes and the dark tokens in `situs.css` remain, but nothing sets `data-tema="gelap"` any more, so they never apply. Keep the `dark` variant bound to that attribute: Tailwind's default `prefers-color-scheme` variant would darken the site on dark-mode devices. Do not add new `dark:` classes.
 
 ## Typography
 
@@ -313,6 +305,16 @@ Solid, square, confident.
 ### Section Heading (signature)
 Uppercase bold biru-950 title on the left, "Lihat lainnya" link with a 28px arrow square on the right, 24px (32px at lg) below. A light variant exists for blue bands.
 
+### Opening Splash (signature)
+A full-screen biru-900 `motif-komdigi` layer (`<x-situs.pembuka>`) laid out like an official letterhead (kop surat): the Lambang and white Komdigi mark with a divider, "Pemerintah Kota Kendari" in tracked uppercase biru-200, "Dinas Komunikasi dan Informatika" in bold white uppercase, the letterhead double rule (3px white over 1px white/70, 3px apart, at most 34rem wide), then the office address from Pengaturan.
+- **Sequence.** It lasts about 2.65s, in the house easing:
+  - the marks are hoisted bottom-up by clip-path, like a flag being raised, with the Komdigi mark following the divider;
+  - the institution lines rise in, and the dinas name sharpens from a 6px blur;
+  - the double rule draws outward from its centre, thick line first;
+  - at 2.1s the layer lifts away as a curtain (`clip-path` inset from the bottom, 550ms).
+- **When it plays.** Only on a direct load of the homepage, once per tab session (`sessionStorage`), never on a `wire:navigate` visit. It is skipped entirely under reduced motion or "Stop Animasi". A click, any key, a wheel or a touch lifts the curtain at once (400ms).
+- **Failure.** The exit runs in CSS, so the layer clears itself even if `situs.js` fails. The layer is `aria-hidden`; the page beneath is complete from the first paint.
+
 ### Highlight Carousel (signature)
 Fixed abstract network background (`latar-jaringan.webp`: constellation nodes and flowing data lines) under a navy-to-transparent scrim, the same for every slide, display title with rising entrance (650ms, cubic-bezier(0.16, 1, 0.3, 1)), 40px numbered square selectors (active is white fill), 7s autoplay paused on hover or focus and disabled under reduced motion.
 
@@ -321,7 +323,8 @@ Double ring on every focusable element: 2px biru-600 outline offset 2px over a 2
 
 ### Admin Panel (Filament)
 The admin follows this system too, without a Vite theme build.
-- **Colours.** `AdminPanelProvider` passes the biru-* scale as `primary`. It passes a blue-tinted `gray` whose 900 and 950 steps equal malam-kartu and malam, so the admin's dark mode matches the site's.
+- **Colours.** `AdminPanelProvider` passes the biru-* scale as `primary` and a blue-tinted `gray`. The admin is light only (see The Light Only Rule).
+- **Navigation.** SPA mode (`->spa()`): panel pages switch through `wire:navigate` without reloading the document. Two URLs are exempt because they are not panel pages: `#backup-database` (it opens the backup modal) and the backup download route. Custom scripts placed in `<body>` through render hooks need `data-navigate-once`; otherwise every navigation runs them again.
 - **Font.** IBM Plex Sans, self-hosted in `public/fonts`.
 - **Shape.** `resources/views/filament/admin/gaya.blade.php` is an unlayered `<style>` injected at `STYLES_AFTER`. It overrides only shape, because Filament's CSS is layered. It sets:
   - every radius to 4px and square avatars;
@@ -333,7 +336,7 @@ The admin follows this system too, without a Vite theme build.
   - stats with a 3px blue top bar.
   - the Struktur Organisasi form (Isi Halaman) drawn as a tree: Pimpinan as a biru-50 fieldset, units as cards, sub units as flat gray-50 rows, joined by 1px branch lines, each level tagged by a chip that fades from solid biru to outlined.
 - **Dashboard.** It opens with the `SambutanAdmin` band: the network background, a WITA greeting and shortcuts to create berita, dokumen, foto and video.
-- **Clock script.** `filament.admin.skrip-jam` runs once at `BODY_END` on every panel page, including login.
+- **Clock script.** `filament.admin.skrip-jam` sits at `BODY_END` on every panel page, including login. `data-navigate-once` makes it run once per document.
 
 ## Do's and Don'ts
 

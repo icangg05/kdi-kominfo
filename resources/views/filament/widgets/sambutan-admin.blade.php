@@ -1,6 +1,7 @@
 @php
     use Filament\Support\Icons\Heroicon;
 
+    use function Filament\Support\generate_href_html;
     use function Filament\Support\generate_icon_html;
 @endphp
 
@@ -18,7 +19,7 @@
             <ul class="kdi-pintasan">
                 @foreach ($pintasan as [$label, $url, $ikon])
                     <li>
-                        <a href="{{ $url }}">
+                        <a {{ generate_href_html($url) }}>
                             <span class="kdi-pintasan-ikon">{{ generate_icon_html($ikon) }}</span>
                             {{ $label }}
                             {{ generate_icon_html(Heroicon::ArrowRight, attributes: new \Illuminate\View\ComponentAttributeBag(['class' => 'kdi-pintasan-panah'])) }}

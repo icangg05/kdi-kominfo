@@ -204,51 +204,6 @@
                 padding: 2.25rem 1rem 1.5rem;
             }
 
-            .masuk-alat {
-                display: flex;
-                justify-content: flex-end;
-            }
-
-            .masuk-tema {
-                display: inline-flex;
-                align-items: center;
-                gap: 0.5rem;
-                min-height: 2.5rem;
-                padding-inline: 0.75rem;
-                border: 1px solid var(--m-garis);
-                border-radius: 0.25rem;
-                font-size: 0.875rem;
-                font-weight: 600;
-                color: var(--m-teks);
-                transition: background-color 150ms, border-color 150ms;
-            }
-
-            .masuk-tema:hover {
-                border-color: #8bb9ea;
-                background: rgb(11 78 162 / 0.06);
-            }
-
-            html.dark .masuk-tema:hover {
-                border-color: #2777c8;
-                background: rgb(255 255 255 / 0.06);
-            }
-
-            .masuk-tema svg {
-                width: 1.125rem;
-                height: 1.125rem;
-            }
-
-            /* Label menyebut aksi berikutnya; kelas `dark` dipasang Filament di <html>. */
-            .masuk-tema-ke-gelap,
-            html.dark .masuk-tema-ke-terang {
-                display: contents;
-            }
-
-            .masuk-tema-ke-terang,
-            html.dark .masuk-tema-ke-gelap {
-                display: none;
-            }
-
             .masuk-kotak {
                 width: 100%;
                 max-width: 26rem;
@@ -389,19 +344,6 @@
         </aside>
 
         <main class="masuk-utama">
-            <div class="masuk-alat">
-                {{-- Kunci `theme` dipakai bersama situs publik; event ini ditangani skrip tema Filament. --}}
-                <button
-                    type="button"
-                    class="masuk-tema"
-                    x-data
-                    x-on:click="$dispatch('theme-changed', $store.theme === 'dark' ? 'light' : 'dark')"
-                >
-                    <span class="masuk-tema-ke-gelap">{{ generate_icon_html(Heroicon::OutlinedMoon) }} Mode gelap</span>
-                    <span class="masuk-tema-ke-terang">{{ generate_icon_html(Heroicon::OutlinedSun) }} Mode terang</span>
-                </button>
-            </div>
-
             {{ $slot }}
 
             <p class="masuk-hak">&copy; {{ $sekarang->year }} Dinas Komunikasi dan Informatika Kota Kendari</p>

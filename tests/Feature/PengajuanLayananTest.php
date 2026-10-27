@@ -7,10 +7,14 @@ use App\Filament\Resources\PengajuanLayanans\Pages\ViewPengajuanLayanan;
 use App\Livewire\Layanan\CekPengajuan;
 use App\Livewire\Layanan\FormPengajuan;
 use App\Models\PengajuanLayanan;
+use App\Models\ProfilDinas;
 use App\Models\User;
 use App\Support\Situs;
+use App\Support\Telegram;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\Client\Request;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Storage;
 use Livewire\Features\SupportTesting\Testable;
@@ -489,5 +493,86 @@ class PengajuanLayananTest extends TestCase
 
     Storage::disk('local')->assertMissing($pengajuan->surat);
     Storage::disk('local')->assertMissing($pengajuan->ktp);
+  }
+
+  /** Pengaturan Telegram dalam bentuk yang disimpan halaman Pengaturan Situs (token terenkripsi). */
+  private function aturTelegram(bool $aktif): void
+  {
+    ProfilDinas::updateOrCreate(['jenis' => 'pengaturan'], ['konten' => [
+      ['id' => 'telegram_aktif', 'value' => $aktif],
+      ['id' => 'telegram_token', 'value' => Telegram::kunci('123456789:' . str_repeat('A', 35))],
+      ['id' => 'telegram_chat_id', 'value' => '-1001234567890'],
+    ]]);
+  }
+
+  public function test_pengajuan_baru_diberitahukan_ke_telegram_dengan_tombol_ke_panel(): void
+  {
+    config(['app.url' => 'https://diskominfo.kendarikota.go.id']);
+    // defer() biasanya menunggu balasan terkirim; di tes langsung dijalankan.
+    $this->withoutDefer();
+    $this->aturTelegram(aktif: true);
+    Http::fake(['api.telegram.org/*' => Http::response(['ok' => true, 'result' => []])]);
+
+    $this->formulirLengkap('subdomain-hosting')->call('kirim')->assertHasNoErrors();
+
+    $pengajuan = PengajuanLayanan::sole();
+    Http::assertSentCount(1);
+    Http::assertSent(fn (Request $r) => $r->url() === 'https://api.telegram.org/bot123456789:' . str_repeat('A', 35) . '/sendMessage'
+      && $r['chat_id'] === '-1001234567890'
+      && $r['parse_mode'] === 'HTML'
+      && str_contains($r['text'], '🌐 <b>Subdomain &amp; Hosting</b>')
+      && str_contains($r['text'], "🔖 Nomor: <b>{$pengajuan->nomor}</b>")
+      && str_contains($r['text'], '👤 Pemohon: <b>Budi Santoso</b>')
+      && str_contains($r['text'], '🔗 Subdomain: <b>dinkes.kendarikota.go.id</b>')
+      && str_contains($r['text'], '🏷️ Jenis layanan: <b>Layanan publik</b>')
+      && str_contains($r['text'], '📎 Berkas: <b>surat permohonan</b>')
+      && str_contains($r['text'], 'Perlu ditindak saat ini: <b>1 pengajuan</b>')
+      // Data pribadi (nomor HP, NIK, NIP) tidak ikut ke Telegram.
+      && ! str_contains($r['text'], '081234567890')
+      && $r['reply_markup'] === ['inline_keyboard' => [[
+        ['text' => '🔍 Periksa pengajuan', 'url' => "https://diskominfo.kendarikota.go.id/admin/pengajuan-layanan/{$pengajuan->id}"],
+      ]]]);
+  }
+
+  public function test_tautan_panel_ditulis_sebagai_teks_bila_situs_belum_beralamat_publik(): void
+  {
+    config(['app.url' => 'http://localhost:8000']);
+    $this->withoutDefer();
+    $this->aturTelegram(aktif: true);
+    Http::fake(['api.telegram.org/*' => Http::response(['ok' => true, 'result' => []])]);
+
+    $this->formulirLengkap('pengajuan-tte')->call('kirim')->assertHasNoErrors();
+
+    $pengajuan = PengajuanLayanan::sole();
+    Http::assertSent(fn (Request $r) => ! isset($r['reply_markup'])
+      && str_contains($r['text'], '✍️ <b>Tanda Tangan Elektronik</b>')
+      && str_contains($r['text'], '💼 Jabatan: <b>Kepala Bidang Pelayanan</b>')
+      && str_contains($r['text'], '📎 Berkas: <b>surat permohonan dan KTP</b>')
+      && ! str_contains($r['text'], '7471011203850001')
+      && str_contains($r['text'], "<b>🔍 Periksa pengajuan: http://localhost:8000/admin/pengajuan-layanan/{$pengajuan->id}</b>"));
+  }
+
+  public function test_telegram_tidak_dihubungi_bila_notifikasi_dimatikan(): void
+  {
+    $this->withoutDefer();
+    $this->aturTelegram(aktif: false);
+    Http::fake();
+
+    $this->formulirLengkap('email-dinas')->call('kirim')->assertHasNoErrors();
+
+    $this->assertSame(1, PengajuanLayanan::count());
+    Http::assertNothingSent();
+  }
+
+  public function test_telegram_gagal_tidak_menggagalkan_pengajuan(): void
+  {
+    $this->withoutDefer();
+    $this->aturTelegram(aktif: true);
+    Http::fake(['api.telegram.org/*' => Http::response(['ok' => false, 'description' => 'Bad Request: chat not found'], 400)]);
+
+    $this->formulirLengkap('pengajuan-tte')->call('kirim')->assertHasNoErrors();
+
+    $this->assertSame(1, PengajuanLayanan::count());
+    Http::assertSentCount(1);
   }
 }

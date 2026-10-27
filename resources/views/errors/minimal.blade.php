@@ -42,15 +42,8 @@
   <meta name="theme-color" content="#0b2f5c">
   <title>{{ $judul }} | Diskominfo Kota Kendari</title>
   <link rel="icon" href="/favicon.ico">
-  {{-- Kunci `theme` sama dengan situs dan panel Filament, jadi mode gelap ikut terbawa. --}}
-  <script>
-    try {
-      const t = localStorage.getItem('theme');
-      if (t === 'dark' || (t === 'system' && matchMedia('(prefers-color-scheme: dark)').matches)) {
-        document.documentElement.dataset.tema = 'gelap';
-      }
-    } catch {}
-  </script>
+  {{-- Selalu terang, sama dengan situs; `only` menolak penggelapan otomatis peramban. --}}
+  <meta name="color-scheme" content="only light">
   <style>
     @font-face {
       font-family: "IBM Plex Sans";
@@ -67,17 +60,6 @@
       --garis: #dbe3ef;
       --tombol-sekunder: #0d478e;
       --sorot: #f2f7fd;
-    }
-
-    :root[data-tema="gelap"] {
-      color-scheme: dark;
-      --latar: #05152b;
-      --judul: #fff;
-      --kode: #4f95dc;
-      --teks: #9fb6d4;
-      --garis: #1d3558;
-      --tombol-sekunder: #c0d8f4;
-      --sorot: rgb(255 255 255 / 0.05);
     }
 
     * { box-sizing: border-box; }

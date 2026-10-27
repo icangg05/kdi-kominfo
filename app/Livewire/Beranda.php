@@ -41,6 +41,6 @@ class Beranda extends Component
       // Kategori kosong disembunyikan supaya tautannya tidak membuka halaman tanpa isi.
       'kategoriBerita' => KategoriBerita::has('berita')->orderBy('nama')->get(['nama', 'slug']),
       'kategoriDokumen' => KategoriDokumen::has('dokumen')->orderBy('nama')->get(['nama', 'slug']),
-    ]);
+    ], ['pembuka' => true]);
   }
 }

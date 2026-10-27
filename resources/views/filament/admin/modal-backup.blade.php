@@ -40,7 +40,8 @@
         </x-slot>
     </x-filament::modal>
 
-    <script>
+    {{-- Pendengar di document cukup dipasang sekali; mode SPA menjalankan ulang skrip <body> tiap pindah halaman. --}}
+    <script data-navigate-once>
         document.addEventListener('click', (e) => {
             if (!e.target.closest('a[href="#backup-database"]')) return;
             e.preventDefault();

@@ -343,4 +343,22 @@ class SitusPublikTest extends TestCase
     $this->get('/robots.txt');
     $this->assertSame(0, Visitor::count());
   }
+
+  public function test_situs_selalu_terang_tanpa_tombol_mode_gelap(): void
+  {
+    $this->get('/')
+      ->assertOk()
+      ->assertSee('<meta name="color-scheme" content="only light" />', false)
+      ->assertDontSee('data-tombol-tema', false)
+      ->assertDontSee('Mode gelap');
+  }
+
+  public function test_layar_pembuka_hanya_di_beranda(): void
+  {
+    $this->get('/')
+      ->assertOk()
+      ->assertSeeInOrder(['data-layar-pembuka', 'Pemerintah Kota Kendari', 'Dinas Komunikasi dan Informatika', ProfilDinas::pengaturan()['alamat'], 'id="konten"'], false);
+
+    $this->get('/berita')->assertOk()->assertDontSee('data-layar-pembuka', false);
+  }
 }
