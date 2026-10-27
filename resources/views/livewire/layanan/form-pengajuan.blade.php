@@ -10,7 +10,9 @@
 
 <section id="ajukan" class="mt-16 scroll-mt-20" aria-labelledby="judul-ajukan">
   <div class="bayangan-kartu overflow-hidden rounded border border-garis bg-white dark:bg-malam-kartu">
-    <div class="grid lg:grid-cols-[20rem_minmax(0,1fr)] xl:grid-cols-[22rem_minmax(0,1fr)]">
+    {{-- grid-cols-1 = minmax(0, 1fr): tanpa kolom eksplisit, nama berkas unggahan yang panjang (truncate, tak terbungkus)
+         melebarkan kolom di ponsel sampai isi kartu terpotong di kanan. --}}
+    <div class="grid grid-cols-1 lg:grid-cols-[20rem_minmax(0,1fr)] xl:grid-cols-[22rem_minmax(0,1fr)]">
       <div class="motif-komdigi bg-biru-900 p-7 text-white lg:p-8">
         <p class="text-xs font-bold tracking-wide text-biru-300 uppercase">Pengajuan daring</p>
         <h2 id="judul-ajukan" class="mt-2 text-2xl leading-tight font-bold text-balance">Ajukan {{ $jenis['label'] }}</h2>
